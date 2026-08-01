@@ -1,0 +1,77 @@
+{
+  "pfp": "",
+  "hero": {
+    "title": "aayeddie",
+    "tagline": "Builder of small worlds — apps, games, and things that glow."
+  },
+  "theme": {
+    "accent1": "#8b5cf6",
+    "accent2": "#22d3ee"
+  },
+  "socials": [
+    { "name": "Discord", "handle": "Aayeddie's Studio", "url": "https://discord.gg/", "color": "#5865F2", "init": "D" },
+    { "name": "Instagram", "handle": "@aayeddie", "url": "https://instagram.com/aayeddie", "color": "#dd2a7b", "init": "IG" },
+    { "name": "Instagram (alt)", "handle": "@aayeddie.clips", "url": "https://instagram.com/aayeddie.clips", "color": "#8134af", "init": "IG" },
+    { "name": "TikTok", "handle": "@aayeddie", "url": "https://tiktok.com/@aayeddie", "color": "#25F4EE", "init": "TT" },
+    { "name": "TikTok (alt)", "handle": "@aayeddie.dev", "url": "https://tiktok.com/@aayeddie.dev", "color": "#FE2C55", "init": "TT" },
+    { "name": "Snapchat", "handle": "@aayeddie", "url": "https://snapchat.com/add/aayeddie", "color": "#FFFC00", "init": "SC" },
+    { "name": "Rednote", "handle": "@aayeddie", "url": "#", "color": "#FF2442", "init": "小" },
+    { "name": "Roblox", "handle": "aayeddie", "url": "https://roblox.com/", "color": "#00A2FF", "init": "R" },
+    { "name": "Roblox (alt)", "handle": "aayeddie.studio", "url": "https://roblox.com/", "color": "#00FF88", "init": "R" },
+    { "name": "YouTube", "handle": "@aayeddie", "url": "https://youtube.com/@aayeddie", "color": "#FF3B3B", "init": "YT" },
+    { "name": "Pinterest", "handle": "@aayeddie", "url": "https://pinterest.com/aayeddie", "color": "#E60023", "init": "P" },
+    { "name": "X", "handle": "@aayeddie", "url": "https://x.com/aayeddie", "color": "#e8e8e8", "init": "X" }
+  ],
+  "highlights": [
+    {
+      "icon": "🖼️",
+      "coverImage": "",
+      "cat": "Photography",
+      "c1": "#8b5cf6",
+      "c2": "#22d3ee",
+      "slides": [
+        { "image": "", "title": "Behind the lens", "caption": "Frame by frame — a running log of shots I keep coming back to.", "date": "2026" }
+      ]
+    },
+    {
+      "icon": "🎬",
+      "coverImage": "",
+      "cat": "BTS",
+      "c1": "#ff2e9a",
+      "c2": "#8b5cf6",
+      "slides": [
+        { "image": "", "title": "How it actually gets built", "caption": "The messy middle of every project, before it looks finished.", "date": "2026" }
+      ]
+    },
+    {
+      "icon": "📺",
+      "coverImage": "",
+      "cat": "YouTube",
+      "c1": "#ffcc33",
+      "c2": "#ff2e9a",
+      "slides": [
+        { "image": "", "title": "On the channel", "caption": "Builds, breakdowns, and working ideas.", "date": "2026" }
+      ]
+    },
+    {
+      "icon": "🧩",
+      "coverImage": "",
+      "cat": "Projects",
+      "c1": "#22d3ee",
+      "c2": "#00ff88",
+      "slides": [
+        { "image": "", "title": "Currently shipping", "caption": "DroidBay, an Android emulator shell, and Discord bots.", "date": "2026" }
+      ]
+    },
+    {
+      "icon": "🎮",
+      "coverImage": "",
+      "cat": "Roblox",
+      "c1": "#00A2FF",
+      "c2": "#8b5cf6",
+      "slides": [
+        { "image": "", "title": "Oakview", "caption": "A Roblox island town built with MCP tooling.", "date": "2026" }
+      ]
+    }
+  ]
+}
