@@ -222,23 +222,81 @@
     font-size: 0.8rem;
     gap: 0.8rem;
   }
-  .item-info {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    overflow: hidden;
+
+  /* --- HORIZONTAL SLIDER GALLERY STYLES FOR RECENT BUILDS --- */
+  .gallery-slider-container {
+    position: relative;
+    margin-top: 1.2rem;
   }
-  .item-thumb {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    object-fit: cover;
-    background: rgba(255,255,255,0.08);
+  .gallery-track {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
+    gap: 1.2rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 0.5rem 0.2rem 1rem 0.2rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-cyan) rgba(255,255,255,0.05);
+  }
+  .gallery-track::-webkit-scrollbar {
+    height: 8px;
+  }
+  .gallery-track::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.03);
+    border-radius: 4px;
+  }
+  .gallery-track::-webkit-scrollbar-thumb {
+    background: var(--accent-cyan);
+    border-radius: 4px;
+  }
+
+  .gallery-card {
+    min-width: 310px;
+    max-width: 310px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     flex-shrink: 0;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .gallery-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-violet);
+  }
+  .gallery-card-img-wrap {
+    width: 100%;
+    height: 160px;
+    background: rgba(255,255,255,0.05);
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .gallery-card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .gallery-card-body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+  }
+  .gallery-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+  }
+  .slider-nav-btns {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+    justify-content: flex-end;
   }
 
   .slide-box {
@@ -379,7 +437,7 @@
 <header>
   <div>
     <h1>Aayeddie Studio Master Control & Visual Editor</h1>
-    <p>Zero Vendor Lock-In · Separate Ring Covers & Multi-Image Highlights · Recent Builds · GitHub Suite</p>
+    <p>Zero Vendor Lock-In · Separate Ring Covers & Multi-Image Highlights · Recent Builds Image Gallery · GitHub Suite</p>
   </div>
   <button class="btn btn-outline" onclick="triggerLiveRefresh()">🔄 Refresh Preview & Sync</button>
 </header>
@@ -387,7 +445,7 @@
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('tab-preview', this)">✏️ Live Visual Preview & Edit</button>
   <button class="tab-btn" onclick="switchTab('tab-hero', this)">🖼️ User PFP & Hero Branding</button>
-  <button class="tab-btn" onclick="switchTab('tab-builds', this)">🛠️ Recent Builds</button>
+  <button class="tab-btn" onclick="switchTab('tab-builds', this)">🛠️ Recent Builds Gallery</button>
   <button class="tab-btn" onclick="switchTab('tab-content', this)">🎬 Multi-Image Highlights & Ring PFPs</button>
   <button class="tab-btn" onclick="switchTab('tab-socials', this)">🌐 Social Channels</button>
   <button class="tab-btn" onclick="switchTab('tab-sync', this)">📦 JSON Data Sync & Backup</button>
@@ -410,7 +468,7 @@
   <div class="preview-wrapper" id="preview-container">
     <button class="edit-pencil-btn" style="top: 80px; left: calc(50% + 180px);" onclick="openPencilModal('hero')" title="Edit Hero & User PFP">✏️</button>
     <button class="edit-pencil-btn" style="top: 260px; right: 40px;" onclick="openPencilModal('highlights')" title="Edit Highlight Rings">✏️</button>
-    <button class="edit-pencil-btn" style="top: 350px; left: 40px;" onclick="openPencilModal('builds')" title="Edit Recent Builds">✏️</button>
+    <button class="edit-pencil-btn" style="top: 350px; left: 40px;" onclick="openPencilModal('builds')" title="Edit Recent Builds Gallery">✏️</button>
     <button class="edit-pencil-btn" style="top: 480px; right: 40px;" onclick="openPencilModal('socials')" title="Edit Social Hub">✏️</button>
     <button class="edit-pencil-btn" style="top: 600px; left: 40px;" onclick="openPencilModal('theme')" title="Edit Theme Accents">✏️</button>
 
@@ -465,7 +523,7 @@
   </div>
 </div>
 
-<!-- TAB 3: RECENT BUILDS MANAGEMENT -->
+<!-- TAB 3: RECENT BUILDS IMAGE GALLERY MANAGEMENT -->
 <div id="tab-builds" class="view-panel">
   <div class="grid">
     <!-- Form to Add or Update Build -->
@@ -486,6 +544,10 @@
         <textarea id="build-desc" rows="3" placeholder="e.g. Electron-based Android emulator launcher — APK import, metadata scraping..."></textarea>
       </div>
       <div class="field">
+        <label>Image / Thumbnail URL (Supports Image Links)</label>
+        <input type="text" id="build-img-url" placeholder="https://images.unsplash.com/... or image link">
+      </div>
+      <div class="field">
         <label>Project / Demo Link (URL)</label>
         <input type="text" id="build-url" placeholder="https://github.com/... or #">
       </div>
@@ -497,13 +559,24 @@
       <div id="build-status" class="status-msg">Build saved successfully!</div>
     </div>
 
-    <!-- Active Recent Builds List -->
+    <!-- Active Recent Builds Horizontal Slider Gallery -->
     <div class="card" style="grid-column: span 2;">
-      <h2>🚀 Current Recent Builds List</h2>
-      <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
-        Add, reorder, edit, or remove project cards displayed in the "Recent builds" section of your portfolio.
-      </p>
-      <div class="item-list" id="builds-list-container"></div>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem;">
+        <div>
+          <h2>🚀 Recent Builds Image Gallery</h2>
+          <p style="font-size: 0.75rem; color: var(--text-muted);">
+            Scroll left/right or use the buttons to browse, reorder, or edit image cards in your portfolio slider.
+          </p>
+        </div>
+        <div class="slider-nav-btns" style="margin-bottom:0;">
+          <button class="btn btn-outline" style="padding:0.4rem 0.8rem; font-size:0.75rem;" onclick="scrollGallery(-1)">◀ Scroll Left</button>
+          <button class="btn btn-outline" style="padding:0.4rem 0.8rem; font-size:0.75rem;" onclick="scrollGallery(1)">Scroll Right ▶</button>
+        </div>
+      </div>
+      
+      <div class="gallery-slider-container">
+        <div class="gallery-track" id="builds-gallery-track"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -743,13 +816,14 @@ const defaultHighlights = [
   }
 ];
 
-// Default Recent Builds dataset
+// Default Recent Builds dataset with image URLs
 const defaultBuilds = [
   {
     id: "build_1",
     title: "DroidBay",
     tag: "Electron / Android",
     desc: "Electron-based Android emulator launcher — APK import, metadata scraping, and custom controls.",
+    imageUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80",
     url: "#"
   },
   {
@@ -757,6 +831,7 @@ const defaultBuilds = [
     title: "Oakview (Roblox Studio)",
     tag: "Roblox Studio / MCP",
     desc: "An island town built in Roblox Studio via MCP tooling.",
+    imageUrl: "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_16x9.jpg?w=1200",
     url: "#"
   },
   {
@@ -764,6 +839,7 @@ const defaultBuilds = [
     title: "Server Builder Bot",
     tag: "Python / Discord.py",
     desc: "A discord.py bot that builds out the Aayeddie's Studio server structure automatically.",
+    imageUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80",
     url: "#"
   },
   {
@@ -771,6 +847,7 @@ const defaultBuilds = [
     title: "3D Estate Walkthrough",
     tag: "Three.js / WebGL",
     desc: "Three.js first-person walkthrough of a Mediterranean-style estate.",
+    imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&auto=format&fit=crop&q=80",
     url: "#"
   },
   {
@@ -778,6 +855,7 @@ const defaultBuilds = [
     title: "FIFA 2026 Scoreboard",
     tag: "HTML / SVG / JS",
     desc: "Broadcast-style scoreboard editor with SVG flags and real-time animation overlay.",
+    imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop&q=80",
     url: "#"
   },
   {
@@ -785,6 +863,7 @@ const defaultBuilds = [
     title: "Roblox Avatar Viewer",
     tag: "Three.js / Web API",
     desc: "A web viewer for Roblox avatars with pose controls and procedural animation preview.",
+    imageUrl: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&auto=format&fit=crop&q=80",
     url: "#"
   }
 ];
@@ -863,7 +942,7 @@ function removePfp(){
   triggerLiveRefresh();
 }
 
-// --- RECENT BUILDS MANAGER ---
+// --- RECENT BUILDS IMAGE GALLERY MANAGER ---
 function getStoredBuilds(){
   const data = localStorage.getItem('aayeddie_custom_builds');
   if(data){
@@ -873,38 +952,55 @@ function getStoredBuilds(){
 }
 
 function loadBuilds(){
-  const container = document.getElementById('builds-list-container');
-  if(!container) return;
-  container.innerHTML = '';
+  const track = document.getElementById('builds-gallery-track');
+  if(!track) return;
+  track.innerHTML = '';
 
   const builds = getStoredBuilds();
 
   if(builds.length === 0){
-    container.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted);">No builds added yet. Click "Add New Build" to create one.</div>`;
+    track.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted); padding:1rem;">No builds added yet. Click "Add New Build" to create one.</div>`;
     return;
   }
 
   builds.forEach((item, idx) => {
-    const row = document.createElement('div');
-    row.className = 'item-row';
-    row.innerHTML = `
-      <div style="flex:1; overflow:hidden;">
-        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
-          <strong style="color:#fff; font-size:0.9rem;">${item.title}</strong>
-          ${item.tag ? `<span class="tag-pill">${item.tag}</span>` : ''}
-        </div>
-        <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.3rem;">${item.desc || 'No description provided.'}</p>
-        ${item.url && item.url !== '#' ? `<a href="${item.url}" target="_blank" style="font-size:0.7rem; color:var(--accent-cyan); text-decoration:none;">🔗 ${item.url}</a>` : ''}
+    const card = document.createElement('div');
+    card.className = 'gallery-card';
+    
+    const displayImg = item.imageUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80';
+    
+    card.innerHTML = `
+      <div class="gallery-card-img-wrap">
+        <img src="${displayImg}" alt="${item.title}">
       </div>
-      <div style="display:flex; gap:0.4rem; flex-shrink:0;">
-        <button class="btn btn-outline" style="padding:0.3rem 0.6rem; font-size:0.7rem;" onclick="moveBuild(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.3;"' : ''}>▲</button>
-        <button class="btn btn-outline" style="padding:0.3rem 0.6rem; font-size:0.7rem;" onclick="moveBuild(${idx}, 1)" ${idx === builds.length - 1 ? 'disabled style="opacity:0.3;"' : ''}>▼</button>
-        <button class="btn btn-outline" style="padding:0.3rem 0.6rem; font-size:0.7rem;" onclick="editBuildItem('${item.id}')">✏️ Edit</button>
-        <button class="btn-danger" onclick="deleteBuildItem('${item.id}')">Delete</button>
+      <div class="gallery-card-body">
+        <div>
+          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; justify-content:space-between;">
+            <strong style="color:#fff; font-size:0.95rem;">${item.title}</strong>
+            ${item.tag ? `<span class="tag-pill">${item.tag}</span>` : ''}
+          </div>
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.4rem; line-height:1.3;">${item.desc || 'No description provided.'}</p>
+        </div>
+        <div>
+          ${item.url && item.url !== '#' ? `<a href="${item.url}" target="_blank" style="font-size:0.7rem; color:var(--accent-cyan); text-decoration:none; display:inline-block; margin-top:0.5rem;">🔗 View Live Demo</a>` : ''}
+          <div class="gallery-controls">
+            <button class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="moveBuild(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.3;"' : ''}>◀</button>
+            <button class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="moveBuild(${idx}, 1)" ${idx === builds.length - 1 ? 'disabled style="opacity:0.3;"' : ''}>▶</button>
+            <button class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="editBuildItem('${item.id}')">✏️ Edit</button>
+            <button class="btn-danger" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="deleteBuildItem('${item.id}')">Delete</button>
+          </div>
+        </div>
       </div>
     `;
-    container.appendChild(row);
+    track.appendChild(card);
   });
+}
+
+function scrollGallery(direction){
+  const track = document.getElementById('builds-gallery-track');
+  if(track){
+    track.scrollBy({ left: direction * 340, behavior: 'smooth' });
+  }
 }
 
 function saveBuildItem(){
@@ -912,6 +1008,7 @@ function saveBuildItem(){
   const title = document.getElementById('build-title').value.trim();
   const tag = document.getElementById('build-tag').value.trim();
   const desc = document.getElementById('build-desc').value.trim();
+  const imageUrl = document.getElementById('build-img-url').value.trim();
   const url = document.getElementById('build-url').value.trim();
 
   if(!title){
@@ -922,18 +1019,17 @@ function saveBuildItem(){
   let builds = getStoredBuilds();
 
   if(idInput){
-    // Update existing build
     const idx = builds.findIndex(b => b.id === idInput);
     if(idx !== -1){
-      builds[idx] = { id: idInput, title, tag, desc, url };
+      builds[idx] = { id: idInput, title, tag, desc, imageUrl, url };
     }
   } else {
-    // Add new build
     const newBuild = {
       id: 'build_' + Date.now(),
       title,
       tag,
       desc,
+      imageUrl,
       url: url || '#'
     };
     builds.push(newBuild);
@@ -955,9 +1051,10 @@ function editBuildItem(id){
   document.getElementById('build-title').value = item.title || '';
   document.getElementById('build-tag').value = item.tag || '';
   document.getElementById('build-desc').value = item.desc || '';
+  document.getElementById('build-img-url').value = item.imageUrl || '';
   document.getElementById('build-url').value = item.url || '';
 
-  document.getElementById('build-form-title').textContent = '✏️ Edit Build';
+  document.getElementById('build-form-title').textContent = '✏️ Edit Build Card';
   document.getElementById('btn-save-build').textContent = 'Update Build';
   document.getElementById('btn-cancel-build').style.display = 'inline-block';
   switchTab('tab-builds');
@@ -968,6 +1065,7 @@ function resetBuildForm(){
   document.getElementById('build-title').value = '';
   document.getElementById('build-tag').value = '';
   document.getElementById('build-desc').value = '';
+  document.getElementById('build-img-url').value = '';
   document.getElementById('build-url').value = '';
 
   document.getElementById('build-form-title').textContent = '🛠️ Add New Build';
@@ -976,7 +1074,7 @@ function resetBuildForm(){
 }
 
 function deleteBuildItem(id){
-  if(confirm("Are you sure you want to delete this build item?")){
+  if(confirm("Are you sure you want to delete this build card from the gallery?")){
     let builds = getStoredBuilds();
     builds = builds.filter(b => b.id !== id);
     localStorage.setItem('aayeddie_custom_builds', JSON.stringify(builds));
@@ -1032,13 +1130,14 @@ function openPencilModal(section){
       <div class="field"><label>Ring Cover PFP File</label><input type="file" id="pencil-hl-ring-file" accept="image/*"></div>
     `;
   } else if(section === 'builds'){
-    title.textContent = '✏️ Edit Recent Builds';
+    title.textContent = '✏️ Edit Recent Builds Gallery';
     body.innerHTML = `
-      <p style="font-size:0.85rem; color:var(--text-muted);">Quickly add a build card or switch to the Builds tab for full control:</p>
+      <p style="font-size:0.85rem; color:var(--text-muted);">Quickly add a new card to your image gallery:</p>
       <div class="field" style="margin-top:0.8rem;"><label>Build Title</label><input type="text" id="pencil-build-title" placeholder="e.g. DroidBay"></div>
       <div class="field"><label>Tag / Category</label><input type="text" id="pencil-build-tag" placeholder="e.g. Electron / Android"></div>
+      <div class="field"><label>Image URL</label><input type="text" id="pencil-build-img" placeholder="https://image-url.com"></div>
       <div class="field"><label>Description</label><textarea id="pencil-build-desc" rows="2" placeholder="Short description..."></textarea></div>
-      <button class="btn btn-outline" style="margin-top:0.5rem;" onclick="closePencilModal(); switchTab('tab-builds');">Open Full Builds Manager Tab</button>
+      <button class="btn btn-outline" style="margin-top:0.5rem;" onclick="closePencilModal(); switchTab('tab-builds');">Open Full Gallery Manager Tab</button>
     `;
   } else if(section === 'socials'){
     title.textContent = '✏️ Edit Social Hub';
@@ -1112,10 +1211,11 @@ function savePencilModal(){
   } else if(currentPencilTarget === 'builds'){
     const title = document.getElementById('pencil-build-title').value;
     const tag = document.getElementById('pencil-build-tag').value;
+    const imageUrl = document.getElementById('pencil-build-img').value;
     const desc = document.getElementById('pencil-build-desc').value;
     if(title){
       let builds = getStoredBuilds();
-      builds.push({ id: 'build_' + Date.now(), title, tag, desc, url: '#' });
+      builds.push({ id: 'build_' + Date.now(), title, tag, desc, imageUrl, url: '#' });
       localStorage.setItem('aayeddie_custom_builds', JSON.stringify(builds));
       loadBuilds();
       triggerLiveRefresh();
@@ -1175,13 +1275,11 @@ function loadHighlightsRings(selectedIdxToSet){
   const highlights = getStoredHighlights();
 
   highlights.forEach((ring, ringIdx) => {
-    // Populate Ring Selection Dropdown
     const opt = document.createElement('option');
     opt.value = ringIdx;
     opt.textContent = `${ring.icon || '🧩'} ${ring.cat} (${ring.slides ? ring.slides.length : 0} Slides)`;
     selectRing.appendChild(opt);
 
-    // Build Ring Card with Slide Manager
     const card = document.createElement('div');
     card.className = 'card';
     card.style.marginBottom = '1rem';
@@ -1452,7 +1550,7 @@ Official portfolio and media web engine for @${user}.
 Deployment active at: https://${user}.github.io/${repo}/
 
 ## 🛠️ Local Customization
-1. Open \`admin.html\` locally (or on the deployed site) to edit site text, PFP, builds, social links, and highlights.
+1. Open \`admin.html\` locally (or on the deployed site) to edit site text, PFP, builds gallery, social links, and highlights.
 2. Click **Download data.json** and place it in the repo root, replacing the existing one.
 3. Commit and push — \`index.html\` loads \`data.json\` on every visit, so your changes go live for all visitors after deployment via GitHub Actions.
 `;
