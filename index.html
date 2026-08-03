@@ -1,1645 +1,462 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aayeddie Studio | Full Admin Portal & Sync Engine</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg-dark: #05060d;
-    --card-bg: rgba(255, 255, 255, 0.03);
-    --border-color: rgba(255, 255, 255, 0.12);
-    --accent-violet: #8b5cf6;
-    --accent-cyan: #22d3ee;
-    --text-main: #f5f3ff;
-    --text-muted: #9ca3c9;
-    --font-head: 'Space Grotesk', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aayeddie Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #05060d;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --border-color: rgba(255, 255, 255, 0.12);
+      --accent-violet: #8b5cf6;
+      --accent-cyan: #22d3ee;
+      --text-main: #f5f3ff;
+      --text-muted: #9ca3c9;
+      --font-head: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background-color: var(--bg-dark);
-    color: var(--text-main);
-    font-family: var(--font-mono);
-    padding: 2.5rem 2rem;
-    min-height: 100vh;
-  }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  header {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  header h1 {
-    font-family: var(--font-head);
-    font-size: 2.2rem;
-    background: linear-gradient(120deg, var(--text-main), var(--accent-violet), var(--accent-cyan));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  header p {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    margin-top: 0.4rem;
-  }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+      padding: 2.5rem 1.5rem;
+      display: flex;
+      justify-content: center;
+    }
 
-  .tabs {
-    display: flex;
-    gap: 0.8rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-  }
-  .tab-btn {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    color: var(--text-muted);
-    padding: 0.65rem 1.2rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    transition: all 0.25s;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-  .tab-btn.active, .tab-btn:hover {
-    color: #fff;
-    border-color: var(--accent-cyan);
-    background: rgba(34, 211, 238, 0.08);
-  }
+    .container {
+      width: 100%;
+      max-width: 850px;
+    }
 
-  .view-panel { display: none; }
-  .view-panel.active { display: block; }
+    /* HEADER / HERO */
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 1.5rem;
-  }
+    .pfp-wrapper {
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 1.2rem;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.3);
+    }
 
-  .card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 14px;
-    padding: 1.5rem;
-    backdrop-filter: blur(10px);
-    position: relative;
-  }
-  .card h2 {
-    font-family: var(--font-head);
-    font-size: 1.2rem;
-    color: var(--accent-cyan);
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
+    .pfp-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--bg-dark);
+      display: block;
+    }
 
-  .field { margin-bottom: 1.2rem; }
-  label {
-    display: block;
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    margin-bottom: 0.4rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  input[type="text"], input[type="file"], textarea, select {
-    width: 100%;
-    padding: 0.65rem 0.8rem;
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid var(--border-color);
-    color: #fff;
-    border-radius: 8px;
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-  }
-  input[type="color"] {
-    width: 60px;
-    height: 36px;
-    border: 1px solid var(--border-color);
-    background: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  input[type="text"]:focus, textarea:focus {
-    border-color: var(--accent-violet);
-    outline: none;
-  }
+    .pfp-fallback {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #121526;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
 
-  .pfp-preview-wrap {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    margin-bottom: 1rem;
-  }
-  .pfp-img-preview {
-    width: 76px;
-    height: 76px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--accent-cyan);
-    background: rgba(0,0,0,0.5);
-  }
+    h1 {
+      font-family: var(--font-head);
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff, var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
 
-  .btn {
-    background: linear-gradient(120deg, var(--accent-violet), var(--accent-cyan));
-    color: #05060d;
-    font-weight: 600;
-    border: none;
-    padding: 0.75rem 1.4rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 18px rgba(139, 92, 246, 0.4);
-  }
-  .btn-outline {
-    background: transparent;
-    color: #fff;
-    border: 1px solid var(--border-color);
-  }
-  .btn-outline:hover {
-    border-color: var(--accent-cyan);
-    background: rgba(255, 255, 255, 0.05);
-  }
-  .btn-danger {
-    background: rgba(239, 68, 68, 0.2);
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    color: #fca5a5;
-    padding: 0.4rem 0.8rem;
-    font-size: 0.7rem;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  .btn-danger:hover {
-    background: rgba(239, 68, 68, 0.4);
-  }
+    p.tagline {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 550px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
 
-  pre {
-    background: #000;
-    border: 1px solid var(--border-color);
-    padding: 1.2rem;
-    border-radius: 8px;
-    overflow-x: auto;
-    font-size: 0.78rem;
-    color: #a7f3d0;
-    margin-top: 0.8rem;
-    max-height: 380px;
-  }
+    /* SOCIAL LINKS HUB */
+    .social-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      margin: 2rem 0;
+    }
 
-  .item-list {
-    margin-top: 1rem;
-    max-height: 480px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-  .item-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    padding: 0.85rem 1rem;
-    background: rgba(0,0,0,0.35);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    font-size: 0.8rem;
-    gap: 0.8rem;
-  }
-  .item-info {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    overflow: hidden;
-  }
-  .item-thumb {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    object-fit: cover;
-    background: rgba(255,255,255,0.08);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    flex-shrink: 0;
-  }
+    .social-card {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 1.1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
 
-  .slide-box {
-    background: rgba(255,255,255,0.02);
-    border: 1px dashed var(--border-color);
-    padding: 0.8rem;
-    border-radius: 8px;
-    margin-top: 0.6rem;
-  }
+    .social-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 4px 15px rgba(34, 211, 238, 0.15);
+    }
 
-  .action-row {
-    display: flex;
-    gap: 0.8rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
-  }
+    .social-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: #fff;
+    }
 
-  .status-msg {
-    margin-top: 0.8rem;
-    font-size: 0.75rem;
-    color: #34d399;
-    display: none;
-  }
+    /* HIGHLIGHT RINGS */
+    .section-title {
+      font-family: var(--font-head);
+      font-size: 1.25rem;
+      color: var(--accent-cyan);
+      margin: 2.5rem 0 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-  /* Tag pill style */
-  .tag-pill {
-    display: inline-block;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    background: rgba(139, 92, 246, 0.2);
-    border: 1px solid rgba(139, 92, 246, 0.4);
-    color: var(--accent-cyan);
-    font-size: 0.7rem;
-    margin-top: 0.3rem;
-  }
+    .highlights-scroll {
+      display: flex;
+      gap: 1.2rem;
+      overflow-x: auto;
+      padding-bottom: 0.8rem;
+      scrollbar-width: thin;
+    }
 
-  /* Build Gallery Grid */
-  .build-gallery-grid {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-top: 0.6rem;
-  }
-  .build-gallery-thumb {
-    width: 54px;
-    height: 54px;
-    border-radius: 6px;
-    object-fit: cover;
-    border: 1px solid var(--border-color);
-    background: rgba(0,0,0,0.4);
-  }
-  .gallery-preview-pill {
-    position: relative;
-    display: inline-block;
-  }
-  .gallery-preview-pill .remove-img-btn {
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    background: #ef4444;
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    font-size: 0.65rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+    .highlight-ring {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      min-width: 80px;
+    }
 
-  /* ---------- Live Visual Preview Frame & Edit Overlay ---------- */
-  .preview-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(0,0,0,0.5);
-    padding: 0.8rem 1.2rem;
-    border-radius: 12px 12px 0 0;
-    border: 1px solid var(--border-color);
-    border-bottom: none;
-  }
-  .device-toggle button {
-    background: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--text-muted);
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.75rem;
-  }
-  .device-toggle button.active {
-    color: var(--accent-cyan);
-    border-color: var(--accent-cyan);
-    background: rgba(34,211,238,0.1);
-  }
+    .ring-outer {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
+      transition: transform 0.2s ease;
+    }
 
-  .preview-wrapper {
-    position: relative;
-    width: 100%;
-    height: 720px;
-    background: #05060d;
-    border: 1px solid var(--border-color);
-    border-radius: 0 0 12px 12px;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .preview-wrapper iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    transition: width 0.3s ease;
-  }
-  .preview-wrapper.tablet iframe { width: 768px; }
-  .preview-wrapper.mobile iframe { width: 380px; }
+    .ring-outer:hover {
+      transform: scale(1.06);
+    }
 
-  /* Floating Edit Pencil Pins */
-  .edit-pencil-btn {
-    position: absolute;
-    z-index: 50;
-    background: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
-    color: #05060d;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    cursor: pointer;
-    box-shadow: 0 0 15px rgba(34,211,238,0.5);
-    transition: transform 0.2s;
-    border: none;
-  }
-  .edit-pencil-btn:hover {
-    transform: scale(1.15) rotate(15deg);
-  }
+    .ring-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--bg-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      overflow: hidden;
+    }
 
-  /* Inline Quick Edit Modal */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.8);
-    backdrop-filter: blur(8px);
-    z-index: 300;
-    display: none;
-    align-items: center;
-    justify-content: center;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal-box {
-    background: #0b1a3d;
-    border: 1px solid var(--border-color);
-    width: min(600px, 92vw);
-    border-radius: 16px;
-    padding: 1.8rem;
-    position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-    max-height: 88vh;
-    overflow-y: auto;
-  }
-  .modal-close {
-    position: absolute;
-    top: 1rem; right: 1rem;
-    color: #fff; border: none; background: none; font-size: 1.2rem; cursor: pointer;
-  }
-</style>
+    .ring-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .ring-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+
+    /* BUILDS SHOWCASE */
+    .builds-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .build-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+
+    .build-card:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-3px);
+    }
+
+    .build-title {
+      font-family: var(--font-head);
+      font-size: 1.1rem;
+      margin-bottom: 0.4rem;
+      color: #fff;
+    }
+
+    .build-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 1rem;
+    }
+
+    .build-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.8rem;
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .build-link:hover {
+      text-decoration: underline;
+    }
+
+    /* SLIDE MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 6, 13, 0.92);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+    }
+
+    .modal-content {
+      background: #0d0f1f;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      max-width: 500px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 15px;
+      background: rgba(0,0,0,0.6);
+      border: none;
+      color: #fff;
+      font-size: 1.2rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-slide-img {
+      width: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.3);
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>Aayeddie Studio Master Control & Visual Editor</h1>
-    <p>Zero Vendor Lock-In · Separate Ring Covers & Highlights · Recent Builds Image Sliders · GitHub Suite</p>
+  <div class="container">
+    <header>
+      <div class="pfp-wrapper">
+        <img id="pfp-img" class="pfp-img" src="" alt="Profile Picture" style="display:none;">
+        <div id="pfp-fallback" class="pfp-fallback">⚡</div>
+      </div>
+      <h1 id="hero-title">aayeddie</h1>
+      <p id="hero-tagline" class="tagline">Builder of small worlds — apps, games, and things that glow.</p>
+
+      <div id="socials-grid" class="social-grid"></div>
+    </header>
+
+    <section id="highlights-section" style="display:none;">
+      <h2 class="section-title">✨ Highlights</h2>
+      <div id="highlights-scroll" class="highlights-scroll"></div>
+    </section>
+
+    <section id="builds-section" style="display:none;">
+      <h2 class="section-title">🚀 Featured Builds</h2>
+      <div id="builds-grid" class="builds-grid"></div>
+    </section>
+
+    <footer>
+      <p>© <span id="year"></span> @aayeddie. All rights reserved.</p>
+    </footer>
   </div>
-  <button class="btn btn-outline" onclick="triggerLiveRefresh()">🔄 Refresh Preview & Sync</button>
-</header>
 
-<div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('tab-preview', this)">✏️ Live Visual Preview & Edit</button>
-  <button class="tab-btn" onclick="switchTab('tab-hero', this)">🖼️ User PFP & Hero Branding</button>
-  <button class="tab-btn" onclick="switchTab('tab-builds', this)">🖼️ Recent Builds Image Sliders</button>
-  <button class="tab-btn" onclick="switchTab('tab-content', this)">🎬 Multi-Image Highlights & Ring PFPs</button>
-  <button class="tab-btn" onclick="switchTab('tab-socials', this)">🌐 Social Channels</button>
-  <button class="tab-btn" onclick="switchTab('tab-sync', this)">📦 JSON Data Sync & Backup</button>
-  <button class="tab-btn" onclick="switchTab('tab-repo', this)">📁 GitHub Repository Setup</button>
-</div>
-
-<!-- TAB 1: LIVE VISUAL PREVIEW & EDIT PENCILS -->
-<div id="tab-preview" class="view-panel active">
-  <div class="preview-toolbar">
-    <span style="font-size: 0.8rem; color: var(--text-muted);">
-      💡 Click any <strong>✏️ Edit Pencil</strong> over the website elements to modify content live.
-    </span>
-    <div class="device-toggle">
-      <button class="active" onclick="setDevice('desktop', this)">🖥️ Desktop</button>
-      <button onclick="setDevice('tablet', this)">📱 Tablet</button>
-      <button onclick="setDevice('mobile', this)">📱 Mobile</button>
-    </div>
-  </div>
-  
-  <div class="preview-wrapper" id="preview-container">
-    <button class="edit-pencil-btn" style="top: 80px; left: calc(50% + 180px);" onclick="openPencilModal('hero')" title="Edit Hero & User PFP">✏️</button>
-    <button class="edit-pencil-btn" style="top: 260px; right: 40px;" onclick="openPencilModal('highlights')" title="Edit Highlight Rings">✏️</button>
-    <button class="edit-pencil-btn" style="top: 360px; left: 40px;" onclick="openPencilModal('builds')" title="Edit Recent Builds Image Sliders">✏️</button>
-    <button class="edit-pencil-btn" style="top: 480px; right: 40px;" onclick="openPencilModal('socials')" title="Edit Social Hub">✏️</button>
-    <button class="edit-pencil-btn" style="top: 600px; left: 40px;" onclick="openPencilModal('theme')" title="Edit Theme Accents">✏️</button>
-
-    <iframe id="site-frame" src="index.html"></iframe>
-  </div>
-</div>
-
-<!-- TAB 2: HERO & USER PROFILE PICTURE (USER PFP) -->
-<div id="tab-hero" class="view-panel">
-  <div class="grid">
-    <div class="card">
-      <h2>🖼️ User Avatar / Hero Profile Picture (User PFP)</h2>
-      <div class="pfp-preview-wrap">
-        <img id="pfp-admin-preview" class="pfp-img-preview" src="" alt="Avatar Preview" style="display:none;">
-        <div>
-          <label>Upload Image File</label>
-          <input type="file" id="pfp-file-input" accept="image/*" onchange="handlePfpUpload(event)">
-        </div>
+  <div id="modal" class="modal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <div class="modal-body">
+        <img id="modal-img" class="modal-slide-img" src="" alt="Slide">
+        <h3 id="modal-title" style="color:#fff; font-family:var(--font-head); margin-bottom:0.4rem;"></h3>
+        <p id="modal-caption" style="color:var(--text-muted); font-size:0.85rem; line-height:1.4;"></p>
+        <div id="modal-date" style="color:var(--accent-cyan); font-size:0.75rem; margin-top:0.8rem;"></div>
       </div>
-      <div class="field">
-        <label>Or Paste Image URL</label>
-        <input type="text" id="pfp-url-input" placeholder="https://example.com/pfp.png" oninput="handlePfpUrlChange(this.value)">
-      </div>
-      <div class="action-row">
-        <button class="btn" onclick="savePfpConfig()">Save User Profile Picture</button>
-        <button class="btn btn-danger" onclick="removePfp()">Remove PFP</button>
-      </div>
-      <div id="pfp-status" class="status-msg">Profile picture saved!</div>
-    </div>
-
-    <div class="card">
-      <h2>✨ Hero Text & Theme Accents</h2>
-      <div class="field">
-        <label>Hero Title</label>
-        <input type="text" id="hero-title-input" value="aayeddie">
-      </div>
-      <div class="field">
-        <label>Tagline / Description</label>
-        <textarea id="hero-tagline-input" rows="2" placeholder="Enter custom tagline..."></textarea>
-      </div>
-      <div class="field">
-        <label>Accent Primary (Violet)</label>
-        <input type="color" id="theme-c1" value="#8b5cf6">
-      </div>
-      <div class="field">
-        <label>Accent Secondary (Cyan)</label>
-        <input type="color" id="theme-c2" value="#22d3ee">
-      </div>
-      <button class="btn" onclick="saveHeroConfig()">Save Hero & Theme</button>
-      <div id="hero-status" class="status-msg">Hero & Theme updated!</div>
-    </div>
-  </div>
-</div>
-
-<!-- TAB 3: RECENT BUILDS IMAGE SLIDERS & GALLERY MANAGER -->
-<div id="tab-builds" class="view-panel">
-  <div class="grid">
-    <!-- Form to Add or Edit Build with Gallery Sliders -->
-    <div class="card">
-      <h2 id="build-form-title">🖼️ Add / Edit Build Image Gallery</h2>
-      <input type="hidden" id="build-edit-id" value="">
-      
-      <div class="field">
-        <label>Build Title</label>
-        <input type="text" id="build-title" placeholder="e.g. DroidBay">
-      </div>
-      <div class="field">
-        <label>Category / Tech Tag</label>
-        <input type="text" id="build-tag" placeholder="e.g. Electron / Android">
-      </div>
-      <div class="field">
-        <label>Description / Caption</label>
-        <textarea id="build-desc" rows="2" placeholder="Describe this project build or gallery slide..."></textarea>
-      </div>
-      <div class="field">
-        <label>Project Link URL</label>
-        <input type="text" id="build-url" placeholder="https://github.com/... or #">
-      </div>
-
-      <!-- Gallery Image Upload / Add Section -->
-      <div style="background: rgba(0,0,0,0.3); padding:0.8rem; border-radius:8px; border:1px solid var(--border-color); margin-bottom:1rem;">
-        <label style="color:var(--accent-cyan);">📸 Add Image Slide to Gallery</label>
-        <div class="field" style="margin-top:0.4rem;">
-          <label>Upload Gallery Image File</label>
-          <input type="file" id="build-img-file" accept="image/*">
-        </div>
-        <div class="field">
-          <label>Or Paste Gallery Image URL</label>
-          <input type="text" id="build-img-url" placeholder="https://example.com/slide1.png">
-        </div>
-        <button class="btn btn-outline" style="font-size:0.75rem; padding:0.4rem 0.8rem;" onclick="addGalleryImageToBuildForm()">+ Add Photo to Gallery List</button>
-      </div>
-
-      <!-- Current Active Images in Form -->
-      <div class="field">
-        <label>Attached Gallery Images (<span id="form-img-count">0</span>):</label>
-        <div id="form-gallery-preview" class="build-gallery-grid">
-          <span style="font-size:0.75rem; color:var(--text-muted);">No images added to this build yet.</span>
-        </div>
-      </div>
-
-      <div class="action-row">
-        <button class="btn" id="btn-save-build" onclick="saveBuildItem()">Save Build Gallery</button>
-        <button class="btn btn-outline" id="btn-cancel-build" onclick="resetBuildForm()" style="display:none;">Cancel Edit</button>
-      </div>
-      <div id="build-status" class="status-msg">Build gallery saved successfully!</div>
-    </div>
-
-    <!-- Active Recent Builds Gallery List -->
-    <div class="card" style="grid-column: span 2;">
-      <h2>🚀 Recent Builds Image Sliders & Showcase Cards</h2>
-      <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
-        Each build showcase card below contains an interactive image gallery slider. Add screenshots, reorder, or edit gallery slides.
-      </p>
-      <div class="item-list" id="builds-list-container"></div>
-    </div>
-  </div>
-</div>
-
-<!-- TAB 4: HIGHLIGHT RINGS & MULTI-IMAGE SLIDE MANAGER -->
-<div id="tab-content" class="view-panel">
-  <div class="grid">
-    <!-- Step 1: Create Highlight Ring -->
-    <div class="card">
-      <h2>1️⃣ Create Highlight Ring (Set Ring Cover PFP)</h2>
-      <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">
-        Define the Highlight Ring's Category Name and its <strong>Highlight Ring Cover (Ring PFP)</strong> image or emoji icon.
-      </p>
-      
-      <div class="field"><label>Category Name</label><input type="text" id="hl-cat" placeholder="e.g. Photography, Projects, BTS"></div>
-      <div class="field"><label>Fallback Emoji / Icon</label><input type="text" id="hl-icon" value="🧩"></div>
-      
-      <div class="field">
-        <label>Upload Highlight Ring Cover (Ring PFP Image)</label>
-        <input type="file" id="hl-ring-file" accept="image/*">
-      </div>
-      <div class="field">
-        <label>Or Ring Cover Image URL</label>
-        <input type="text" id="hl-ring-url" placeholder="https://example.com/ring-cover.png">
-      </div>
-
-      <button class="btn" onclick="createNewHighlightRing()">Create Highlight Ring</button>
-      <div id="hl-ring-status" class="status-msg">Highlight Ring Created!</div>
-    </div>
-
-    <!-- Step 2: Add Slide Images to an Existing Highlight -->
-    <div class="card">
-      <h2>2️⃣ Add Slide / Image to Highlight Ring</h2>
-      <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">
-        Add multiple images or cards into a single Highlight Ring story sequence.
-      </p>
-
-      <div class="field">
-        <label>Select Target Highlight Ring</label>
-        <select id="hl-select-ring"></select>
-      </div>
-      <div class="field"><label>Slide Title</label><input type="text" id="slide-title" placeholder="e.g. Sunset Shot #1"></div>
-      <div class="field"><label>Slide Caption</label><input type="text" id="slide-caption" placeholder="Description shown in story viewer..."></div>
-      <div class="field"><label>Date / Tag</label><input type="text" id="slide-date" value="2026"></div>
-
-      <div class="field">
-        <label>Upload Slide Image File</label>
-        <input type="file" id="slide-file" accept="image/*">
-      </div>
-      <div class="field">
-        <label>Or Slide Image URL</label>
-        <input type="text" id="slide-url" placeholder="https://example.com/slide.png">
-      </div>
-
-      <button class="btn" onclick="addSlideToHighlight()">Add Slide to Highlight</button>
-      <div id="slide-status" class="status-msg">Slide Added to Highlight Ring!</div>
     </div>
   </div>
 
-  <div class="card" style="margin-top: 1.5rem;">
-    <h2>🎬 Active Highlight Rings & Multiple Slides List</h2>
-    <div id="highlights-rings-container" class="item-list"></div>
-  </div>
-</div>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-<!-- TAB 5: SOCIAL CHANNELS -->
-<div id="tab-socials" class="view-panel">
-  <div class="grid">
-    <div class="card">
-      <h2>🌐 Social Channels Manager</h2>
-      <div class="field"><label>Platform Name</label><input type="text" id="soc-name" placeholder="YouTube"></div>
-      <div class="field"><label>Handle</label><input type="text" id="soc-handle" placeholder="@aayeddie"></div>
-      <div class="field"><label>URL</label><input type="text" id="soc-url" placeholder="https://youtube.com/@aayeddie"></div>
-      <div class="field"><label>Color Accent</label><input type="color" id="soc-color" value="#FF3B3B"></div>
-      <button class="btn" onclick="addSocialItem()">Add Social Channel</button>
-      <div style="margin-top: 1.5rem;">
-        <label>Added Social Channels</label>
-        <div class="item-list" id="socials-list"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- TAB 6: LOCAL & REPOSITORY SYNC -->
-<div id="tab-sync" class="view-panel">
-  <div class="grid">
-    <div class="card" style="grid-column: span 2;">
-      <h2>📦 Complete Data Sync & Export (data.json)</h2>
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
-        Export your complete dataset to download a <code>data.json</code> file or synchronize directly with LocalStorage so <code>index.html</code> updates immediately. Commit the downloaded <code>data.json</code> to the repo root so every visitor sees your changes.
-      </p>
-      <div class="action-row">
-        <button class="btn" onclick="exportFullConfig()">Export & View JSON</button>
-        <button class="btn btn-outline" onclick="downloadJSONFile()">Download data.json</button>
-        <button class="btn btn-outline" onclick="resetDefaults()">Reset to Defaults</button>
-      </div>
-      <pre id="json-export-preview">Click Export to preview full unified site state...</pre>
-    </div>
-  </div>
-</div>
-
-<!-- TAB 7: GITHUB SETUP GENERATOR -->
-<div id="tab-repo" class="view-panel">
-  <div class="grid">
-    <div class="card">
-      <h2>📁 Repository Configurator</h2>
-      <div class="field"><label>GitHub Username</label><input type="text" id="gh-user" value="aayeddie"></div>
-      <div class="field"><label>Repository Name</label><input type="text" id="gh-repo" value="aayeddie-studio"></div>
-      <div class="field"><label>Branch Name</label><input type="text" id="gh-branch" value="main"></div>
-      <button class="btn" onclick="generateRepoFiles()">Generate Deployment Package</button>
-    </div>
-
-    <div class="card" style="grid-column: span 2;">
-      <h2>📜 Terminal Commands & Files</h2>
-      <div class="action-row">
-        <button class="btn btn-outline" onclick="copyText('out-commands')">Copy Git Terminal Commands</button>
-        <button class="btn btn-outline" onclick="copyText('out-readme')">Copy README.md</button>
-        <button class="btn btn-outline" onclick="copyText('out-workflow')">Copy GitHub Workflow</button>
-      </div>
-
-      <div class="field" style="margin-top: 1rem;">
-        <label>Git Terminal Commands</label>
-        <pre id="out-commands"># Run these commands inside your project folder:
-git init
-git add .
-git commit -m "Deploy site assets and data"
-git branch -M main
-git remote add origin https://github.com/aayeddie/aayeddie-studio.git
-git push -u origin main</pre>
-      </div>
-
-      <div class="field">
-        <label>Generated README.md</label>
-        <pre id="out-readme">Click Generate Deployment Package...</pre>
-      </div>
-
-      <div class="field">
-        <label>GitHub Pages Deployment Workflow (.github/workflows/deploy.yml)</label>
-        <pre id="out-workflow">name: Deploy Portfolio to GitHub Pages
-
-on:
-  push:
-    branches: ["main"]
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v4
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-      - id: deployment
-        uses: actions/deploy-pages@v4</pre>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- INLINE EDIT PENCIL MODAL -->
-<div class="modal-overlay" id="pencil-modal">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closePencilModal()">✕</button>
-    <h2 id="modal-pencil-title" style="font-family:var(--font-head); color:var(--accent-cyan); margin-bottom:1rem;">Edit Section</h2>
-    <div id="modal-pencil-body"></div>
-    <div class="action-row" style="margin-top:1.4rem;">
-      <button class="btn" onclick="savePencilModal()">Apply Changes</button>
-      <button class="btn btn-outline" onclick="closePencilModal()">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<script>
-let currentPencilTarget = '';
-let currentPfpDataUrl = localStorage.getItem('aayeddie_pfp') || '';
-let currentFormGalleryImages = [];
-
-// Default fallback highlights array with multi-slide architecture
-const defaultHighlights = [
-  {
-    icon:"🖼️",
-    coverImage: "",
-    cat:"Photography",
-    c1:"#8b5cf6",
-    c2:"#22d3ee",
-    slides: [
-      { image:"", title:"Behind the lens", caption:"Frame by frame — a running log of shots I keep coming back to.", date:"2026" }
-    ]
-  },
-  {
-    icon:"🎬",
-    coverImage: "",
-    cat:"BTS",
-    c1:"#ff2e9a",
-    c2:"#8b5cf6",
-    slides: [
-      { image:"", title:"How it actually gets built", caption:"The messy middle of every project, before it looks finished.", date:"2026" }
-    ]
-  },
-  {
-    icon:"📺",
-    coverImage: "",
-    cat:"YouTube",
-    c1:"#ffcc33",
-    c2:"#ff2e9a",
-    slides: [
-      { image:"", title:"On the channel", caption:"Builds, breakdowns, and working ideas.", date:"2026" }
-    ]
-  },
-  {
-    icon:"🧩",
-    coverImage: "",
-    cat:"Projects",
-    c1:"#22d3ee",
-    c2:"#00ff88",
-    slides: [
-      { image:"", title:"Currently shipping", caption:"DroidBay, an Android emulator shell, and Discord bots.", date:"2026" }
-    ]
-  },
-  {
-    icon:"🎮",
-    coverImage: "",
-    cat:"Roblox",
-    c1:"#00A2FF",
-    c2:"#8b5cf6",
-    slides: [
-      { image:"", title:"Oakview", caption:"A Roblox island town built with MCP tooling.", date:"2026" }
-    ]
-  }
-];
-
-// Default Recent Builds with Gallery Slider Support
-const defaultBuilds = [
-  {
-    id: "build_1",
-    title: "DroidBay",
-    tag: "Electron / Android",
-    desc: "Electron-based Android emulator launcher — APK import, metadata scraping, and custom controls.",
-    url: "#",
-    images: [
-      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop"
-    ]
-  },
-  {
-    id: "build_2",
-    title: "Oakview (Roblox Studio)",
-    tag: "Roblox Studio / MCP",
-    desc: "An island town built in Roblox Studio via MCP tooling.",
-    url: "#",
-    images: [
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop"
-    ]
-  },
-  {
-    id: "build_3",
-    title: "Server Builder Bot",
-    tag: "Python / Discord.py",
-    desc: "A discord.py bot that builds out the Aayeddie's Studio server structure automatically.",
-    url: "#",
-    images: []
-  },
-  {
-    id: "build_4",
-    title: "3D Estate Walkthrough",
-    tag: "Three.js / WebGL",
-    desc: "Three.js first-person walkthrough of a Mediterranean-style estate.",
-    url: "#",
-    images: [
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&auto=format&fit=crop"
-    ]
-  },
-  {
-    id: "build_5",
-    title: "FIFA 2026 Scoreboard",
-    tag: "HTML / SVG / JS",
-    desc: "Broadcast-style scoreboard editor with SVG flags and real-time animation overlay.",
-    url: "#",
-    images: []
-  },
-  {
-    id: "build_6",
-    title: "Roblox Avatar Viewer",
-    tag: "Three.js / Web API",
-    desc: "A web viewer for Roblox avatars with pose controls and procedural animation preview.",
-    url: "#",
-    images: []
-  }
-];
-
-// --- TAB SWITCHING ---
-function switchTab(tabId, btn){
-  document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
-  if(btn) btn.classList.add('active');
-}
-
-// --- DEVICE FRAME TOGGLE ---
-function setDevice(type, btn){
-  document.querySelectorAll('.device-toggle button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const container = document.getElementById('preview-container');
-  container.className = 'preview-wrapper ' + type;
-}
-
-// --- REFRESH PREVIEW IFRAME & DISPATCH STORAGE SYNC ---
-function triggerLiveRefresh(){
-  const iframe = document.getElementById('site-frame');
-  if(iframe){
-    iframe.src = iframe.src;
-  }
-}
-
-// --- USER PFP MANAGEMENT ---
-function initPfpDisplay(){
-  const pfpPreview = document.getElementById('pfp-admin-preview');
-  if(currentPfpDataUrl){
-    pfpPreview.src = currentPfpDataUrl;
-    pfpPreview.style.display = 'block';
-  } else {
-    pfpPreview.style.display = 'none';
-  }
-}
-
-function handlePfpUpload(event){
-  const file = event.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e){
-    currentPfpDataUrl = e.target.result;
-    document.getElementById('pfp-url-input').value = '';
-    initPfpDisplay();
-  };
-  reader.readAsDataURL(file);
-}
-
-function handlePfpUrlChange(val){
-  if(val){
-    currentPfpDataUrl = val;
-    initPfpDisplay();
-  }
-}
-
-function savePfpConfig(){
-  if(currentPfpDataUrl){
-    localStorage.setItem('aayeddie_pfp', currentPfpDataUrl);
-  } else {
-    localStorage.removeItem('aayeddie_pfp');
-  }
-  showStatus('pfp-status');
-  triggerLiveRefresh();
-}
-
-function removePfp(){
-  currentPfpDataUrl = '';
-  localStorage.removeItem('aayeddie_pfp');
-  document.getElementById('pfp-file-input').value = '';
-  document.getElementById('pfp-url-input').value = '';
-  initPfpDisplay();
-  showStatus('pfp-status');
-  triggerLiveRefresh();
-}
-
-// --- RECENT BUILDS IMAGE SLIDERS MANAGER ---
-function getStoredBuilds(){
-  const data = localStorage.getItem('aayeddie_custom_builds');
-  if(data){
-    try { return JSON.parse(data); } catch(e){}
-  }
-  return [...defaultBuilds];
-}
-
-function loadBuilds(){
-  const container = document.getElementById('builds-list-container');
-  if(!container) return;
-  container.innerHTML = '';
-
-  const builds = getStoredBuilds();
-
-  if(builds.length === 0){
-    container.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted);">No build galleries added yet.</div>`;
-    return;
-  }
-
-  builds.forEach((item, idx) => {
-    const row = document.createElement('div');
-    row.className = 'item-row';
-
-    const imagesCount = item.images ? item.images.length : 0;
-    
-    let galleryThumbsHtml = '';
-    if(imagesCount > 0){
-      galleryThumbsHtml = `<div class="build-gallery-grid">` + 
-        item.images.map(imgSrc => `<img src="${imgSrc}" class="build-gallery-thumb" alt="slide">`).join('') +
-        `</div>`;
-    } else {
-      galleryThumbsHtml = `<div style="font-size:0.7rem; color:var(--text-muted); margin-top:0.4rem;">📷 No gallery slides added for this build yet.</div>`;
-    }
-
-    row.innerHTML = `
-      <div style="flex:1; overflow:hidden;">
-        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
-          <strong style="color:#fff; font-size:0.9rem;">${item.title}</strong>
-          ${item.tag ? `<span class="tag-pill">${item.tag}</span>` : ''}
-          <span style="font-size:0.7rem; color:var(--accent-cyan); font-weight:600;">🖼️ ${imagesCount} Gallery Slide${imagesCount !== 1 ? 's' : ''}</span>
-        </div>
-        <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.3rem;">${item.desc || 'No description provided.'}</p>
-        ${galleryThumbsHtml}
-      </div>
-      <div style="display:flex; gap:0.4rem; flex-shrink:0; align-items:center;">
-        <button class="btn btn-outline" style="padding:0.3rem 0.6rem; font-size:0.7rem;" onclick="moveBuild(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.3;"' : ''}>▲</button>
-        <button class="btn btn-outline" style="padding:0.3rem 0.6rem; font-size:0.7rem;" onclick="moveBuild(${idx}, 1)" ${idx === builds.length - 1 ? 'disabled style="opacity:0.3;"' : ''}>▼</button>
-        <button class="btn btn-outline" style="padding:0.3rem 0.6rem; font-size:0.7rem;" onclick="editBuildItem('${item.id}')">✏️ Edit Gallery</button>
-        <button class="btn-danger" onclick="deleteBuildItem('${item.id}')">Delete</button>
-      </div>
-    `;
-    container.appendChild(row);
-  });
-}
-
-function renderFormGalleryPreview(){
-  const container = document.getElementById('form-gallery-preview');
-  const countEl = document.getElementById('form-img-count');
-  countEl.textContent = currentFormGalleryImages.length;
-
-  if(!container) return;
-  container.innerHTML = '';
-
-  if(currentFormGalleryImages.length === 0){
-    container.innerHTML = `<span style="font-size:0.75rem; color:var(--text-muted);">No images added to this build yet.</span>`;
-    return;
-  }
-
-  currentFormGalleryImages.forEach((imgUrl, idx) => {
-    const pill = document.createElement('div');
-    pill.className = 'gallery-preview-pill';
-    pill.innerHTML = `
-      <img src="${imgUrl}" class="build-gallery-thumb">
-      <button class="remove-img-btn" onclick="removeImageFromFormGallery(${idx})" title="Remove Image">✕</button>
-    `;
-    container.appendChild(pill);
-  });
-}
-
-function addGalleryImageToBuildForm(){
-  const fileInput = document.getElementById('build-img-file');
-  const urlInput = document.getElementById('build-img-url').value.trim();
-
-  if(fileInput && fileInput.files[0]){
-    const reader = new FileReader();
-    reader.onload = function(e){
-      currentFormGalleryImages.push(e.target.result);
-      fileInput.value = '';
-      renderFormGalleryPreview();
-    };
-    reader.readAsDataURL(fileInput.files[0]);
-  } else if(urlInput){
-    currentFormGalleryImages.push(urlInput);
-    document.getElementById('build-img-url').value = '';
-    renderFormGalleryPreview();
-  } else {
-    alert("Please select an image file or enter an Image URL to add to the gallery!");
-  }
-}
-
-function removeImageFromFormGallery(idx){
-  currentFormGalleryImages.splice(idx, 1);
-  renderFormGalleryPreview();
-}
-
-function saveBuildItem(){
-  const idInput = document.getElementById('build-edit-id').value;
-  const title = document.getElementById('build-title').value.trim();
-  const tag = document.getElementById('build-tag').value.trim();
-  const desc = document.getElementById('build-desc').value.trim();
-  const url = document.getElementById('build-url').value.trim();
-
-  if(!title){
-    alert("Please enter a Build Title!");
-    return;
-  }
-
-  let builds = getStoredBuilds();
-
-  if(idInput){
-    const idx = builds.findIndex(b => b.id === idInput);
-    if(idx !== -1){
-      builds[idx] = { id: idInput, title, tag, desc, url, images: [...currentFormGalleryImages] };
-    }
-  } else {
-    const newBuild = {
-      id: 'build_' + Date.now(),
-      title,
-      tag,
-      desc,
-      url: url || '#',
-      images: [...currentFormGalleryImages]
-    };
-    builds.push(newBuild);
-  }
-
-  localStorage.setItem('aayeddie_custom_builds', JSON.stringify(builds));
-  resetBuildForm();
-  loadBuilds();
-  showStatus('build-status');
-  triggerLiveRefresh();
-}
-
-function editBuildItem(id){
-  const builds = getStoredBuilds();
-  const item = builds.find(b => b.id === id);
-  if(!item) return;
-
-  document.getElementById('build-edit-id').value = item.id;
-  document.getElementById('build-title').value = item.title || '';
-  document.getElementById('build-tag').value = item.tag || '';
-  document.getElementById('build-desc').value = item.desc || '';
-  document.getElementById('build-url').value = item.url || '';
-
-  currentFormGalleryImages = item.images ? [...item.images] : [];
-  renderFormGalleryPreview();
-
-  document.getElementById('build-form-title').textContent = '🖼️ Edit Build Image Gallery';
-  document.getElementById('btn-save-build').textContent = 'Update Build Gallery';
-  document.getElementById('btn-cancel-build').style.display = 'inline-block';
-  switchTab('tab-builds');
-}
-
-function resetBuildForm(){
-  document.getElementById('build-edit-id').value = '';
-  document.getElementById('build-title').value = '';
-  document.getElementById('build-tag').value = '';
-  document.getElementById('build-desc').value = '';
-  document.getElementById('build-url').value = '';
-  document.getElementById('build-img-file').value = '';
-  document.getElementById('build-img-url').value = '';
-
-  currentFormGalleryImages = [];
-  renderFormGalleryPreview();
-
-  document.getElementById('build-form-title').textContent = '🖼️ Add / Edit Build Image Gallery';
-  document.getElementById('btn-save-build').textContent = 'Save Build Gallery';
-  document.getElementById('btn-cancel-build').style.display = 'none';
-}
-
-function deleteBuildItem(id){
-  if(confirm("Are you sure you want to delete this build card and its image slider?")){
-    let builds = getStoredBuilds();
-    builds = builds.filter(b => b.id !== id);
-    localStorage.setItem('aayeddie_custom_builds', JSON.stringify(builds));
-    loadBuilds();
-    triggerLiveRefresh();
-  }
-}
-
-function moveBuild(idx, dir){
-  let builds = getStoredBuilds();
-  const targetIdx = idx + dir;
-  if(targetIdx < 0 || targetIdx >= builds.length) return;
-
-  const temp = builds[idx];
-  builds[idx] = builds[targetIdx];
-  builds[targetIdx] = temp;
-
-  localStorage.setItem('aayeddie_custom_builds', JSON.stringify(builds));
-  loadBuilds();
-  triggerLiveRefresh();
-}
-
-// --- EDIT PENCIL MODALS ---
-function openPencilModal(section){
-  currentPencilTarget = section;
-  const modal = document.getElementById('pencil-modal');
-  const title = document.getElementById('modal-pencil-title');
-  const body = document.getElementById('modal-pencil-body');
-
-  if(section === 'hero'){
-    title.textContent = '✏️ Edit Hero & User PFP';
-    const curTitle = localStorage.getItem('aayeddie_hero_title') || 'aayeddie';
-    const curTagline = localStorage.getItem('aayeddie_hero_tagline') || '';
-    body.innerHTML = `
-      <div class="field">
-        <label>Upload Profile Picture (User PFP)</label>
-        <input type="file" id="pencil-pfp-file" accept="image/*">
-      </div>
-      <div class="field">
-        <label>Hero Title</label>
-        <input type="text" id="pencil-hero-title" value="${curTitle}">
-      </div>
-      <div class="field">
-        <label>Hero Tagline</label>
-        <textarea id="pencil-hero-tagline" rows="2">${curTagline}</textarea>
-      </div>
-    `;
-  } else if(section === 'highlights'){
-    title.textContent = '✏️ Edit Highlight Rings';
-    body.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted);">Create a new Highlight Ring with a Cover Image (Ring PFP):</p>
-      <div class="field" style="margin-top:0.8rem;"><label>Category Name</label><input type="text" id="pencil-hl-cat" value="New Category"></div>
-      <div class="field"><label>Fallback Emoji</label><input type="text" id="pencil-hl-icon" value="🧩"></div>
-      <div class="field"><label>Ring Cover PFP File</label><input type="file" id="pencil-hl-ring-file" accept="image/*"></div>
-    `;
-  } else if(section === 'builds'){
-    title.textContent = '✏️ Edit Recent Build Image Sliders';
-    body.innerHTML = `
-      <p style="font-size:0.85rem; color:var(--text-muted);">Quickly add a build gallery card with image slider or open the full tab:</p>
-      <div class="field" style="margin-top:0.8rem;"><label>Build Title</label><input type="text" id="pencil-build-title" placeholder="e.g. DroidBay"></div>
-      <div class="field"><label>Tag / Category</label><input type="text" id="pencil-build-tag" placeholder="e.g. Electron / Android"></div>
-      <div class="field"><label>Upload Gallery Image File</label><input type="file" id="pencil-build-file" accept="image/*"></div>
-      <div class="field"><label>Description</label><textarea id="pencil-build-desc" rows="2" placeholder="Short description..."></textarea></div>
-      <button class="btn btn-outline" style="margin-top:0.5rem;" onclick="closePencilModal(); switchTab('tab-builds');">Open Full Builds Gallery Manager</button>
-    `;
-  } else if(section === 'socials'){
-    title.textContent = '✏️ Edit Social Hub';
-    body.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted);">Quickly add a social channel link:</p>
-      <div class="field" style="margin-top:0.8rem;"><label>Platform</label><input type="text" id="pencil-soc-name" placeholder="YouTube"></div>
-      <div class="field"><label>Handle</label><input type="text" id="pencil-soc-handle" placeholder="@aayeddie"></div>
-      <div class="field"><label>URL</label><input type="text" id="pencil-soc-url" placeholder="https://youtube.com/@aayeddie"></div>
-    `;
-  } else if(section === 'theme'){
-    title.textContent = '✏️ Edit Theme Accents';
-    body.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted);">Theme accents update portfolio glow:</p>
-      <div class="field" style="margin-top:0.8rem;"><label>Primary Accent</label><input type="color" id="pencil-c1" value="${localStorage.getItem('aayeddie_accent1') || '#8b5cf6'}"></div>
-      <div class="field"><label>Secondary Accent</label><input type="color" id="pencil-c2" value="${localStorage.getItem('aayeddie_accent2') || '#22d3ee'}"></div>
-    `;
-  }
-
-  modal.classList.add('open');
-}
-
-function closePencilModal(){
-  document.getElementById('pencil-modal').classList.remove('open');
-}
-
-function savePencilModal(){
-  if(currentPencilTarget === 'hero'){
-    const t = document.getElementById('pencil-hero-title').value;
-    const tag = document.getElementById('pencil-hero-tagline').value;
-    localStorage.setItem('aayeddie_hero_title', t);
-    localStorage.setItem('aayeddie_hero_tagline', tag);
-
-    const fileInput = document.getElementById('pencil-pfp-file');
-    if(fileInput && fileInput.files[0]){
-      const reader = new FileReader();
-      reader.onload = function(e){
-        localStorage.setItem('aayeddie_pfp', e.target.result);
-        currentPfpDataUrl = e.target.result;
-        initPfpDisplay();
-        triggerLiveRefresh();
-      };
-      reader.readAsDataURL(fileInput.files[0]);
-    } else {
-      triggerLiveRefresh();
-    }
-  } else if(currentPencilTarget === 'highlights'){
-    const cat = document.getElementById('pencil-hl-cat').value;
-    const icon = document.getElementById('pencil-hl-icon').value || '🧩';
-    const fileInput = document.getElementById('pencil-hl-ring-file');
-
-    const saveRing = (ringImg) => {
-      let highlights = getStoredHighlights();
-      highlights.push({
-        icon,
-        coverImage: ringImg || "",
-        cat,
-        c1: "#8b5cf6",
-        c2: "#22d3ee",
-        slides: [ { image: ringImg || "", title: cat, caption: "Story for " + cat, date: "2026" } ]
-      });
-      localStorage.setItem('aayeddie_custom_highlights', JSON.stringify(highlights));
-      loadHighlightsRings();
-      triggerLiveRefresh();
-    };
-
-    if(fileInput && fileInput.files[0]){
-      const reader = new FileReader();
-      reader.onload = (e) => saveRing(e.target.result);
-      reader.readAsDataURL(fileInput.files[0]);
-    } else {
-      saveRing("");
-    }
-  } else if(currentPencilTarget === 'builds'){
-    const title = document.getElementById('pencil-build-title').value;
-    const tag = document.getElementById('pencil-build-tag').value;
-    const desc = document.getElementById('pencil-build-desc').value;
-    const fileInput = document.getElementById('pencil-build-file');
-
-    const saveBuildWithImg = (imgUrl) => {
-      if(title){
-        let builds = getStoredBuilds();
-        builds.push({
-          id: 'build_' + Date.now(),
-          title,
-          tag,
-          desc,
-          url: '#',
-          images: imgUrl ? [imgUrl] : []
-        });
-        localStorage.setItem('aayeddie_custom_builds', JSON.stringify(builds));
-        loadBuilds();
-        triggerLiveRefresh();
+    async function loadSiteData() {
+      let data = {};
+      try {
+        const res = await fetch('data.json');
+        data = await res.json();
+      } catch (e) {
+        console.warn("data.json failed to load, falling back to defaults/localStorage.", e);
       }
-    };
 
-    if(fileInput && fileInput.files[0]){
-      const reader = new FileReader();
-      reader.onload = (e) => saveBuildWithImg(e.target.result);
-      reader.readAsDataURL(fileInput.files[0]);
-    } else {
-      saveBuildWithImg("");
-    }
-  } else if(currentPencilTarget === 'socials'){
-    const name = document.getElementById('pencil-soc-name').value;
-    const handle = document.getElementById('pencil-soc-handle').value;
-    const url = document.getElementById('pencil-soc-url').value;
-    if(name && handle && url){
-      const socials = JSON.parse(localStorage.getItem('aayeddie_custom_socials') || '[]');
-      socials.push({ name, handle, url, color:"#22d3ee", init: name.slice(0,2).toUpperCase() });
-      localStorage.setItem('aayeddie_custom_socials', JSON.stringify(socials));
-      loadSocials();
-      triggerLiveRefresh();
-    }
-  } else if(currentPencilTarget === 'theme'){
-    const c1 = document.getElementById('pencil-c1').value;
-    const c2 = document.getElementById('pencil-c2').value;
-    localStorage.setItem('aayeddie_accent1', c1);
-    localStorage.setItem('aayeddie_accent2', c2);
-    triggerLiveRefresh();
-  }
+      // Check localStorage for overrides
+      const pfp = localStorage.getItem('aayeddie_pfp') || data.pfp;
+      const title = localStorage.getItem('aayeddie_hero_title') || (data.hero && data.hero.title) || 'aayeddie';
+      const tagline = localStorage.getItem('aayeddie_hero_tagline') || (data.hero && data.hero.tagline) || '';
 
-  closePencilModal();
-}
+      // Set PFP
+      if (pfp) {
+        const img = document.getElementById('pfp-img');
+        img.src = pfp;
+        img.style.display = 'block';
+        document.getElementById('pfp-fallback').style.display = 'none';
+      }
 
-// --- HERO & BRANDING SYNC ---
-function saveHeroConfig(){
-  const title = document.getElementById('hero-title-input').value;
-  const tagline = document.getElementById('hero-tagline-input').value;
-  const c1 = document.getElementById('theme-c1').value;
-  const c2 = document.getElementById('theme-c2').value;
+      // Set Hero Text
+      document.getElementById('hero-title').textContent = title;
+      document.getElementById('hero-tagline').textContent = tagline;
 
-  localStorage.setItem('aayeddie_hero_title', title);
-  localStorage.setItem('aayeddie_hero_tagline', tagline);
-  localStorage.setItem('aayeddie_accent1', c1);
-  localStorage.setItem('aayeddie_accent2', c2);
+      // Set Socials
+      const socialsData = localStorage.getItem('aayeddie_custom_socials');
+      const socials = socialsData ? JSON.parse(socialsData) : (data.socials || []);
+      const socialsGrid = document.getElementById('socials-grid');
+      
+      socialsGrid.innerHTML = socials.map(s => `
+        <a class="social-card" href="${s.url}" target="_blank" rel="noopener">
+          <div class="social-badge" style="background:${s.color || 'var(--accent-violet)'}">${s.init || s.name[0]}</div>
+          <div>
+            <div style="font-weight:600;">${s.name}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);">${s.handle}</div>
+          </div>
+        </a>
+      `).join('');
 
-  showStatus('hero-status');
-  triggerLiveRefresh();
-}
-
-// --- MULTI-SLIDE HIGHLIGHT RING MANAGER ---
-function getStoredHighlights(){
-  if(localStorage.getItem('aayeddie_custom_highlights')){
-    try { return JSON.parse(localStorage.getItem('aayeddie_custom_highlights')); } catch(e){}
-  }
-  return [...defaultHighlights];
-}
-
-function loadHighlightsRings(selectedIdxToSet){
-  const container = document.getElementById('highlights-rings-container');
-  const selectRing = document.getElementById('hl-select-ring');
-  container.innerHTML = '';
-  selectRing.innerHTML = '';
-
-  const highlights = getStoredHighlights();
-
-  highlights.forEach((ring, ringIdx) => {
-    const opt = document.createElement('option');
-    opt.value = ringIdx;
-    opt.textContent = `${ring.icon || '🧩'} ${ring.cat} (${ring.slides ? ring.slides.length : 0} Slides)`;
-    selectRing.appendChild(opt);
-
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.style.marginBottom = '1rem';
-
-    const ringCoverHtml = ring.coverImage 
-      ? `<img src="${ring.coverImage}" class="item-thumb" alt="cover">` 
-      : `<div class="item-thumb">${ring.icon || '🧩'}</div>`;
-
-    let slidesListHtml = '';
-    if(ring.slides && ring.slides.length > 0){
-      slidesListHtml = ring.slides.map((s, sIdx) => `
-        <div class="slide-box">
-          <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem;">
-            <div style="display:flex; align-items:center; gap:0.6rem; overflow:hidden;">
-              ${s.image ? `<img src="${s.image}" style="width:36px; height:36px; border-radius:6px; object-fit:cover;">` : `<span style="font-size:1.1rem;">📷</span>`}
-              <div>
-                <strong>${s.title || 'Untitled Slide'}</strong>
-                <div style="font-size:0.7rem; color:var(--text-muted);">${s.caption || 'No caption'}</div>
+      // Set Highlights
+      const highlightsData = localStorage.getItem('aayeddie_custom_highlights');
+      const highlights = highlightsData ? JSON.parse(highlightsData) : (data.highlights || []);
+      if (highlights.length > 0) {
+        document.getElementById('highlights-section').style.display = 'block';
+        const hScroll = document.getElementById('highlights-scroll');
+        hScroll.innerHTML = highlights.map((h, index) => `
+          <div class="highlight-ring" onclick="openHighlight(${index})">
+            <div class="ring-outer" style="background: linear-gradient(135deg, ${h.c1 || '#8b5cf6'}, ${h.c2 || '#22d3ee'});">
+              <div class="ring-inner">
+                ${h.coverImage ? `<img src="${h.coverImage}" alt="${h.cat}">` : `<span>${h.icon || '⭐'}</span>`}
               </div>
             </div>
-            <button class="btn-danger" onclick="deleteSlide(${ringIdx}, ${sIdx})">Delete Slide</button>
+            <span class="ring-label">${h.cat}</span>
           </div>
-        </div>
-      `).join('');
-    } else {
-      slidesListHtml = `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.4rem;">No slides in this highlight yet.</div>`;
+        `).join('');
+        window.siteHighlights = highlights;
+      }
+
+      // Set Builds
+      const buildsData = localStorage.getItem('aayeddie_custom_builds');
+      const builds = buildsData ? JSON.parse(buildsData) : (data.builds || []);
+      if (builds.length > 0) {
+        document.getElementById('builds-section').style.display = 'block';
+        const bGrid = document.getElementById('builds-grid');
+        bGrid.innerHTML = builds.map(b => `
+          <div class="build-card">
+            <div>
+              <div class="build-title">${b.title}</div>
+              <div class="build-desc">${b.desc || ''}</div>
+            </div>
+            ${b.url && b.url !== '#' ? `<a class="build-link" href="${b.url}" target="_blank" rel="noopener">View Build →</a>` : ''}
+          </div>
+        `).join('');
+      }
     }
 
-    card.innerHTML = `
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div class="item-info">
-          ${ringCoverHtml}
-          <div>
-            <h3 style="font-family:var(--font-head); font-size:1.1rem; color:#fff;">${ring.cat}</h3>
-            <span style="font-size:0.72rem; color:var(--accent-cyan);">${ring.slides ? ring.slides.length : 0} Slides inside this ring</span>
-          </div>
-        </div>
-        <button class="btn-danger" onclick="deleteHighlightRing(${ringIdx})">Delete Entire Ring</button>
-      </div>
-      <div style="margin-top:0.8rem;">
-        <label>Slides Sequence in this Highlight Ring:</label>
-        ${slidesListHtml}
-      </div>
-    `;
-    container.appendChild(card);
-  });
+    function openHighlight(index) {
+      const h = window.siteHighlights[index];
+      if (!h || !h.slides || h.slides.length === 0) return;
+      const slide = h.slides[0];
 
-  if(selectedIdxToSet !== undefined && selectRing.options.length > selectedIdxToSet){
-    selectRing.selectedIndex = selectedIdxToSet;
-  }
-}
+      const img = document.getElementById('modal-img');
+      if (slide.image) {
+        img.src = slide.image;
+        img.style.display = 'block';
+      } else {
+        img.style.display = 'none';
+      }
 
-function createNewHighlightRing(){
-  const cat = document.getElementById('hl-cat').value;
-  const icon = document.getElementById('hl-icon').value || '🧩';
-  const ringFileInput = document.getElementById('hl-ring-file');
-  const ringUrlInput = document.getElementById('hl-ring-url').value;
+      document.getElementById('modal-title').textContent = slide.title || h.cat;
+      document.getElementById('modal-caption').textContent = slide.caption || '';
+      document.getElementById('modal-date').textContent = slide.date ? `Date: ${slide.date}` : '';
+      document.getElementById('modal').style.display = 'flex';
+    }
 
-  if(!cat){
-    alert("Please enter a category name for the Highlight Ring!");
-    return;
-  }
+    function closeModal(e) {
+      if (!e || e.target === document.getElementById('modal') || e.target.classList.contains('modal-close')) {
+        document.getElementById('modal').style.display = 'none';
+      }
+    }
 
-  const saveRing = (ringCoverData) => {
-    let highlights = getStoredHighlights();
-    const newRing = {
-      icon,
-      coverImage: ringCoverData || "",
-      cat,
-      c1: "#8b5cf6",
-      c2: "#22d3ee",
-      slides: [
-        {
-          image: ringCoverData || "",
-          title: cat,
-          caption: "Story highlight for " + cat,
-          date: "2026"
-        }
-      ]
-    };
-    
-    highlights.push(newRing);
-    const newIndex = highlights.length - 1;
-
-    localStorage.setItem('aayeddie_custom_highlights', JSON.stringify(highlights));
-    document.getElementById('hl-cat').value = '';
-    document.getElementById('hl-ring-file').value = '';
-    document.getElementById('hl-ring-url').value = '';
-    
-    loadHighlightsRings(newIndex);
-    showStatus('hl-ring-status');
-    triggerLiveRefresh();
-  };
-
-  if(ringFileInput && ringFileInput.files[0]){
-    const reader = new FileReader();
-    reader.onload = (e) => saveRing(e.target.result);
-    reader.readAsDataURL(ringFileInput.files[0]);
-  } else if(ringUrlInput){
-    saveRing(ringUrlInput);
-  } else {
-    saveRing("");
-  }
-}
-
-function addSlideToHighlight(){
-  const ringIdx = document.getElementById('hl-select-ring').value;
-  const title = document.getElementById('slide-title').value;
-  const caption = document.getElementById('slide-caption').value;
-  const date = document.getElementById('slide-date').value || '2026';
-  const fileInput = document.getElementById('slide-file');
-  const urlInput = document.getElementById('slide-url').value;
-
-  if(ringIdx === "" || ringIdx === null){
-    alert("Please select or create a Highlight Ring first!");
-    return;
-  }
-
-  const saveSlide = (slideImgData) => {
-    let highlights = getStoredHighlights();
-    if(!highlights[ringIdx].slides) highlights[ringIdx].slides = [];
-
-    highlights[ringIdx].slides.push({
-      image: slideImgData || "",
-      title: title || highlights[ringIdx].cat,
-      caption: caption || "",
-      date: date
-    });
-
-    localStorage.setItem('aayeddie_custom_highlights', JSON.stringify(highlights));
-    document.getElementById('slide-title').value = '';
-    document.getElementById('slide-caption').value = '';
-    document.getElementById('slide-file').value = '';
-    document.getElementById('slide-url').value = '';
-
-    loadHighlightsRings(ringIdx);
-    showStatus('slide-status');
-    triggerLiveRefresh();
-  };
-
-  if(fileInput && fileInput.files[0]){
-    const reader = new FileReader();
-    reader.onload = (e) => saveSlide(e.target.result);
-    reader.readAsDataURL(fileInput.files[0]);
-  } else if(urlInput){
-    saveSlide(urlInput);
-  } else {
-    saveSlide("");
-  }
-}
-
-function deleteSlide(ringIdx, slideIdx){
-  let highlights = getStoredHighlights();
-  if(highlights[ringIdx] && highlights[ringIdx].slides){
-    highlights[ringIdx].slides.splice(slideIdx, 1);
-    localStorage.setItem('aayeddie_custom_highlights', JSON.stringify(highlights));
-    loadHighlightsRings(ringIdx);
-    triggerLiveRefresh();
-  }
-}
-
-function deleteHighlightRing(ringIdx){
-  if(confirm("Delete this entire Highlight Ring and all its slides?")){
-    let highlights = getStoredHighlights();
-    highlights.splice(ringIdx, 1);
-    localStorage.setItem('aayeddie_custom_highlights', JSON.stringify(highlights));
-    loadHighlightsRings();
-    triggerLiveRefresh();
-  }
-}
-
-// --- SOCIAL MANAGERS ---
-function loadSocials(){
-  const list = document.getElementById('socials-list');
-  list.innerHTML = '';
-  const socials = JSON.parse(localStorage.getItem('aayeddie_custom_socials') || '[]');
-  socials.forEach((item, idx) => {
-    const row = document.createElement('div');
-    row.className = 'item-row';
-    row.innerHTML = `<span><strong>${item.name}</strong> (${item.handle})</span> <button class="btn-danger" onclick="deleteSocial(${idx})">Delete</button>`;
-    list.appendChild(row);
-  });
-}
-
-function addSocialItem(){
-  const name = document.getElementById('soc-name').value;
-  const handle = document.getElementById('soc-handle').value;
-  const url = document.getElementById('soc-url').value;
-  const color = document.getElementById('soc-color').value;
-  if(!name || !handle || !url) return;
-
-  const socials = JSON.parse(localStorage.getItem('aayeddie_custom_socials') || '[]');
-  socials.push({ name, handle, url, color, init: name.slice(0,2).toUpperCase() });
-  localStorage.setItem('aayeddie_custom_socials', JSON.stringify(socials));
-  loadSocials();
-  triggerLiveRefresh();
-}
-
-function deleteSocial(idx){
-  const socials = JSON.parse(localStorage.getItem('aayeddie_custom_socials') || '[]');
-  socials.splice(idx, 1);
-  localStorage.setItem('aayeddie_custom_socials', JSON.stringify(socials));
-  loadSocials();
-  triggerLiveRefresh();
-}
-
-// --- JSON EXPORT / REPO HELPER ---
-function exportFullConfig(){
-  const data = {
-    pfp: localStorage.getItem('aayeddie_pfp') || '',
-    hero: {
-      title: localStorage.getItem('aayeddie_hero_title') || 'aayeddie',
-      tagline: localStorage.getItem('aayeddie_hero_tagline') || ''
-    },
-    theme: {
-      accent1: localStorage.getItem('aayeddie_accent1') || '#8b5cf6',
-      accent2: localStorage.getItem('aayeddie_accent2') || '#22d3ee'
-    },
-    builds: getStoredBuilds(),
-    socials: JSON.parse(localStorage.getItem('aayeddie_custom_socials') || '[]'),
-    highlights: getStoredHighlights()
-  };
-  document.getElementById('json-export-preview').textContent = JSON.stringify(data, null, 2);
-  return data;
-}
-
-function downloadJSONFile(){
-  const data = exportFullConfig();
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'data.json';
-  a.click();
-}
-
-function resetDefaults(){
-  if(confirm("Reset site synchronization settings to defaults?")){
-    localStorage.clear();
-    currentPfpDataUrl = '';
-    initPfpDisplay();
-    loadBuilds();
-    loadSocials();
-    loadHighlightsRings();
-    exportFullConfig();
-    triggerLiveRefresh();
-  }
-}
-
-function generateRepoFiles(){
-  const user = document.getElementById('gh-user').value || 'aayeddie';
-  const repo = document.getElementById('gh-repo').value || 'aayeddie-studio';
-  const branch = document.getElementById('gh-branch').value || 'main';
-
-  const cmds = `# Initialize & Push to GitHub:
-git init
-git add .
-git commit -m "Deploy site assets and data"
-git branch -M ${branch}
-git remote add origin https://github.com/${user}/${repo}.git
-git push -u origin ${branch}`;
-
-  const readme = `# ${repo}
-
-Official portfolio and media web engine for @${user}.
-
-## 🚀 Live Site
-Deployment active at: https://${user}.github.io/${repo}/
-
-## 🛠️ Local Customization
-1. Open \`admin.html\` locally (or on the deployed site) to edit site text, PFP, build image sliders, social links, and highlights.
-2. Click **Download data.json** and place it in the repo root, replacing the existing one.
-3. Commit and push — \`index.html\` loads \`data.json\` on every visit, so your changes go live for all visitors after deployment via GitHub Actions.
-`;
-
-  document.getElementById('out-commands').textContent = cmds;
-  document.getElementById('out-readme').textContent = readme;
-}
-
-function copyText(elementId){
-  const txt = document.getElementById(elementId).textContent;
-  navigator.clipboard.writeText(txt).then(() => alert("Copied to clipboard!"));
-}
-
-function showStatus(id){
-  const el = document.getElementById(id);
-  if(el){
-    el.style.display = 'block';
-    setTimeout(() => el.style.display = 'none', 3000);
-  }
-}
-
-// Initial Loading
-initPfpDisplay();
-loadBuilds();
-loadSocials();
-loadHighlightsRings();
-generateRepoFiles();
-</script>
+    loadSiteData();
+  </script>
 </body>
 </html>
