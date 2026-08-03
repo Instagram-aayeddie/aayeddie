@@ -133,7 +133,7 @@
       color: #fff;
     }
 
-    /* HIGHLIGHT RINGS */
+    /* SECTION TITLES */
     .section-title {
       font-family: var(--font-head);
       font-size: 1.25rem;
@@ -144,6 +144,7 @@
       gap: 0.5rem;
     }
 
+    /* HIGHLIGHT RINGS */
     .highlights-scroll {
       display: flex;
       gap: 1.2rem;
@@ -199,61 +200,107 @@
       text-align: center;
     }
 
-    /* BUILDS SHOWCASE */
-    .builds-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1.2rem;
-    }
-
-    .build-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 1.2rem;
+    /* =============================================== */
+    /* MAIN SLIDING IMAGE GALLERY SHOWCASE             */
+    /* =============================================== */
+    .main-gallery-wrapper {
+      position: relative;
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.25s ease;
-    }
-
-    .build-card:hover {
-      border-color: rgba(255, 255, 255, 0.25);
-      transform: translateY(-3px);
-      box-shadow: 0 0 22px rgba(139, 92, 246, 0.3), 0 0 40px rgba(34, 211, 238, 0.18);
-    }
-
-    .build-title {
-      font-family: var(--font-head);
-      font-size: 1.1rem;
-      margin-bottom: 0.4rem;
-      color: #fff;
-    }
-
-    .build-desc {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-      margin-bottom: 1rem;
-    }
-
-    .build-link {
-      display: inline-flex;
       align-items: center;
-      gap: 0.3rem;
-      font-size: 0.8rem;
-      color: var(--accent-cyan);
-      text-decoration: none;
-      font-weight: 600;
     }
 
-    .build-link:hover {
-      text-decoration: underline;
+    .main-gallery-scroll {
+      display: flex;
+      gap: 1.2rem;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      padding: 0.5rem 0.2rem 1.2rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-cyan) rgba(255,255,255,0.05);
+      width: 100%;
     }
 
-    /* ============================= */
-    /* INSTAGRAM-STYLE STORY VIEWER  */
-    /* ============================= */
+    .main-gallery-scroll::-webkit-scrollbar { height: 6px; }
+    .main-gallery-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 4px; }
+    .main-gallery-scroll::-webkit-scrollbar-thumb { background: var(--accent-cyan); border-radius: 4px; }
+
+    .main-gallery-card {
+      min-width: 85%;
+      max-width: 85%;
+      aspect-ratio: 16 / 10;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      scroll-snap-align: center;
+      border: 1px solid var(--border-color);
+      background: #000;
+      flex-shrink: 0;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .main-gallery-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .main-gallery-card:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 20px rgba(34, 211, 238, 0.25);
+    }
+
+    .main-gallery-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 1.5rem 1rem 0.8rem;
+      background: linear-gradient(to top, rgba(5, 6, 13, 0.95), transparent);
+    }
+
+    .main-gallery-title {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      color: #fff;
+      margin-bottom: 0.2rem;
+    }
+
+    .main-gallery-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .gallery-slide-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      background: rgba(5, 6, 13, 0.75);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .gallery-slide-btn:hover {
+      background: var(--accent-violet);
+      border-color: #fff;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .gallery-slide-btn.left { left: -15px; }
+    .gallery-slide-btn.right { right: -15px; }
+
+    /* INSTAGRAM-STYLE STORY VIEWER */
     .story-modal {
       display: none;
       position: fixed;
@@ -280,7 +327,6 @@
       box-shadow: 0 20px 60px rgba(0,0,0,0.8);
     }
 
-    /* progress segments */
     .story-progress-row {
       display: flex;
       gap: 4px;
@@ -300,7 +346,6 @@
       background: #fff;
     }
 
-    /* header row */
     .story-header {
       display: flex;
       align-items: center;
@@ -351,7 +396,6 @@
       transform: scale(1.08);
     }
 
-    /* main story stage (the actual "play like instagram" surface) */
     .story-stage {
       flex: 1;
       position: relative;
@@ -389,16 +433,8 @@
       color: var(--text-muted);
       line-height: 1.35;
     }
-    .story-empty-msg {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      text-align: center;
-      padding: 2rem;
-    }
 
-    /* =============================================== */
-    /* "OWN PHOTO GALLERY" — horizontal scroll mode      */
-    /* =============================================== */
+    /* STORY MODAL GALLERY MODE */
     .gallery-scroll-wrap {
       flex: 1;
       display: flex;
@@ -420,10 +456,6 @@
       height: 100%;
       align-items: center;
     }
-    .gallery-scroll::-webkit-scrollbar { height: 7px; }
-    .gallery-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 4px; }
-    .gallery-scroll::-webkit-scrollbar-thumb { background: var(--accent-cyan); border-radius: 4px; }
-
     .gallery-nav {
       background: rgba(255,255,255,0.08);
       border: none;
@@ -449,8 +481,6 @@
       cursor: pointer;
       flex-shrink: 0;
       scroll-snap-align: center;
-      border: 2px solid transparent;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
       background: #000;
     }
     .gallery-photo img {
@@ -468,31 +498,6 @@
       background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
     }
 
-    /* Enhanced hover glow (general) */
-    .gallery-photo:hover {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.6), 0 0 26px rgba(139,92,246,0.45);
-    }
-
-    /* Rainbow glow — specifically for gallery photos */
-    .rainbow-glow { position: relative; z-index: 0; }
-    .rainbow-glow::before {
-      content: '';
-      position: absolute;
-      inset: -3px;
-      border-radius: 18px;
-      z-index: -1;
-      background: conic-gradient(from 0deg, #ff2e2e, #ffcc33, #33ff77, #22d3ee, #8b5cf6, #ff2e9a, #ff2e2e);
-      opacity: 0;
-      filter: blur(12px);
-      transition: opacity 0.35s ease;
-      animation: rainbow-spin 4s linear infinite;
-    }
-    .rainbow-glow:hover::before { opacity: 0.95; }
-    @keyframes rainbow-spin {
-      to { transform: rotate(360deg); }
-    }
-
     footer {
       text-align: center;
       margin-top: 4rem;
@@ -501,6 +506,8 @@
     }
 
     @media (max-width: 480px) {
+      .main-gallery-card { min-width: 92%; max-width: 92%; }
+      .gallery-slide-btn { display: none; } /* relies on swipe on smaller screens */
       .story-content { height: 92vh; border-radius: 14px; }
       .gallery-photo { min-width: 88%; max-width: 88%; }
     }
@@ -525,9 +532,13 @@
       <div id="highlights-scroll" class="highlights-scroll"></div>
     </section>
 
-    <section id="builds-section" style="display:none;">
-      <h2 class="section-title">🚀 Featured Builds</h2>
-      <div id="builds-grid" class="builds-grid"></div>
+    <section id="gallery-section" style="display:none;">
+      <h2 class="section-title">🖼️ Gallery Showcase</h2>
+      <div class="main-gallery-wrapper">
+        <button class="gallery-slide-btn left" onclick="slideMainGallery(-1)">‹</button>
+        <div id="main-gallery-scroll" class="main-gallery-scroll"></div>
+        <button class="gallery-slide-btn right" onclick="slideMainGallery(1)">›</button>
+      </div>
     </section>
 
     <footer>
@@ -535,7 +546,6 @@
     </footer>
   </div>
 
-  <!-- INSTAGRAM-STYLE STORY / GALLERY MODAL -->
   <div id="modal" class="story-modal">
     <div class="story-content" onclick="event.stopPropagation()">
 
@@ -578,13 +588,8 @@
         const contentType = res.headers.get('content-type') || '';
         if (res.ok && contentType.includes('json')) {
           data = await res.json();
-        } else {
-          // No data.json deployed yet (or server returned an HTML fallback page) —
-          // this is expected until you add one, so we just use defaults/localStorage.
         }
-      } catch (e) {
-        // Network/parse hiccup — silently fall back to defaults/localStorage.
-      }
+      } catch (e) {}
 
       // Check localStorage for overrides
       const pfp = localStorage.getItem('aayeddie_pfp') || data.pfp;
@@ -637,28 +642,39 @@
         window.siteHighlights = highlights;
       }
 
-      // Set Builds
-      const buildsData = localStorage.getItem('aayeddie_custom_builds');
-      const builds = buildsData ? JSON.parse(buildsData) : (data.builds || []);
-      if (builds.length > 0) {
-        document.getElementById('builds-section').style.display = 'block';
-        const bGrid = document.getElementById('builds-grid');
-        bGrid.innerHTML = builds.map(b => `
-          <div class="build-card">
-            <div>
-              <div class="build-title">${b.title}</div>
-              <div class="build-desc">${b.desc || ''}</div>
-            </div>
-            ${b.url && b.url !== '#' ? `<a class="build-link" href="${b.url}" target="_blank" rel="noopener">View Build →</a>` : ''}
+      // Set Main Image Gallery
+      const galleryData = localStorage.getItem('aayeddie_custom_gallery');
+      const galleryImages = galleryData ? JSON.parse(galleryData) : (data.gallery || []);
+      if (galleryImages.length > 0) {
+        document.getElementById('gallery-section').style.display = 'block';
+        const gScroll = document.getElementById('main-gallery-scroll');
+        gScroll.innerHTML = galleryImages.map(img => `
+          <div class="main-gallery-card">
+            <img src="${img.url || img.image}" alt="${img.title || 'Gallery image'}" loading="lazy">
+            ${(img.title || img.caption) ? `
+              <div class="main-gallery-caption">
+                ${img.title ? `<div class="main-gallery-title">${img.title}</div>` : ''}
+                ${img.caption ? `<div class="main-gallery-sub">${img.caption}</div>` : ''}
+              </div>
+            ` : ''}
           </div>
         `).join('');
+      }
+    }
+
+    /* Main Gallery Slide Navigation */
+    function slideMainGallery(direction) {
+      const el = document.getElementById('main-gallery-scroll');
+      if (el) {
+        const slideAmount = el.clientWidth * 0.85;
+        el.scrollBy({ left: direction * slideAmount, behavior: 'smooth' });
       }
     }
 
     /* =====================================================
        INSTAGRAM-STYLE STORY VIEWER ENGINE
        ===================================================== */
-    const STORY_DURATION = 4500; // ms per slide
+    const STORY_DURATION = 4500;
 
     let storySlides = [];
     let storyIndex = 0;
@@ -699,8 +715,7 @@
     function showStorySlide(i) {
       clearTimeout(storyTimer);
 
-      if (i < 0) { closeModal(); return; }
-      if (i >= storySlides.length) { closeModal(); return; }
+      if (i < 0 || i >= storySlides.length) { closeModal(); return; }
 
       storyIndex = i;
       const slide = storySlides[i];
@@ -710,7 +725,6 @@
       document.getElementById('story-caption-text').textContent = slide.caption || '';
       document.getElementById('story-slide-date').textContent = slide.date ? `Date: ${slide.date}` : '';
 
-      // Reset all progress fills instantly (no transition)
       storySlides.forEach((_, idx) => {
         const fill = document.getElementById('story-fill-' + idx);
         if (!fill) return;
@@ -718,7 +732,6 @@
         fill.style.width = idx < i ? '100%' : '0%';
       });
 
-      // Animate the current segment filling over STORY_DURATION
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           const fill = document.getElementById('story-fill-' + i);
@@ -769,10 +782,9 @@
       else if (e.key === 'Escape') closeModal();
     }
 
-    // Tap-to-advance / hold-to-pause on the story stage (works for mouse + touch)
     (function setupStoryStage() {
       const stage = document.getElementById('story-stage');
-      stage.addEventListener('pointerdown', (e) => {
+      stage.addEventListener('pointerdown', () => {
         pointerDownAt = Date.now();
         pauseStory();
       });
@@ -796,14 +808,10 @@
       document.removeEventListener('keydown', handleStoryKeydown);
     }
 
-    // Close when clicking the dark backdrop
     document.getElementById('modal').addEventListener('click', (e) => {
       if (e.target.id === 'modal') closeModal();
     });
 
-    /* =====================================================
-       "OWN PHOTO GALLERY" MODE — big scrollable photo strip
-       ===================================================== */
     function toggleGalleryMode() {
       galleryModeOn = !galleryModeOn;
       setGalleryMode(galleryModeOn);
@@ -828,7 +836,7 @@
     function renderHighlightGallery() {
       const wrap = document.getElementById('gallery-scroll');
       wrap.innerHTML = storySlides.map((s, idx) => `
-        <div class="gallery-photo rainbow-glow" onclick="jumpToStorySlide(${idx})">
+        <div class="gallery-photo" onclick="jumpToStorySlide(${idx})">
           <img src="${s.image || ''}" alt="${s.title || ''}">
           <div class="gallery-photo-caption">${s.title || ''}</div>
         </div>
