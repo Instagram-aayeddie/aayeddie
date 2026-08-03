@@ -321,6 +321,54 @@
     display: none;
   }
 
+  /* Live paste/upload preview thumbnail */
+  .mini-preview-wrap {
+    display: none;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(0,0,0,0.3);
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+  }
+  .mini-preview-wrap.show { display: flex; }
+  .mini-preview-wrap img {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid var(--accent-cyan);
+  }
+  .mini-preview-wrap span {
+    font-size: 0.7rem;
+    color: var(--accent-cyan);
+  }
+
+  /* Slide reorder buttons */
+  .slide-move-btns {
+    display: flex;
+    gap: 0.3rem;
+  }
+  .slide-move-btns button {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border-color);
+    color: #fff;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.75rem;
+  }
+  .slide-move-btns button:hover:not(:disabled) {
+    border-color: var(--accent-cyan);
+    background: rgba(34,211,238,0.12);
+  }
+  .slide-move-btns button:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+  }
+
   /* Tag pill style */
   .tag-pill {
     display: inline-block;
@@ -596,12 +644,13 @@
       
       <div class="field">
         <label>Upload Highlight Ring Cover (Ring PFP Image)</label>
-        <input type="file" id="hl-ring-file" accept="image/*">
+        <input type="file" id="hl-ring-file" accept="image/*" onchange="previewFileInput('hl-ring-file', 'hl-ring-preview')">
       </div>
       <div class="field">
         <label>Or Ring Cover Image URL</label>
-        <input type="text" id="hl-ring-url" placeholder="https://example.com/ring-cover.png">
+        <input type="text" id="hl-ring-url" placeholder="https://example.com/ring-cover.png" oninput="previewUrlInput('hl-ring-url', 'hl-ring-preview')">
       </div>
+      <div class="mini-preview-wrap" id="hl-ring-preview"><img src=""><span>Preview — this image will display</span></div>
 
       <button class="btn" onclick="createNewHighlightRing()">Create Highlight Ring</button>
       <div id="hl-ring-status" class="status-msg">Highlight Ring Created!</div>
@@ -624,12 +673,13 @@
 
       <div class="field">
         <label>Upload Slide Image File</label>
-        <input type="file" id="slide-file" accept="image/*">
+        <input type="file" id="slide-file" accept="image/*" onchange="previewFileInput('slide-file', 'slide-preview')">
       </div>
       <div class="field">
         <label>Or Slide Image URL</label>
-        <input type="text" id="slide-url" placeholder="https://example.com/slide.png">
+        <input type="text" id="slide-url" placeholder="https://example.com/slide.png" oninput="previewUrlInput('slide-url', 'slide-preview')">
       </div>
+      <div class="mini-preview-wrap" id="slide-preview"><img src=""><span>Preview — this image will display in the gallery</span></div>
 
       <button class="btn" onclick="addSlideToHighlight()">Add Slide to Highlight</button>
       <div id="slide-status" class="status-msg">Slide Added to Highlight Ring!</div>
@@ -637,7 +687,29 @@
   </div>
 
   <div class="card" style="margin-top: 1.5rem;">
+    <h2>🔀 Merge Two Highlight Rings</h2>
+    <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">
+      Combine all photos from one Highlight Ring into another. The source ring is deleted afterward and its photos are appended to the end of the target ring's gallery.
+    </p>
+    <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-end;">
+      <div class="field" style="flex:1; min-width:200px; margin-bottom:0;">
+        <label>Merge FROM (source, will be deleted)</label>
+        <select id="hl-merge-source"></select>
+      </div>
+      <div class="field" style="flex:1; min-width:200px; margin-bottom:0;">
+        <label>Merge INTO (target, keeps all photos)</label>
+        <select id="hl-merge-target"></select>
+      </div>
+      <button class="btn" style="margin-bottom:1.2rem;" onclick="mergeHighlightRings()">Merge Rings</button>
+    </div>
+    <div id="hl-merge-status" class="status-msg">Rings merged successfully!</div>
+  </div>
+
+  <div class="card" style="margin-top: 1.5rem;">
     <h2>🎬 Active Highlight Rings & Multiple Slides List</h2>
+    <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:0.4rem;">
+      Use ◀ ▶ to reorder photos within a ring, or delete individual photos.
+    </p>
     <div id="highlights-rings-container" class="item-list"></div>
   </div>
 </div>
@@ -1258,6 +1330,35 @@ function saveHeroConfig(){
   triggerLiveRefresh();
 }
 
+// --- LIVE PREVIEW HELPERS (paste URL or pick a file, see it instantly) ---
+function previewUrlInput(inputId, previewWrapId){
+  const val = document.getElementById(inputId).value.trim();
+  const wrap = document.getElementById(previewWrapId);
+  if(!val){ wrap.classList.remove('show'); return; }
+  wrap.querySelector('img').src = val;
+  wrap.classList.add('show');
+}
+
+function previewFileInput(inputId, previewWrapId){
+  const fileInput = document.getElementById(inputId);
+  const wrap = document.getElementById(previewWrapId);
+  if(!fileInput.files || !fileInput.files[0]){ wrap.classList.remove('show'); return; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    wrap.querySelector('img').src = e.target.result;
+    wrap.classList.add('show');
+  };
+  reader.readAsDataURL(fileInput.files[0]);
+}
+
+function clearPreview(previewWrapId){
+  const wrap = document.getElementById(previewWrapId);
+  if(wrap){
+    wrap.classList.remove('show');
+    wrap.querySelector('img').src = '';
+  }
+}
+
 // --- MULTI-SLIDE HIGHLIGHT RING MANAGER ---
 function getStoredHighlights(){
   if(localStorage.getItem('aayeddie_custom_highlights')){
@@ -1269,8 +1370,12 @@ function getStoredHighlights(){
 function loadHighlightsRings(selectedIdxToSet){
   const container = document.getElementById('highlights-rings-container');
   const selectRing = document.getElementById('hl-select-ring');
+  const mergeSource = document.getElementById('hl-merge-source');
+  const mergeTarget = document.getElementById('hl-merge-target');
   container.innerHTML = '';
   selectRing.innerHTML = '';
+  if(mergeSource) mergeSource.innerHTML = '';
+  if(mergeTarget) mergeTarget.innerHTML = '';
 
   const highlights = getStoredHighlights();
 
@@ -1279,6 +1384,9 @@ function loadHighlightsRings(selectedIdxToSet){
     opt.value = ringIdx;
     opt.textContent = `${ring.icon || '🧩'} ${ring.cat} (${ring.slides ? ring.slides.length : 0} Slides)`;
     selectRing.appendChild(opt);
+
+    if(mergeSource) mergeSource.appendChild(opt.cloneNode(true));
+    if(mergeTarget) mergeTarget.appendChild(opt.cloneNode(true));
 
     const card = document.createElement('div');
     card.className = 'card';
@@ -1300,7 +1408,13 @@ function loadHighlightsRings(selectedIdxToSet){
                 <div style="font-size:0.7rem; color:var(--text-muted);">${s.caption || 'No caption'}</div>
               </div>
             </div>
-            <button class="btn-danger" onclick="deleteSlide(${ringIdx}, ${sIdx})">Delete Slide</button>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <div class="slide-move-btns">
+                <button onclick="moveSlide(${ringIdx}, ${sIdx}, -1)" ${sIdx === 0 ? 'disabled' : ''} title="Move earlier">◀</button>
+                <button onclick="moveSlide(${ringIdx}, ${sIdx}, 1)" ${sIdx === ring.slides.length - 1 ? 'disabled' : ''} title="Move later">▶</button>
+              </div>
+              <button class="btn-danger" onclick="deleteSlide(${ringIdx}, ${sIdx})">Delete Slide</button>
+            </div>
           </div>
         </div>
       `).join('');
@@ -1368,7 +1482,8 @@ function createNewHighlightRing(){
     document.getElementById('hl-cat').value = '';
     document.getElementById('hl-ring-file').value = '';
     document.getElementById('hl-ring-url').value = '';
-    
+    clearPreview('hl-ring-preview');
+
     loadHighlightsRings(newIndex);
     showStatus('hl-ring-status');
     triggerLiveRefresh();
@@ -1414,6 +1529,7 @@ function addSlideToHighlight(){
     document.getElementById('slide-caption').value = '';
     document.getElementById('slide-file').value = '';
     document.getElementById('slide-url').value = '';
+    clearPreview('slide-preview');
 
     loadHighlightsRings(ringIdx);
     showStatus('slide-status');
@@ -1449,6 +1565,54 @@ function deleteHighlightRing(ringIdx){
     loadHighlightsRings();
     triggerLiveRefresh();
   }
+}
+
+// Move a photo's position within its highlight ring's gallery (left/right reorder)
+function moveSlide(ringIdx, slideIdx, dir){
+  let highlights = getStoredHighlights();
+  const ring = highlights[ringIdx];
+  if(!ring || !ring.slides) return;
+
+  const targetIdx = slideIdx + dir;
+  if(targetIdx < 0 || targetIdx >= ring.slides.length) return;
+
+  const tmp = ring.slides[slideIdx];
+  ring.slides[slideIdx] = ring.slides[targetIdx];
+  ring.slides[targetIdx] = tmp;
+
+  localStorage.setItem('aayeddie_custom_highlights', JSON.stringify(highlights));
+  loadHighlightsRings(ringIdx);
+  triggerLiveRefresh();
+}
+
+// Merge all photos from one Highlight Ring into another; source ring is removed
+function mergeHighlightRings(){
+  const sourceSel = document.getElementById('hl-merge-source');
+  const targetSel = document.getElementById('hl-merge-target');
+  if(!sourceSel.value || !targetSel.value){
+    alert("Please choose both a source and a target Highlight Ring!");
+    return;
+  }
+  const sourceIdx = parseInt(sourceSel.value, 10);
+  const targetIdx = parseInt(targetSel.value, 10);
+
+  if(sourceIdx === targetIdx){
+    alert("Choose two different Highlight Rings to merge!");
+    return;
+  }
+  if(!confirm("Merge all photos from the source ring into the target ring? The source ring will be deleted afterward.")) return;
+
+  let highlights = getStoredHighlights();
+  const sourceSlides = highlights[sourceIdx].slides || [];
+  if(!highlights[targetIdx].slides) highlights[targetIdx].slides = [];
+
+  highlights[targetIdx].slides = highlights[targetIdx].slides.concat(sourceSlides);
+  highlights.splice(sourceIdx, 1);
+
+  localStorage.setItem('aayeddie_custom_highlights', JSON.stringify(highlights));
+  loadHighlightsRings();
+  showStatus('hl-merge-status');
+  triggerLiveRefresh();
 }
 
 // --- SOCIAL MANAGERS ---
