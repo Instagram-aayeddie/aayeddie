@@ -205,7 +205,7 @@
 
   .item-list {
     margin-top: 1rem;
-    max-height: 340px;
+    max-height: 440px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -261,6 +261,18 @@
     font-size: 0.75rem;
     color: #34d399;
     display: none;
+  }
+
+  /* Tag pill style */
+  .tag-pill {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    color: var(--accent-cyan);
+    font-size: 0.7rem;
+    margin-top: 0.3rem;
   }
 
   /* ---------- Live Visual Preview Frame & Edit Overlay ---------- */
@@ -347,7 +359,7 @@
   .modal-box {
     background: #0b1a3d;
     border: 1px solid var(--border-color);
-    width: min(540px, 92vw);
+    width: min(580px, 92vw);
     border-radius: 16px;
     padding: 1.8rem;
     position: relative;
@@ -367,7 +379,7 @@
 <header>
   <div>
     <h1>Aayeddie Studio Master Control & Visual Editor</h1>
-    <p>Zero Vendor Lock-In · Separate Ring Covers & Multi-Image Highlights · GitHub Suite</p>
+    <p>Zero Vendor Lock-In · Separate Ring Covers & Multi-Image Highlights · Recent Builds · GitHub Suite</p>
   </div>
   <button class="btn btn-outline" onclick="triggerLiveRefresh()">🔄 Refresh Preview & Sync</button>
 </header>
@@ -375,6 +387,7 @@
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('tab-preview', this)">✏️ Live Visual Preview & Edit</button>
   <button class="tab-btn" onclick="switchTab('tab-hero', this)">🖼️ User PFP & Hero Branding</button>
+  <button class="tab-btn" onclick="switchTab('tab-builds', this)">🛠️ Recent Builds</button>
   <button class="tab-btn" onclick="switchTab('tab-content', this)">🎬 Multi-Image Highlights & Ring PFPs</button>
   <button class="tab-btn" onclick="switchTab('tab-socials', this)">🌐 Social Channels</button>
   <button class="tab-btn" onclick="switchTab('tab-sync', this)">📦 JSON Data Sync & Backup</button>
@@ -397,8 +410,9 @@
   <div class="preview-wrapper" id="preview-container">
     <button class="edit-pencil-btn" style="top: 80px; left: calc(50% + 180px);" onclick="openPencilModal('hero')" title="Edit Hero & User PFP">✏️</button>
     <button class="edit-pencil-btn" style="top: 260px; right: 40px;" onclick="openPencilModal('highlights')" title="Edit Highlight Rings">✏️</button>
-    <button class="edit-pencil-btn" style="top: 420px; left: 40px;" onclick="openPencilModal('socials')" title="Edit Social Hub">✏️</button>
-    <button class="edit-pencil-btn" style="top: 580px; right: 40px;" onclick="openPencilModal('theme')" title="Edit Theme Accents">✏️</button>
+    <button class="edit-pencil-btn" style="top: 350px; left: 40px;" onclick="openPencilModal('builds')" title="Edit Recent Builds">✏️</button>
+    <button class="edit-pencil-btn" style="top: 480px; right: 40px;" onclick="openPencilModal('socials')" title="Edit Social Hub">✏️</button>
+    <button class="edit-pencil-btn" style="top: 600px; left: 40px;" onclick="openPencilModal('theme')" title="Edit Theme Accents">✏️</button>
 
     <iframe id="site-frame" src="index.html"></iframe>
   </div>
@@ -451,7 +465,50 @@
   </div>
 </div>
 
-<!-- TAB 3: HIGHLIGHT RINGS & MULTI-IMAGE SLIDE MANAGER -->
+<!-- TAB 3: RECENT BUILDS MANAGEMENT -->
+<div id="tab-builds" class="view-panel">
+  <div class="grid">
+    <!-- Form to Add or Update Build -->
+    <div class="card">
+      <h2 id="build-form-title">🛠️ Add New Build</h2>
+      <input type="hidden" id="build-edit-id" value="">
+      
+      <div class="field">
+        <label>Build Title</label>
+        <input type="text" id="build-title" placeholder="e.g. DroidBay">
+      </div>
+      <div class="field">
+        <label>Category / Tech Stack Tag</label>
+        <input type="text" id="build-tag" placeholder="e.g. Electron / Android">
+      </div>
+      <div class="field">
+        <label>Description / Summary</label>
+        <textarea id="build-desc" rows="3" placeholder="e.g. Electron-based Android emulator launcher — APK import, metadata scraping..."></textarea>
+      </div>
+      <div class="field">
+        <label>Project / Demo Link (URL)</label>
+        <input type="text" id="build-url" placeholder="https://github.com/... or #">
+      </div>
+
+      <div class="action-row">
+        <button class="btn" id="btn-save-build" onclick="saveBuildItem()">Add Build</button>
+        <button class="btn btn-outline" id="btn-cancel-build" onclick="resetBuildForm()" style="display:none;">Cancel Edit</button>
+      </div>
+      <div id="build-status" class="status-msg">Build saved successfully!</div>
+    </div>
+
+    <!-- Active Recent Builds List -->
+    <div class="card" style="grid-column: span 2;">
+      <h2>🚀 Current Recent Builds List</h2>
+      <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+        Add, reorder, edit, or remove project cards displayed in the "Recent builds" section of your portfolio.
+      </p>
+      <div class="item-list" id="builds-list-container"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 4: HIGHLIGHT RINGS & MULTI-IMAGE SLIDE MANAGER -->
 <div id="tab-content" class="view-panel">
   <div class="grid">
     <!-- Step 1: Create Highlight Ring -->
@@ -512,7 +569,7 @@
   </div>
 </div>
 
-<!-- TAB 4: SOCIAL CHANNELS -->
+<!-- TAB 5: SOCIAL CHANNELS -->
 <div id="tab-socials" class="view-panel">
   <div class="grid">
     <div class="card">
@@ -530,13 +587,13 @@
   </div>
 </div>
 
-<!-- TAB 5: LOCAL & REPOSITORY SYNC -->
+<!-- TAB 6: LOCAL & REPOSITORY SYNC -->
 <div id="tab-sync" class="view-panel">
   <div class="grid">
     <div class="card" style="grid-column: span 2;">
       <h2>📦 Complete Data Sync & Export (data.json)</h2>
       <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
-        Export your complete dataset to download a <code>data.json</code> file or synchronize directly with LocalStorage so <code>index.html</code> updates immediately. Commit the downloaded <code>data.json</code> to the repo root so every visitor (not just this browser) sees your changes.
+        Export your complete dataset to download a <code>data.json</code> file or synchronize directly with LocalStorage so <code>index.html</code> updates immediately. Commit the downloaded <code>data.json</code> to the repo root so every visitor sees your changes.
       </p>
       <div class="action-row">
         <button class="btn" onclick="exportFullConfig()">Export & View JSON</button>
@@ -548,7 +605,7 @@
   </div>
 </div>
 
-<!-- TAB 6: GITHUB SETUP GENERATOR -->
+<!-- TAB 7: GITHUB SETUP GENERATOR -->
 <div id="tab-repo" class="view-panel">
   <div class="grid">
     <div class="card">
@@ -686,6 +743,52 @@ const defaultHighlights = [
   }
 ];
 
+// Default Recent Builds dataset
+const defaultBuilds = [
+  {
+    id: "build_1",
+    title: "DroidBay",
+    tag: "Electron / Android",
+    desc: "Electron-based Android emulator launcher — APK import, metadata scraping, and custom controls.",
+    url: "#"
+  },
+  {
+    id: "build_2",
+    title: "Oakview (Roblox Studio)",
+    tag: "Roblox Studio / MCP",
+    desc: "An island town built in Roblox Studio via MCP tooling.",
+    url: "#"
+  },
+  {
+    id: "build_3",
+    title: "Server Builder Bot",
+    tag: "Python / Discord.py",
+    desc: "A discord.py bot that builds out the Aayeddie's Studio server structure automatically.",
+    url: "#"
+  },
+  {
+    id: "build_4",
+    title: "3D Estate Walkthrough",
+    tag: "Three.js / WebGL",
+    desc: "Three.js first-person walkthrough of a Mediterranean-style estate.",
+    url: "#"
+  },
+  {
+    id: "build_5",
+    title: "FIFA 2026 Scoreboard",
+    tag: "HTML / SVG / JS",
+    desc: "Broadcast-style scoreboard editor with SVG flags and real-time animation overlay.",
+    url: "#"
+  },
+  {
+    id: "build_6",
+    title: "Roblox Avatar Viewer",
+    tag: "Three.js / Web API",
+    desc: "A web viewer for Roblox avatars with pose controls and procedural animation preview.",
+    url: "#"
+  }
+];
+
 // --- TAB SWITCHING ---
 function switchTab(tabId, btn){
   document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
@@ -760,6 +863,142 @@ function removePfp(){
   triggerLiveRefresh();
 }
 
+// --- RECENT BUILDS MANAGER ---
+function getStoredBuilds(){
+  const data = localStorage.getItem('aayeddie_custom_builds');
+  if(data){
+    try { return JSON.parse(data); } catch(e){}
+  }
+  return [...defaultBuilds];
+}
+
+function loadBuilds(){
+  const container = document.getElementById('builds-list-container');
+  if(!container) return;
+  container.innerHTML = '';
+
+  const builds = getStoredBuilds();
+
+  if(builds.length === 0){
+    container.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted);">No builds added yet. Click "Add New Build" to create one.</div>`;
+    return;
+  }
+
+  builds.forEach((item, idx) => {
+    const row = document.createElement('div');
+    row.className = 'item-row';
+    row.innerHTML = `
+      <div style="flex:1; overflow:hidden;">
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <strong style="color:#fff; font-size:0.9rem;">${item.title}</strong>
+          ${item.tag ? `<span class="tag-pill">${item.tag}</span>` : ''}
+        </div>
+        <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.3rem;">${item.desc || 'No description provided.'}</p>
+        ${item.url && item.url !== '#' ? `<a href="${item.url}" target="_blank" style="font-size:0.7rem; color:var(--accent-cyan); text-decoration:none;">🔗 ${item.url}</a>` : ''}
+      </div>
+      <div style="display:flex; gap:0.4rem; flex-shrink:0;">
+        <button class="btn btn-outline" style="padding:0.3rem 0.6rem; font-size:0.7rem;" onclick="moveBuild(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.3;"' : ''}>▲</button>
+        <button class="btn btn-outline" style="padding:0.3rem 0.6rem; font-size:0.7rem;" onclick="moveBuild(${idx}, 1)" ${idx === builds.length - 1 ? 'disabled style="opacity:0.3;"' : ''}>▼</button>
+        <button class="btn btn-outline" style="padding:0.3rem 0.6rem; font-size:0.7rem;" onclick="editBuildItem('${item.id}')">✏️ Edit</button>
+        <button class="btn-danger" onclick="deleteBuildItem('${item.id}')">Delete</button>
+      </div>
+    `;
+    container.appendChild(row);
+  });
+}
+
+function saveBuildItem(){
+  const idInput = document.getElementById('build-edit-id').value;
+  const title = document.getElementById('build-title').value.trim();
+  const tag = document.getElementById('build-tag').value.trim();
+  const desc = document.getElementById('build-desc').value.trim();
+  const url = document.getElementById('build-url').value.trim();
+
+  if(!title){
+    alert("Please enter a Build Title!");
+    return;
+  }
+
+  let builds = getStoredBuilds();
+
+  if(idInput){
+    // Update existing build
+    const idx = builds.findIndex(b => b.id === idInput);
+    if(idx !== -1){
+      builds[idx] = { id: idInput, title, tag, desc, url };
+    }
+  } else {
+    // Add new build
+    const newBuild = {
+      id: 'build_' + Date.now(),
+      title,
+      tag,
+      desc,
+      url: url || '#'
+    };
+    builds.push(newBuild);
+  }
+
+  localStorage.setItem('aayeddie_custom_builds', JSON.stringify(builds));
+  resetBuildForm();
+  loadBuilds();
+  showStatus('build-status');
+  triggerLiveRefresh();
+}
+
+function editBuildItem(id){
+  const builds = getStoredBuilds();
+  const item = builds.find(b => b.id === id);
+  if(!item) return;
+
+  document.getElementById('build-edit-id').value = item.id;
+  document.getElementById('build-title').value = item.title || '';
+  document.getElementById('build-tag').value = item.tag || '';
+  document.getElementById('build-desc').value = item.desc || '';
+  document.getElementById('build-url').value = item.url || '';
+
+  document.getElementById('build-form-title').textContent = '✏️ Edit Build';
+  document.getElementById('btn-save-build').textContent = 'Update Build';
+  document.getElementById('btn-cancel-build').style.display = 'inline-block';
+  switchTab('tab-builds');
+}
+
+function resetBuildForm(){
+  document.getElementById('build-edit-id').value = '';
+  document.getElementById('build-title').value = '';
+  document.getElementById('build-tag').value = '';
+  document.getElementById('build-desc').value = '';
+  document.getElementById('build-url').value = '';
+
+  document.getElementById('build-form-title').textContent = '🛠️ Add New Build';
+  document.getElementById('btn-save-build').textContent = 'Add Build';
+  document.getElementById('btn-cancel-build').style.display = 'none';
+}
+
+function deleteBuildItem(id){
+  if(confirm("Are you sure you want to delete this build item?")){
+    let builds = getStoredBuilds();
+    builds = builds.filter(b => b.id !== id);
+    localStorage.setItem('aayeddie_custom_builds', JSON.stringify(builds));
+    loadBuilds();
+    triggerLiveRefresh();
+  }
+}
+
+function moveBuild(idx, dir){
+  let builds = getStoredBuilds();
+  const targetIdx = idx + dir;
+  if(targetIdx < 0 || targetIdx >= builds.length) return;
+
+  const temp = builds[idx];
+  builds[idx] = builds[targetIdx];
+  builds[targetIdx] = temp;
+
+  localStorage.setItem('aayeddie_custom_builds', JSON.stringify(builds));
+  loadBuilds();
+  triggerLiveRefresh();
+}
+
 // --- EDIT PENCIL MODALS ---
 function openPencilModal(section){
   currentPencilTarget = section;
@@ -791,6 +1030,15 @@ function openPencilModal(section){
       <div class="field" style="margin-top:0.8rem;"><label>Category Name</label><input type="text" id="pencil-hl-cat" value="New Category"></div>
       <div class="field"><label>Fallback Emoji</label><input type="text" id="pencil-hl-icon" value="🧩"></div>
       <div class="field"><label>Ring Cover PFP File</label><input type="file" id="pencil-hl-ring-file" accept="image/*"></div>
+    `;
+  } else if(section === 'builds'){
+    title.textContent = '✏️ Edit Recent Builds';
+    body.innerHTML = `
+      <p style="font-size:0.85rem; color:var(--text-muted);">Quickly add a build card or switch to the Builds tab for full control:</p>
+      <div class="field" style="margin-top:0.8rem;"><label>Build Title</label><input type="text" id="pencil-build-title" placeholder="e.g. DroidBay"></div>
+      <div class="field"><label>Tag / Category</label><input type="text" id="pencil-build-tag" placeholder="e.g. Electron / Android"></div>
+      <div class="field"><label>Description</label><textarea id="pencil-build-desc" rows="2" placeholder="Short description..."></textarea></div>
+      <button class="btn btn-outline" style="margin-top:0.5rem;" onclick="closePencilModal(); switchTab('tab-builds');">Open Full Builds Manager Tab</button>
     `;
   } else if(section === 'socials'){
     title.textContent = '✏️ Edit Social Hub';
@@ -860,6 +1108,17 @@ function savePencilModal(){
       reader.readAsDataURL(fileInput.files[0]);
     } else {
       saveRing("");
+    }
+  } else if(currentPencilTarget === 'builds'){
+    const title = document.getElementById('pencil-build-title').value;
+    const tag = document.getElementById('pencil-build-tag').value;
+    const desc = document.getElementById('pencil-build-desc').value;
+    if(title){
+      let builds = getStoredBuilds();
+      builds.push({ id: 'build_' + Date.now(), title, tag, desc, url: '#' });
+      localStorage.setItem('aayeddie_custom_builds', JSON.stringify(builds));
+      loadBuilds();
+      triggerLiveRefresh();
     }
   } else if(currentPencilTarget === 'socials'){
     const name = document.getElementById('pencil-soc-name').value;
@@ -988,7 +1247,6 @@ function createNewHighlightRing(){
 
   const saveRing = (ringCoverData) => {
     let highlights = getStoredHighlights();
-    // Include an initial default slide so the highlight functions immediately when clicked on the website
     const newRing = {
       icon,
       coverImage: ringCoverData || "",
@@ -1142,6 +1400,7 @@ function exportFullConfig(){
       accent1: localStorage.getItem('aayeddie_accent1') || '#8b5cf6',
       accent2: localStorage.getItem('aayeddie_accent2') || '#22d3ee'
     },
+    builds: getStoredBuilds(),
     socials: JSON.parse(localStorage.getItem('aayeddie_custom_socials') || '[]'),
     highlights: getStoredHighlights()
   };
@@ -1164,6 +1423,7 @@ function resetDefaults(){
     localStorage.clear();
     currentPfpDataUrl = '';
     initPfpDisplay();
+    loadBuilds();
     loadSocials();
     loadHighlightsRings();
     exportFullConfig();
@@ -1192,7 +1452,7 @@ Official portfolio and media web engine for @${user}.
 Deployment active at: https://${user}.github.io/${repo}/
 
 ## 🛠️ Local Customization
-1. Open \`admin.html\` locally (or on the deployed site) to edit site text, PFP, social links, and highlights.
+1. Open \`admin.html\` locally (or on the deployed site) to edit site text, PFP, builds, social links, and highlights.
 2. Click **Download data.json** and place it in the repo root, replacing the existing one.
 3. Commit and push — \`index.html\` loads \`data.json\` on every visit, so your changes go live for all visitors after deployment via GitHub Actions.
 `;
@@ -1216,6 +1476,7 @@ function showStatus(id){
 
 // Initial Loading
 initPfpDisplay();
+loadBuilds();
 loadSocials();
 loadHighlightsRings();
 generateRepoFiles();
