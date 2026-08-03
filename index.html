@@ -201,12 +201,11 @@
     }
 
     /* =============================================== */
-    /* BUILDS CONVERTED TO SLIDING IMAGE GALLERY       */
+    /* CLEAN SLIDING IMAGE GALLERY (NO NAV BUTTONS)    */
     /* =============================================== */
     .gallery-wrapper {
       position: relative;
-      display: flex;
-      align-items: center;
+      width: 100%;
     }
 
     .gallery-scroll {
@@ -219,6 +218,15 @@
       scrollbar-width: thin;
       scrollbar-color: var(--accent-cyan) rgba(255,255,255,0.05);
       width: 100%;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .gallery-scroll.active {
+      cursor: grabbing;
+      scroll-behavior: auto;
+      scroll-snap-type: none;
     }
 
     .gallery-scroll::-webkit-scrollbar { height: 6px; }
@@ -241,6 +249,7 @@
       flex-direction: column;
       justify-content: flex-end;
       text-decoration: none;
+      cursor: pointer;
     }
 
     .gallery-card img {
@@ -251,6 +260,7 @@
       object-fit: cover;
       display: block;
       transition: transform 0.4s ease;
+      pointer-events: none;
     }
 
     .gallery-card-placeholder {
@@ -261,6 +271,7 @@
       align-items: center;
       justify-content: center;
       font-size: 3rem;
+      pointer-events: none;
     }
 
     .gallery-card:hover {
@@ -278,6 +289,7 @@
       z-index: 2;
       padding: 2rem 1.2rem 1rem;
       background: linear-gradient(to top, rgba(5, 6, 13, 0.95) 20%, rgba(5, 6, 13, 0.6) 70%, transparent);
+      pointer-events: none;
     }
 
     .gallery-title {
@@ -296,39 +308,68 @@
       line-height: 1.4;
     }
 
-    .gallery-link-icon {
-      font-size: 0.9rem;
-      color: var(--accent-cyan);
-    }
-
-    .gallery-nav-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 10;
-      background: rgba(5, 6, 13, 0.8);
-      border: 1px solid var(--border-color);
-      color: #fff;
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.3rem;
-      display: flex;
-      align-items: center;
+    /* FULLSCREEN IMAGE LIGHTBOX MODAL */
+    .fullscreen-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 4, 9, 0.95);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
       justify-content: center;
-      backdrop-filter: blur(6px);
-      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+      align-items: center;
+      padding: 1.5rem;
+      cursor: zoom-out;
     }
 
-    .gallery-nav-btn:hover {
-      background: var(--accent-violet);
-      border-color: #fff;
-      transform: translateY(-50%) scale(1.1);
+    .fullscreen-content {
+      max-width: 95vw;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
     }
 
-    .gallery-nav-btn.left { left: -16px; }
-    .gallery-nav-btn.right { right: -16px; }
+    .fullscreen-img {
+      max-width: 100%;
+      max-height: 82vh;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(34, 211, 238, 0.2);
+    }
+
+    .fullscreen-caption {
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .fullscreen-title {
+      font-family: var(--font-head);
+      font-size: 1.3rem;
+      color: #fff;
+      margin-bottom: 0.2rem;
+    }
+
+    .fullscreen-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .fullscreen-close {
+      position: absolute;
+      top: -45px;
+      right: 0;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+
+    .fullscreen-close:hover { opacity: 1; }
 
     /* INSTAGRAM-STYLE STORY VIEWER */
     .story-modal {
@@ -464,7 +505,6 @@
       line-height: 1.35;
     }
 
-    /* STORY MODAL GALLERY MODE */
     .modal-gallery-wrap {
       flex: 1;
       display: flex;
@@ -537,7 +577,6 @@
 
     @media (max-width: 480px) {
       .gallery-card { min-width: 90%; max-width: 90%; }
-      .gallery-nav-btn { display: none; }
       .story-content { height: 92vh; border-radius: 14px; }
       .modal-gallery-photo { min-width: 88%; max-width: 88%; }
     }
@@ -565,15 +604,24 @@
     <section id="gallery-section" style="display:none;">
       <h2 class="section-title">🖼️ Gallery Showcase</h2>
       <div class="gallery-wrapper">
-        <button class="gallery-nav-btn left" onclick="slideMainGallery(-1)">‹</button>
         <div id="main-gallery-scroll" class="gallery-scroll"></div>
-        <button class="gallery-nav-btn right" onclick="slideMainGallery(1)">›</button>
       </div>
     </section>
 
     <footer>
       <p>© <span id="year"></span> @aayeddie. All rights reserved.</p>
     </footer>
+  </div>
+
+  <div id="fullscreen-modal" class="fullscreen-modal" onclick="closeFullscreen()">
+    <div class="fullscreen-content" onclick="event.stopPropagation()">
+      <button class="fullscreen-close" onclick="closeFullscreen()">&times;</button>
+      <img id="fullscreen-img" class="fullscreen-img" src="" alt="Full resolution view">
+      <div class="fullscreen-caption">
+        <div id="fullscreen-title" class="fullscreen-title"></div>
+        <div id="fullscreen-desc" class="fullscreen-desc"></div>
+      </div>
+    </div>
   </div>
 
   <div id="modal" class="story-modal">
@@ -611,6 +659,10 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    let isDragging = false;
+    let startX, scrollLeft;
+    let hasDraggedDistance = false;
+
     async function loadSiteData() {
       let data = {};
       try {
@@ -626,7 +678,6 @@
       const title = localStorage.getItem('aayeddie_hero_title') || (data.hero && data.hero.title) || 'aayeddie';
       const tagline = localStorage.getItem('aayeddie_hero_tagline') || (data.hero && data.hero.tagline) || '';
 
-      // Set PFP
       if (pfp) {
         const img = document.getElementById('pfp-img');
         img.src = pfp;
@@ -634,16 +685,13 @@
         document.getElementById('pfp-fallback').style.display = 'none';
       }
 
-      // Set Hero Text
       document.getElementById('hero-title').textContent = title;
       document.getElementById('hero-tagline').textContent = tagline;
 
-      // Set Socials
+      // Socials
       const socialsData = localStorage.getItem('aayeddie_custom_socials');
       const socials = socialsData ? JSON.parse(socialsData) : (data.socials || []);
-      const socialsGrid = document.getElementById('socials-grid');
-
-      socialsGrid.innerHTML = socials.map(s => `
+      document.getElementById('socials-grid').innerHTML = socials.map(s => `
         <a class="social-card" href="${s.url}" target="_blank" rel="noopener">
           <div class="social-badge" style="background:${s.color || 'var(--accent-violet)'}">${s.init || s.name[0]}</div>
           <div>
@@ -653,13 +701,12 @@
         </a>
       `).join('');
 
-      // Set Highlights
+      // Highlights
       const highlightsData = localStorage.getItem('aayeddie_custom_highlights');
       const highlights = highlightsData ? JSON.parse(highlightsData) : (data.highlights || []);
       if (highlights.length > 0) {
         document.getElementById('highlights-section').style.display = 'block';
-        const hScroll = document.getElementById('highlights-scroll');
-        hScroll.innerHTML = highlights.map((h, index) => `
+        document.getElementById('highlights-scroll').innerHTML = highlights.map((h, index) => `
           <div class="highlight-ring" onclick="openHighlight(${index})">
             <div class="ring-outer" style="background: linear-gradient(135deg, ${h.c1 || '#8b5cf6'}, ${h.c2 || '#22d3ee'});">
               <div class="ring-inner">
@@ -672,10 +719,9 @@
         window.siteHighlights = highlights;
       }
 
-      // RENDER BUILDS / GALLERY ITEMS
+      // RENDER BUILDS / GALLERY
       const buildsData = localStorage.getItem('aayeddie_custom_builds');
       const builds = buildsData ? JSON.parse(buildsData) : (data.builds || []);
-      
       const galleryData = localStorage.getItem('aayeddie_custom_gallery');
       const gallery = galleryData ? JSON.parse(galleryData) : (data.gallery || []);
 
@@ -685,40 +731,84 @@
         document.getElementById('gallery-section').style.display = 'block';
         const gScroll = document.getElementById('main-gallery-scroll');
 
-        gScroll.innerHTML = items.map(b => {
-          const hasUrl = b.url && b.url !== '#';
-          const tag = hasUrl ? 'a' : 'div';
-          const hrefAttr = hasUrl ? `href="${b.url}" target="_blank" rel="noopener"` : '';
-
-          // Look for image across all potential key names
+        gScroll.innerHTML = items.map((b, idx) => {
           const imageSrc = b.image || b.img || b.cover || b.imageUrl || b.thumbnail || b.url_image || '';
+          const title = b.title || '';
+          const desc = b.desc || b.caption || '';
 
           return `
-            <${tag} class="gallery-card" ${hrefAttr}>
+            <div class="gallery-card" onclick="onCardClick(event, '${encodeURIComponent(imageSrc)}', '${encodeURIComponent(title)}', '${encodeURIComponent(desc)}')">
               ${imageSrc 
-                ? `<img src="${imageSrc}" alt="${b.title || 'Image'}" loading="lazy" onerror="this.onerror=null; this.parentElement.querySelector('.gallery-card-placeholder').style.display='flex'; this.remove();">
+                ? `<img src="${imageSrc}" alt="${title}" loading="lazy" onerror="this.onerror=null; this.parentElement.querySelector('.gallery-card-placeholder').style.display='flex'; this.remove();">
                    <div class="gallery-card-placeholder" style="display:none;">🖼️</div>` 
                 : `<div class="gallery-card-placeholder">🚀</div>`}
               <div class="gallery-caption">
                 <div class="gallery-title">
-                  <span>${b.title || ''}</span>
-                  ${hasUrl ? `<span class="gallery-link-icon">→</span>` : ''}
+                  <span>${title}</span>
                 </div>
-                <div class="gallery-desc">${b.desc || b.caption || ''}</div>
+                <div class="gallery-desc">${desc}</div>
               </div>
-            </${tag}>
+            </div>
           `;
         }).join('');
+
+        setupDragToScroll(gScroll);
       }
     }
 
-    /* Main Gallery Slide Navigation */
-    function slideMainGallery(direction) {
-      const el = document.getElementById('main-gallery-scroll');
-      if (el) {
-        const slideAmount = el.clientWidth * 0.85;
-        el.scrollBy({ left: direction * slideAmount, behavior: 'smooth' });
+    /* DRAG TO SCROLL ENGINE FOR MAIN GALLERY */
+    function setupDragToScroll(slider) {
+      slider.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        hasDraggedDistance = false;
+        slider.classList.add('active');
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+      });
+
+      slider.addEventListener('mouseleave', () => {
+        isDragging = false;
+        slider.classList.remove('active');
+      });
+
+      slider.addEventListener('mouseup', () => {
+        isDragging = false;
+        slider.classList.remove('active');
+      });
+
+      slider.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 1.6; // Scroll speed multiplier
+        if (Math.abs(walk) > 5) {
+          hasDraggedDistance = true;
+        }
+        slider.scrollLeft = scrollLeft - walk;
+      });
+    }
+
+    /* OPEN FULLSCREEN IMAGE VIEW ON CLICK */
+    function onCardClick(e, encImg, encTitle, encDesc) {
+      if (hasDraggedDistance) return; // Don't open lightbox if user was dragging
+      const img = decodeURIComponent(encImg);
+      const title = decodeURIComponent(encTitle);
+      const desc = decodeURIComponent(encDesc);
+
+      if (img) {
+        openFullscreen(img, title, desc);
       }
+    }
+
+    function openFullscreen(imgSrc, title, desc) {
+      document.getElementById('fullscreen-img').src = imgSrc;
+      document.getElementById('fullscreen-title').textContent = title || '';
+      document.getElementById('fullscreen-desc').textContent = desc || '';
+      document.getElementById('fullscreen-modal').style.display = 'flex';
+    }
+
+    function closeFullscreen() {
+      document.getElementById('fullscreen-modal').style.display = 'none';
     }
 
     /* =====================================================
@@ -750,7 +840,7 @@
       setGalleryMode(false);
 
       document.getElementById('modal').style.display = 'flex';
-      document.addEventListener('keydown', handleStoryKeydown);
+      document.addEventListener('keydown', handleKeydown);
 
       showStorySlide(0);
     }
@@ -825,11 +915,15 @@
       storyTimer = setTimeout(() => storyNext(), remaining);
     }
 
-    function handleStoryKeydown(e) {
-      if (document.getElementById('modal').style.display !== 'flex') return;
-      if (e.key === 'ArrowRight') storyNext();
-      else if (e.key === 'ArrowLeft') storyPrev();
-      else if (e.key === 'Escape') closeModal();
+    function handleKeydown(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+        closeFullscreen();
+      }
+      if (document.getElementById('modal').style.display === 'flex') {
+        if (e.key === 'ArrowRight') storyNext();
+        else if (e.key === 'ArrowLeft') storyPrev();
+      }
     }
 
     (function setupStoryStage() {
@@ -855,7 +949,6 @@
       if (e) e.stopPropagation();
       document.getElementById('modal').style.display = 'none';
       clearTimeout(storyTimer);
-      document.removeEventListener('keydown', handleStoryKeydown);
     }
 
     document.getElementById('modal').addEventListener('click', (e) => {
