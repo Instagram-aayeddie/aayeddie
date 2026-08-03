@@ -201,15 +201,15 @@
     }
 
     /* =============================================== */
-    /* MAIN SLIDING IMAGE GALLERY SHOWCASE             */
+    /* BUILDS CONVERTED TO SLIDING IMAGE GALLERY       */
     /* =============================================== */
-    .main-gallery-wrapper {
+    .gallery-wrapper {
       position: relative;
       display: flex;
       align-items: center;
     }
 
-    .main-gallery-scroll {
+    .gallery-scroll {
       display: flex;
       gap: 1.2rem;
       overflow-x: auto;
@@ -221,69 +221,99 @@
       width: 100%;
     }
 
-    .main-gallery-scroll::-webkit-scrollbar { height: 6px; }
-    .main-gallery-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 4px; }
-    .main-gallery-scroll::-webkit-scrollbar-thumb { background: var(--accent-cyan); border-radius: 4px; }
+    .gallery-scroll::-webkit-scrollbar { height: 6px; }
+    .gallery-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 4px; }
+    .gallery-scroll::-webkit-scrollbar-thumb { background: var(--accent-cyan); border-radius: 4px; }
 
-    .main-gallery-card {
-      min-width: 85%;
-      max-width: 85%;
-      aspect-ratio: 16 / 10;
+    .gallery-card {
+      min-width: 82%;
+      max-width: 82%;
+      aspect-ratio: 16 / 9;
       border-radius: 16px;
       overflow: hidden;
       position: relative;
       scroll-snap-align: center;
       border: 1px solid var(--border-color);
-      background: #000;
+      background: #0a0b16;
       flex-shrink: 0;
       transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      text-decoration: none;
     }
 
-    .main-gallery-card img {
+    .gallery-card img {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      transition: transform 0.4s ease;
     }
 
-    .main-gallery-card:hover {
+    .gallery-card-placeholder {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(34, 211, 238, 0.15));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .gallery-card:hover {
       border-color: var(--accent-cyan);
       transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 20px rgba(34, 211, 238, 0.25);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 25px rgba(34, 211, 238, 0.25);
     }
 
-    .main-gallery-caption {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 1.5rem 1rem 0.8rem;
-      background: linear-gradient(to top, rgba(5, 6, 13, 0.95), transparent);
+    .gallery-card:hover img {
+      transform: scale(1.04);
     }
 
-    .main-gallery-title {
+    .gallery-caption {
+      position: relative;
+      z-index: 2;
+      padding: 2rem 1.2rem 1rem;
+      background: linear-gradient(to top, rgba(5, 6, 13, 0.95) 20%, rgba(5, 6, 13, 0.6) 70%, transparent);
+    }
+
+    .gallery-title {
       font-family: var(--font-head);
-      font-size: 1rem;
+      font-size: 1.15rem;
       color: #fff;
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .main-gallery-sub {
-      font-size: 0.78rem;
+    .gallery-desc {
+      font-size: 0.82rem;
       color: var(--text-muted);
+      line-height: 1.4;
     }
 
-    .gallery-slide-btn {
+    .gallery-link-icon {
+      font-size: 0.9rem;
+      color: var(--accent-cyan);
+    }
+
+    .gallery-nav-btn {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
       z-index: 10;
-      background: rgba(5, 6, 13, 0.75);
+      background: rgba(5, 6, 13, 0.8);
       border: 1px solid var(--border-color);
       color: #fff;
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -291,14 +321,14 @@
       transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     }
 
-    .gallery-slide-btn:hover {
+    .gallery-nav-btn:hover {
       background: var(--accent-violet);
       border-color: #fff;
       transform: translateY(-50%) scale(1.1);
     }
 
-    .gallery-slide-btn.left { left: -15px; }
-    .gallery-slide-btn.right { right: -15px; }
+    .gallery-nav-btn.left { left: -16px; }
+    .gallery-nav-btn.right { right: -16px; }
 
     /* INSTAGRAM-STYLE STORY VIEWER */
     .story-modal {
@@ -435,7 +465,7 @@
     }
 
     /* STORY MODAL GALLERY MODE */
-    .gallery-scroll-wrap {
+    .modal-gallery-wrap {
       flex: 1;
       display: flex;
       align-items: center;
@@ -443,7 +473,7 @@
       padding: 0.5rem 0.3rem;
       overflow: hidden;
     }
-    .gallery-scroll {
+    .modal-gallery-scroll {
       flex: 1;
       display: flex;
       gap: 1rem;
@@ -456,7 +486,7 @@
       height: 100%;
       align-items: center;
     }
-    .gallery-nav {
+    .modal-gallery-nav {
       background: rgba(255,255,255,0.08);
       border: none;
       color: #fff;
@@ -469,9 +499,9 @@
       flex-shrink: 0;
       transition: background 0.2s ease;
     }
-    .gallery-nav:hover { background: rgba(255,255,255,0.2); }
+    .modal-gallery-nav:hover { background: rgba(255,255,255,0.2); }
 
-    .gallery-photo {
+    .modal-gallery-photo {
       position: relative;
       min-width: 78%;
       max-width: 78%;
@@ -483,13 +513,13 @@
       scroll-snap-align: center;
       background: #000;
     }
-    .gallery-photo img {
+    .modal-gallery-photo img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
-    .gallery-photo-caption {
+    .modal-gallery-caption {
       position: absolute;
       bottom: 0; left: 0; right: 0;
       padding: 0.6rem 0.7rem;
@@ -506,10 +536,10 @@
     }
 
     @media (max-width: 480px) {
-      .main-gallery-card { min-width: 92%; max-width: 92%; }
-      .gallery-slide-btn { display: none; } /* relies on swipe on smaller screens */
+      .gallery-card { min-width: 90%; max-width: 90%; }
+      .gallery-nav-btn { display: none; }
       .story-content { height: 92vh; border-radius: 14px; }
-      .gallery-photo { min-width: 88%; max-width: 88%; }
+      .modal-gallery-photo { min-width: 88%; max-width: 88%; }
     }
   </style>
 </head>
@@ -534,10 +564,10 @@
 
     <section id="gallery-section" style="display:none;">
       <h2 class="section-title">🖼️ Gallery Showcase</h2>
-      <div class="main-gallery-wrapper">
-        <button class="gallery-slide-btn left" onclick="slideMainGallery(-1)">‹</button>
-        <div id="main-gallery-scroll" class="main-gallery-scroll"></div>
-        <button class="gallery-slide-btn right" onclick="slideMainGallery(1)">›</button>
+      <div class="gallery-wrapper">
+        <button class="gallery-nav-btn left" onclick="slideMainGallery(-1)">‹</button>
+        <div id="main-gallery-scroll" class="gallery-scroll"></div>
+        <button class="gallery-nav-btn right" onclick="slideMainGallery(1)">›</button>
       </div>
     </section>
 
@@ -569,10 +599,10 @@
         </div>
       </div>
 
-      <div class="gallery-scroll-wrap" id="gallery-scroll-wrap" style="display:none;">
-        <button class="gallery-nav" onclick="scrollHighlightGallery(-1)">‹</button>
-        <div class="gallery-scroll" id="gallery-scroll"></div>
-        <button class="gallery-nav" onclick="scrollHighlightGallery(1)">›</button>
+      <div class="modal-gallery-wrap" id="modal-gallery-wrap" style="display:none;">
+        <button class="modal-gallery-nav" onclick="scrollHighlightGallery(-1)">‹</button>
+        <div class="modal-gallery-scroll" id="modal-gallery-scroll"></div>
+        <button class="modal-gallery-nav" onclick="scrollHighlightGallery(1)">›</button>
       </div>
 
     </div>
@@ -642,23 +672,34 @@
         window.siteHighlights = highlights;
       }
 
-      // Set Main Image Gallery
-      const galleryData = localStorage.getItem('aayeddie_custom_gallery');
-      const galleryImages = galleryData ? JSON.parse(galleryData) : (data.gallery || []);
-      if (galleryImages.length > 0) {
+      // SUBSTITUTE BUILDS DATA DIRECTLY INTO SLIDING GALLERY SHOWCASE
+      const buildsData = localStorage.getItem('aayeddie_custom_builds');
+      const builds = buildsData ? JSON.parse(buildsData) : (data.builds || []);
+      
+      if (builds.length > 0) {
         document.getElementById('gallery-section').style.display = 'block';
         const gScroll = document.getElementById('main-gallery-scroll');
-        gScroll.innerHTML = galleryImages.map(img => `
-          <div class="main-gallery-card">
-            <img src="${img.url || img.image}" alt="${img.title || 'Gallery image'}" loading="lazy">
-            ${(img.title || img.caption) ? `
-              <div class="main-gallery-caption">
-                ${img.title ? `<div class="main-gallery-title">${img.title}</div>` : ''}
-                ${img.caption ? `<div class="main-gallery-sub">${img.caption}</div>` : ''}
+        gScroll.innerHTML = builds.map(b => {
+          const hasUrl = b.url && b.url !== '#';
+          const tag = hasUrl ? 'a' : 'div';
+          const hrefAttr = hasUrl ? `href="${b.url}" target="_blank" rel="noopener"` : '';
+          const imageSrc = b.image || b.cover || b.img || '';
+
+          return `
+            <${tag} class="gallery-card" ${hrefAttr}>
+              ${imageSrc 
+                ? `<img src="${imageSrc}" alt="${b.title || 'Build'}" loading="lazy">` 
+                : `<div class="gallery-card-placeholder">🚀</div>`}
+              <div class="gallery-caption">
+                <div class="gallery-title">
+                  <span>${b.title}</span>
+                  ${hasUrl ? `<span class="gallery-link-icon">→</span>` : ''}
+                </div>
+                <div class="gallery-desc">${b.desc || ''}</div>
               </div>
-            ` : ''}
-          </div>
-        `).join('');
+            </${tag}>
+          `;
+        }).join('');
       }
     }
 
@@ -820,7 +861,7 @@
     function setGalleryMode(on) {
       document.getElementById('story-stage').style.display = on ? 'none' : 'flex';
       document.getElementById('story-progress-row').style.display = on ? 'none' : 'flex';
-      document.getElementById('gallery-scroll-wrap').style.display = on ? 'flex' : 'none';
+      document.getElementById('modal-gallery-wrap').style.display = on ? 'flex' : 'none';
       const btn = document.getElementById('story-gallery-toggle');
       btn.textContent = on ? '▶' : '▦';
       btn.title = on ? 'Back to Story View' : 'View as scrollable gallery';
@@ -834,11 +875,11 @@
     }
 
     function renderHighlightGallery() {
-      const wrap = document.getElementById('gallery-scroll');
+      const wrap = document.getElementById('modal-gallery-scroll');
       wrap.innerHTML = storySlides.map((s, idx) => `
-        <div class="gallery-photo" onclick="jumpToStorySlide(${idx})">
+        <div class="modal-gallery-photo" onclick="jumpToStorySlide(${idx})">
           <img src="${s.image || ''}" alt="${s.title || ''}">
-          <div class="gallery-photo-caption">${s.title || ''}</div>
+          <div class="modal-gallery-caption">${s.title || ''}</div>
         </div>
       `).join('');
     }
@@ -850,7 +891,7 @@
     }
 
     function scrollHighlightGallery(dir) {
-      const el = document.getElementById('gallery-scroll');
+      const el = document.getElementById('modal-gallery-scroll');
       if (el) el.scrollBy({ left: dir * 300, behavior: 'smooth' });
     }
 
