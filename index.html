@@ -226,8 +226,8 @@
     .gallery-scroll::-webkit-scrollbar-thumb { background: var(--accent-cyan); border-radius: 4px; }
 
     .gallery-card {
-      min-width: 82%;
-      max-width: 82%;
+      min-width: 85%;
+      max-width: 85%;
       aspect-ratio: 16 / 9;
       border-radius: 16px;
       overflow: hidden;
@@ -672,30 +672,39 @@
         window.siteHighlights = highlights;
       }
 
-      // SUBSTITUTE BUILDS DATA DIRECTLY INTO SLIDING GALLERY SHOWCASE
+      // RENDER BUILDS / GALLERY ITEMS
       const buildsData = localStorage.getItem('aayeddie_custom_builds');
       const builds = buildsData ? JSON.parse(buildsData) : (data.builds || []);
       
-      if (builds.length > 0) {
+      const galleryData = localStorage.getItem('aayeddie_custom_gallery');
+      const gallery = galleryData ? JSON.parse(galleryData) : (data.gallery || []);
+
+      const items = builds.length > 0 ? builds : gallery;
+
+      if (items.length > 0) {
         document.getElementById('gallery-section').style.display = 'block';
         const gScroll = document.getElementById('main-gallery-scroll');
-        gScroll.innerHTML = builds.map(b => {
+
+        gScroll.innerHTML = items.map(b => {
           const hasUrl = b.url && b.url !== '#';
           const tag = hasUrl ? 'a' : 'div';
           const hrefAttr = hasUrl ? `href="${b.url}" target="_blank" rel="noopener"` : '';
-          const imageSrc = b.image || b.cover || b.img || '';
+
+          // Look for image across all potential key names
+          const imageSrc = b.image || b.img || b.cover || b.imageUrl || b.thumbnail || b.url_image || '';
 
           return `
             <${tag} class="gallery-card" ${hrefAttr}>
               ${imageSrc 
-                ? `<img src="${imageSrc}" alt="${b.title || 'Build'}" loading="lazy">` 
+                ? `<img src="${imageSrc}" alt="${b.title || 'Image'}" loading="lazy" onerror="this.onerror=null; this.parentElement.querySelector('.gallery-card-placeholder').style.display='flex'; this.remove();">
+                   <div class="gallery-card-placeholder" style="display:none;">🖼️</div>` 
                 : `<div class="gallery-card-placeholder">🚀</div>`}
               <div class="gallery-caption">
                 <div class="gallery-title">
-                  <span>${b.title}</span>
+                  <span>${b.title || ''}</span>
                   ${hasUrl ? `<span class="gallery-link-icon">→</span>` : ''}
                 </div>
-                <div class="gallery-desc">${b.desc || ''}</div>
+                <div class="gallery-desc">${b.desc || b.caption || ''}</div>
               </div>
             </${tag}>
           `;
