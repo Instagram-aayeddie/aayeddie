@@ -1,5 +1,5 @@
 {
-  "pfp": "",
+  "pfp": "https://scontent-hou1-1.cdninstagram.com/v/t51.82787-15/689274761_17959428831121164_4260723724417407630_n.jpg?stp=dst-jpegr_e35_tt6&_nc_cat=111&ig_cache_key=Mzg5MzY3Njk1MTUzODE1NDg4MQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMjMxNi5oZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=OnSHhV7maJcQ7kNvwGMl3Ej&_nc_oc=AdqLvNBI-zdJyTsXrDJQBNNYffpF-NIxfxext6FYqYGAe-Lr7Wpf6f8juISNSE7_DCQ&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hou1-1.cdninstagram.com&_nc_gid=bz9-NyCDQQvAbJy1PaJWTw&_nc_ss=7a22e&oh=00_AQFNiXjNbF0B4day4W2hrw81Q8yQ3evlcmFZ7yHFyLcGwA&oe=6A76D55E",
   "hero": {
     "title": "aayeddie",
     "tagline": "Builder of small worlds — apps, games, and things that glow."
@@ -72,6 +72,48 @@
       "slides": [
         { "image": "", "title": "Oakview", "caption": "A Roblox island town built with MCP tooling.", "date": "2026" }
       ]
+    }
+  ],
+  "builds": [
+    {
+      "id": "build_1785791442960",
+      "title": "aayeddie",
+      "tag": "",
+      "desc": "",
+      "imageUrl": "https://github.com/Instagram-aayeddie/IMAGES/blob/main/_MG_3272.jpg?raw=true",
+      "url": "#"
+    },
+    {
+      "id": "build_1785793359570",
+      "title": "High School",
+      "tag": "",
+      "desc": "",
+      "imageUrl": "https://github.com/Instagram-aayeddie/IMAGES/blob/main/3DCCDA82-F88E-4EED-B40B-6E39977B53E1_1_105_c.jpeg?raw=true",
+      "url": "#"
+    },
+    {
+      "id": "build_1785793612033",
+      "title": "Sister at Graduation",
+      "tag": "",
+      "desc": "",
+      "imageUrl": "https://github.com/Instagram-aayeddie/IMAGES/blob/main/_MG_4829.JPG?raw=true",
+      "url": "#"
+    },
+    {
+      "id": "build_1785793269979",
+      "title": "Dallas 💥",
+      "tag": "",
+      "desc": "",
+      "imageUrl": "https://github.com/Instagram-aayeddie/IMAGES/blob/main/_MG_4939.jpg?raw=true",
+      "url": "#"
+    },
+    {
+      "id": "build_1785793411144",
+      "title": "High School",
+      "tag": "",
+      "desc": "",
+      "imageUrl": "https://github.com/Instagram-aayeddie/IMAGES/blob/main/F9751DFE-6647-476C-BE24-C86EAF5DA461_1_105_c.jpeg?raw=true",
+      "url": "#"
     }
   ]
 }
