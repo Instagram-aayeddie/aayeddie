@@ -582,13 +582,52 @@
       .modal-gallery-photo { min-width: 88%; max-width: 88%; }
     }
   </style>
+
+  <script>
+    /* Image Error Handlers defined in HEAD to guarantee scope during HTML parsing */
+    function handleImgError(imgElement) {
+      if (!imgElement) return;
+
+      if (!imgElement.dataset.retried) {
+        imgElement.dataset.retried = 'true';
+        const originalSrc = imgElement.src;
+        setTimeout(() => {
+          const separator = originalSrc.includes('?') ? '&' : '?';
+          imgElement.src = originalSrc + separator + '_retry=' + Date.now();
+        }, 500);
+        return;
+      }
+
+      imgElement.style.display = 'none';
+      const parentCard = imgElement.closest('.gallery-card');
+      if (parentCard) {
+        const placeholder = parentCard.querySelector('.gallery-card-placeholder');
+        if (placeholder) placeholder.style.display = 'flex';
+      }
+    }
+
+    function handlePfpError(img) {
+      if (!img) return;
+      img.style.display = 'none';
+      const fallback = document.getElementById('pfp-fallback');
+      if (fallback) fallback.style.display = 'flex';
+    }
+
+    function handleFullscreenImgError(img) {
+      if (img) img.style.display = 'none';
+    }
+
+    function handleStoryImgError(img) {
+      if (img) img.style.display = 'none';
+    }
+  </script>
 </head>
 <body>
 
   <div class="container">
     <header>
       <div class="pfp-wrapper">
-        <img id="pfp-img" class="pfp-img" src="" alt="Profile Picture" style="display:none;">
+        <img id="pfp-img" class="pfp-img" src="" alt="Profile Picture" style="display:none;" onerror="handlePfpError(this)">
         <div id="pfp-fallback" class="pfp-fallback">⚡</div>
       </div>
       <h1 id="hero-title">aayeddie</h1>
@@ -617,7 +656,7 @@
   <div id="fullscreen-modal" class="fullscreen-modal" onclick="closeFullscreen()">
     <div class="fullscreen-content" onclick="event.stopPropagation()">
       <button class="fullscreen-close" onclick="closeFullscreen()">&times;</button>
-      <img id="fullscreen-img" class="fullscreen-img" src="" alt="Full resolution view">
+      <img id="fullscreen-img" class="fullscreen-img" src="" alt="Full resolution view" onerror="handleFullscreenImgError(this)">
       <div class="fullscreen-caption">
         <div id="fullscreen-title" class="fullscreen-title"></div>
         <div id="fullscreen-desc" class="fullscreen-desc"></div>
@@ -641,7 +680,7 @@
       </div>
 
       <div class="story-stage" id="story-stage">
-        <img id="story-img" class="story-img" src="" alt="Highlight slide">
+        <img id="story-img" class="story-img" src="" alt="Highlight slide" onerror="handleStoryImgError(this)">
         <div class="story-caption-wrap">
           <div class="story-caption-title" id="story-caption-title"></div>
           <div class="story-caption-text" id="story-caption-text"></div>
@@ -711,7 +750,7 @@
           <div class="highlight-ring" onclick="openHighlight(${index})">
             <div class="ring-outer" style="background: linear-gradient(135deg, ${h.c1 || '#8b5cf6'}, ${h.c2 || '#22d3ee'});">
               <div class="ring-inner">
-                ${h.coverImage ? `<img src="${h.coverImage}" alt="${h.cat}">` : `<span>${h.icon || '⭐'}</span>`}
+                ${h.coverImage ? `<img src="${h.coverImage}" alt="${h.cat}" onerror="this.onerror=null; this.parentElement.innerHTML='<span>${h.icon || '⭐'}</span>';">` : `<span>${h.icon || '⭐'}</span>`}
               </div>
             </div>
             <span class="ring-label">${h.cat}</span>
@@ -740,7 +779,7 @@
           return `
             <div class="gallery-card" onclick="onCardClick(event, '${encodeURIComponent(imageSrc)}', '${encodeURIComponent(title)}', '${encodeURIComponent(desc)}')">
               ${imageSrc 
-                ? `<img src="${imageSrc}" alt="${title}" loading="lazy" onerror="this.onerror=null; this.parentElement.querySelector('.gallery-card-placeholder').style.display='flex'; this.remove();">
+                ? `<img src="${imageSrc}" alt="${title}" loading="lazy" onerror="handleImgError(this)">
                    <div class="gallery-card-placeholder" style="display:none;">🖼️</div>` 
                 : `<div class="gallery-card-placeholder">🚀</div>`}
               <div class="gallery-caption">
@@ -802,7 +841,9 @@
     }
 
     function openFullscreen(imgSrc, title, desc) {
-      document.getElementById('fullscreen-img').src = imgSrc;
+      const imgEl = document.getElementById('fullscreen-img');
+      imgEl.style.display = 'block';
+      imgEl.src = imgSrc;
       document.getElementById('fullscreen-title').textContent = title || '';
       document.getElementById('fullscreen-desc').textContent = desc || '';
       document.getElementById('fullscreen-modal').style.display = 'flex';
@@ -861,7 +902,9 @@
       storyIndex = i;
       const slide = storySlides[i];
 
-      document.getElementById('story-img').src = slide.image || '';
+      const storyImg = document.getElementById('story-img');
+      storyImg.style.display = 'block';
+      storyImg.src = slide.image || '';
       document.getElementById('story-caption-title').textContent = slide.title || '';
       document.getElementById('story-caption-text').textContent = slide.caption || '';
       document.getElementById('story-slide-date').textContent = slide.date ? `Date: ${slide.date}` : '';
@@ -981,7 +1024,7 @@
       const wrap = document.getElementById('modal-gallery-scroll');
       wrap.innerHTML = storySlides.map((s, idx) => `
         <div class="modal-gallery-photo" onclick="jumpToStorySlide(${idx})">
-          <img src="${s.image || ''}" alt="${s.title || ''}">
+          <img src="${s.image || ''}" alt="${s.title || ''}" onerror="this.onerror=null; this.src=''; this.alt='Image unavailable';">
           <div class="modal-gallery-caption">${s.title || ''}</div>
         </div>
       `).join('');
