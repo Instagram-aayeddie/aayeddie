@@ -10,8 +10,8 @@
   <style>
     :root {
       --bg-dark: #05060d;
-      --card-bg: rgba(255, 255, 255, 0.03);
-      --border-color: rgba(255, 255, 255, 0.12);
+      --card-bg: rgba(18, 21, 38, 0.45);
+      --border-color: rgba(255, 255, 255, 0.15);
       --accent-violet: #8b5cf6;
       --accent-cyan: #22d3ee;
       --text-main: #f5f3ff;
@@ -24,17 +24,38 @@
 
     body {
       background-color: var(--bg-dark);
+      background-image: 
+        linear-gradient(135deg, rgba(5, 6, 13, 0.92), rgba(8, 10, 22, 0.85)),
+        url('https://scontent-hou1-1.cdninstagram.com/v/t51.82787-15/522608365_17957052389967403_6724229147812826609_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=106&ig_cache_key=MzY4NDU0NjA4NDgxNzg5NDgxNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuNzE5LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=mR9xJIl3wPwQ7kNvwFSMPob&_nc_oc=AdqTkJwXS-jiKzWaxDGOqqGrmIteJVi0T_xaSG1NuV-dFmjiYqjuEpZPAeEVQ8FkF1E&_nc_zt=23&_nc_ht=scontent-hou1-1.cdninstagram.com&_nc_gid=yKMir1IB-19vaWsaVUzY3A&_nc_ss=7b289&oh=00_AQG4ipO_kd_ZwVaHn2IZKn7C1GcLweNF6wcQ1aTlnGjeXQ&oe=6A772CB4');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
       color: var(--text-main);
       font-family: var(--font-mono);
       min-height: 100vh;
       padding: 2.5rem 1.5rem;
       display: flex;
       justify-content: center;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* BUBBLE CANVAS BACKGROUND */
+    #bubble-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
     }
 
     .container {
       width: 100%;
       max-width: 850px;
+      position: relative;
+      z-index: 1;
     }
 
     /* HEADER / HERO */
@@ -50,7 +71,7 @@
       border-radius: 50%;
       padding: 3px;
       background: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
-      box-shadow: 0 0 25px rgba(139, 92, 246, 0.3);
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
     }
 
     .pfp-img {
@@ -107,6 +128,8 @@
       gap: 0.6rem;
       padding: 0.6rem 1.1rem;
       background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 1px solid var(--border-color);
       border-radius: 10px;
       color: var(--text-main);
@@ -118,7 +141,7 @@
     .social-card:hover {
       transform: translateY(-2px);
       border-color: var(--accent-cyan);
-      box-shadow: 0 4px 15px rgba(34, 211, 238, 0.15);
+      box-shadow: 0 4px 15px rgba(34, 211, 238, 0.2);
     }
 
     .social-badge {
@@ -142,6 +165,7 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      text-shadow: 0 0 12px rgba(34, 211, 238, 0.4);
     }
 
     /* HIGHLIGHT RINGS */
@@ -242,7 +266,9 @@
       position: relative;
       scroll-snap-align: center;
       border: 1px solid var(--border-color);
-      background: #0a0b16;
+      background: rgba(10, 11, 22, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       flex-shrink: 0;
       transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
       display: flex;
@@ -624,6 +650,9 @@
 </head>
 <body>
 
+  <!-- INTERACTIVE BUBBLE CANVAS BACKGROUND -->
+  <canvas id="bubble-canvas"></canvas>
+
   <div class="container">
     <header>
       <div class="pfp-wrapper">
@@ -698,6 +727,152 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* =====================================================
+       PHYSICS BUBBLE ENGINE (MOUSE & TOUCH INTERACTION)
+       ===================================================== */
+    (function initInteractiveBubbles() {
+      const canvas = document.getElementById('bubble-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
+
+      const mouse = {
+        x: -1000,
+        y: -1000,
+        radius: 180,
+        isActive: false
+      };
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const trackPointer = (x, y) => {
+        mouse.x = x;
+        mouse.y = y;
+        mouse.isActive = true;
+      };
+
+      window.addEventListener('mousemove', (e) => trackPointer(e.clientX, e.clientY));
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+          trackPointer(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      });
+
+      window.addEventListener('mouseleave', () => { mouse.isActive = false; });
+      window.addEventListener('touchend', () => { mouse.isActive = false; });
+
+      class Bubble {
+        constructor() {
+          this.reset(true);
+        }
+
+        reset(initial = false) {
+          this.radius = Math.random() * 26 + 10;
+          this.x = Math.random() * width;
+          this.y = initial ? Math.random() * height : height + this.radius + Math.random() * 50;
+          
+          this.vx = (Math.random() - 0.5) * 0.8;
+          this.vy = -Math.random() * 0.9 - 0.3;
+          
+          this.baseVx = this.vx;
+          this.baseVy = this.vy;
+          
+          this.alpha = Math.random() * 0.45 + 0.25;
+          this.hue = Math.random() > 0.5 ? 260 : 190; // Violet vs Cyan tones
+        }
+
+        update() {
+          // Move bubble naturally upward
+          this.x += this.vx;
+          this.y += this.vy;
+
+          // Gentle friction to return to natural base speeds
+          this.vx += (this.baseVx - this.vx) * 0.03;
+          this.vy += (this.baseVy - this.vy) * 0.03;
+
+          // Interactive Cursor Repulsion Physics
+          if (mouse.isActive) {
+            const dx = this.x - mouse.x;
+            const dy = this.y - mouse.y;
+            const dist = Math.hypot(dx, dy);
+
+            if (dist < mouse.radius) {
+              const force = (mouse.radius - dist) / mouse.radius;
+              const angle = Math.atan2(dy, dx);
+              const push = force * 6.5;
+
+              this.vx += Math.cos(angle) * push * 0.3;
+              this.vy += Math.sin(angle) * push * 0.3;
+            }
+          }
+
+          // Screen wrapping & bouncing off horizontal edges
+          if (this.x - this.radius < 0) { this.x = this.radius; this.vx *= -0.8; }
+          if (this.x + this.radius > width) { this.x = width - this.radius; this.vx *= -0.8; }
+
+          // Reset when floated off top screen
+          if (this.y + this.radius < -20) {
+            this.reset(false);
+          }
+        }
+
+        draw() {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+
+          // Glowing glassy gradient fill
+          const grad = ctx.createRadialGradient(
+            this.x - this.radius * 0.3,
+            this.y - this.radius * 0.3,
+            this.radius * 0.1,
+            this.x,
+            this.y,
+            this.radius
+          );
+
+          grad.addColorStop(0, `hsla(${this.hue}, 90%, 80%, ${this.alpha * 0.7})`);
+          grad.addColorStop(0.6, `hsla(${this.hue}, 80%, 55%, ${this.alpha * 0.3})`);
+          grad.addColorStop(1, `hsla(${this.hue}, 80%, 40%, 0.05)`);
+
+          ctx.fillStyle = grad;
+          ctx.fill();
+
+          // Outer glowing rim
+          ctx.strokeStyle = `hsla(${this.hue}, 100%, 75%, ${this.alpha * 0.6})`;
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
+
+          // Highlight shine dot
+          ctx.beginPath();
+          ctx.arc(this.x - this.radius * 0.35, this.y - this.radius * 0.35, this.radius * 0.22, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha * 0.7})`;
+          ctx.fill();
+
+          ctx.restore();
+        }
+      }
+
+      // Populate bubble array based on screen width
+      const bubbleCount = Math.floor(Math.min(window.innerWidth / 16, 55));
+      const bubbles = Array.from({ length: bubbleCount }, () => new Bubble());
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        bubbles.forEach(b => {
+          b.update();
+          b.draw();
+        });
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    })();
 
     let isDragging = false;
     let startX, scrollLeft;
