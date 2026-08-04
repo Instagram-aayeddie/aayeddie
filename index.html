@@ -734,22 +734,36 @@
     document.getElementById('year').textContent = new Date().getFullYear();
 
     /* =====================================================
-       AUDIO ENGINE: POP SOUND WITH RATE/VOLUME VARIATION
+       AUDIO ENGINE: POP SOUND & CINEMATIC GALLERY WHOOSH
        ===================================================== */
     const POP_SOUND_URL = 'https://www.myinstants.com/media/sounds/comedy_pop_finger_in_mouth_001.mp3';
+    const WHOOSH_SOUND_URL = 'https://www.myinstants.com/media/sounds/whoosh_8vhUK9W.mp3';
+
     let lastPopSoundTime = 0;
+    let lastWhooshSoundTime = 0;
 
     function triggerPopSound() {
       const now = Date.now();
-      // Throttle playback slightly (40ms) to prevent audio clipping during rapid pops
       if (now - lastPopSoundTime < 40) return;
       lastPopSoundTime = now;
 
       try {
         const audio = new Audio(POP_SOUND_URL);
         audio.volume = 0.45 + Math.random() * 0.35;
-        // Pitch variation for natural fun sound effects
         audio.playbackRate = 0.88 + Math.random() * 0.32;
+        audio.play().catch(() => {});
+      } catch (err) {}
+    }
+
+    function triggerWhooshSound() {
+      const now = Date.now();
+      if (now - lastWhooshSoundTime < 220) return; // Cooldown to avoid whoosh overlap
+      lastWhooshSoundTime = now;
+
+      try {
+        const audio = new Audio(WHOOSH_SOUND_URL);
+        audio.volume = 0.5 + Math.random() * 0.25;
+        audio.playbackRate = 0.95 + Math.random() * 0.15;
         audio.play().catch(() => {});
       } catch (err) {}
     }
@@ -965,6 +979,7 @@
     let isDragging = false;
     let startX, scrollLeft;
     let hasDraggedDistance = false;
+    let lastScrollPos = 0;
 
     async function loadSiteData() {
       let data = {};
@@ -1059,8 +1074,19 @@
       }
     }
 
-    /* DRAG TO SCROLL ENGINE FOR MAIN GALLERY */
+    /* DRAG & SWIPE ENGINE WITH CINEMATIC WHOOSH FOR MAIN GALLERY */
     function setupDragToScroll(slider) {
+      lastScrollPos = slider.scrollLeft;
+
+      // Whoosh on drag / swipe / touch scroll
+      slider.addEventListener('scroll', () => {
+        const delta = Math.abs(slider.scrollLeft - lastScrollPos);
+        if (delta > 35) {
+          triggerWhooshSound();
+          lastScrollPos = slider.scrollLeft;
+        }
+      });
+
       slider.addEventListener('mousedown', (e) => {
         isDragging = true;
         hasDraggedDistance = false;
@@ -1301,7 +1327,10 @@
 
     function scrollHighlightGallery(dir) {
       const el = document.getElementById('modal-gallery-scroll');
-      if (el) el.scrollBy({ left: dir * 300, behavior: 'smooth' });
+      if (el) {
+        el.scrollBy({ left: dir * 300, behavior: 'smooth' });
+        triggerWhooshSound();
+      }
     }
 
     loadSiteData();
