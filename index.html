@@ -201,7 +201,7 @@
     }
 
     /* =============================================== */
-    /* CLEAN SLIDING IMAGE GALLERY (NO NAV BUTTONS)    */
+    /* SLIDING GALLERY (DYNAMIC ASPECT RATIO)         */
     /* =============================================== */
     .gallery-wrapper {
       position: relative;
@@ -210,6 +210,7 @@
 
     .gallery-scroll {
       display: flex;
+      align-items: flex-start;
       gap: 1.2rem;
       overflow-x: auto;
       scroll-behavior: smooth;
@@ -236,7 +237,6 @@
     .gallery-card {
       min-width: 85%;
       max-width: 85%;
-      aspect-ratio: 16 / 9;
       border-radius: 16px;
       overflow: hidden;
       position: relative;
@@ -250,22 +250,20 @@
       justify-content: flex-end;
       text-decoration: none;
       cursor: pointer;
+      align-self: flex-start;
     }
 
     .gallery-card img {
-      position: absolute;
-      inset: 0;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
       display: block;
       transition: transform 0.4s ease;
       pointer-events: none;
     }
 
     .gallery-card-placeholder {
-      position: absolute;
-      inset: 0;
+      width: 100%;
+      aspect-ratio: 16 / 9;
       background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(34, 211, 238, 0.15));
       display: flex;
       align-items: center;
@@ -285,7 +283,10 @@
     }
 
     .gallery-caption {
-      position: relative;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
       z-index: 2;
       padding: 2rem 1.2rem 1rem;
       background: linear-gradient(to top, rgba(5, 6, 13, 0.95) 20%, rgba(5, 6, 13, 0.6) 70%, transparent);
