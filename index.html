@@ -682,6 +682,13 @@
       </div>
     </section>
 
+    <section id="photography-section" style="display:none;">
+      <h2 class="section-title">🎥 Photography Showcase</h2>
+      <div class="gallery-wrapper">
+        <div id="photography-gallery-scroll" class="gallery-scroll"></div>
+      </div>
+    </section>
+
     <footer>
       <p>© <span id="year"></span> @aayeddie. All rights reserved.</p>
     </footer>
@@ -1191,33 +1198,43 @@
 
       const items = builds.length > 0 ? builds : gallery;
 
-      if (items.length > 0) {
-        document.getElementById('gallery-section').style.display = 'block';
-        const gScroll = document.getElementById('main-gallery-scroll');
+      renderCardScroller(items, 'gallery-section', 'main-gallery-scroll');
 
-        gScroll.innerHTML = items.map((b, idx) => {
-          const imageSrc = b.image || b.img || b.cover || b.imageUrl || b.thumbnail || b.url_image || '';
-          const title = b.title || '';
-          const desc = b.desc || b.caption || '';
+      // RENDER PHOTOGRAPHY SHOWCASE
+      const photographyData = localStorage.getItem('aayeddie_custom_photography');
+      const photography = photographyData ? JSON.parse(photographyData) : (data.photography || []);
 
-          return `
-            <div class="gallery-card" onclick="onCardClick(event, '${encodeURIComponent(imageSrc)}', '${encodeURIComponent(title)}', '${encodeURIComponent(desc)}')">
-              ${imageSrc 
-                ? `<img src="${imageSrc}" alt="${title}" loading="lazy" onerror="handleImgError(this)">
-                   <div class="gallery-card-placeholder" style="display:none;">🖼️</div>` 
-                : `<div class="gallery-card-placeholder">🚀</div>`}
-              <div class="gallery-caption">
-                <div class="gallery-title">
-                  <span>${title}</span>
-                </div>
-                <div class="gallery-desc">${desc}</div>
+      renderCardScroller(photography, 'photography-section', 'photography-gallery-scroll');
+    }
+
+    function renderCardScroller(items, sectionId, scrollId) {
+      if (!items || items.length === 0) return;
+
+      document.getElementById(sectionId).style.display = 'block';
+      const scrollEl = document.getElementById(scrollId);
+
+      scrollEl.innerHTML = items.map((b, idx) => {
+        const imageSrc = b.image || b.img || b.cover || b.imageUrl || b.thumbnail || b.url_image || '';
+        const title = b.title || '';
+        const desc = b.desc || b.caption || '';
+
+        return `
+          <div class="gallery-card" onclick="onCardClick(event, '${encodeURIComponent(imageSrc)}', '${encodeURIComponent(title)}', '${encodeURIComponent(desc)}')">
+            ${imageSrc 
+              ? `<img src="${imageSrc}" alt="${title}" loading="lazy" onerror="handleImgError(this)">
+                 <div class="gallery-card-placeholder" style="display:none;">🖼️</div>` 
+              : `<div class="gallery-card-placeholder">🚀</div>`}
+            <div class="gallery-caption">
+              <div class="gallery-title">
+                <span>${title}</span>
               </div>
+              <div class="gallery-desc">${desc}</div>
             </div>
-          `;
-        }).join('');
+          </div>
+        `;
+      }).join('');
 
-        setupDragToScroll(gScroll);
-      }
+      setupDragToScroll(scrollEl);
     }
 
     /* DRAG & SWIPE ENGINE WITH CINEMATIC WHOOSH FOR MAIN GALLERY */
