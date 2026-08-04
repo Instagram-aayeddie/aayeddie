@@ -47,7 +47,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      pointer-events: none;
+      pointer-events: auto;
       z-index: 0;
     }
 
@@ -56,6 +56,11 @@
       max-width: 850px;
       position: relative;
       z-index: 1;
+      pointer-events: none;
+    }
+
+    .container * {
+      pointer-events: auto;
     }
 
     /* HEADER / HERO */
@@ -729,7 +734,28 @@
     document.getElementById('year').textContent = new Date().getFullYear();
 
     /* =====================================================
-       PHYSICS BUBBLE ENGINE (MOUSE & TOUCH INTERACTION)
+       AUDIO ENGINE: POP SOUND WITH RATE/VOLUME VARIATION
+       ===================================================== */
+    const POP_SOUND_URL = 'https://www.myinstants.com/media/sounds/comedy_pop_finger_in_mouth_001.mp3';
+    let lastPopSoundTime = 0;
+
+    function triggerPopSound() {
+      const now = Date.now();
+      // Throttle playback slightly (40ms) to prevent audio clipping during rapid pops
+      if (now - lastPopSoundTime < 40) return;
+      lastPopSoundTime = now;
+
+      try {
+        const audio = new Audio(POP_SOUND_URL);
+        audio.volume = 0.45 + Math.random() * 0.35;
+        // Pitch variation for natural fun sound effects
+        audio.playbackRate = 0.88 + Math.random() * 0.32;
+        audio.play().catch(() => {});
+      } catch (err) {}
+    }
+
+    /* =====================================================
+       PHYSICS BUBBLE ENGINE WITH POPPING PARTICLES & SOUND
        ===================================================== */
     (function initInteractiveBubbles() {
       const canvas = document.getElementById('bubble-canvas');
@@ -744,6 +770,8 @@
         radius: 180,
         isActive: false
       };
+
+      const popRings = [];
 
       window.addEventListener('resize', () => {
         width = canvas.width = window.innerWidth;
@@ -766,6 +794,34 @@
       window.addEventListener('mouseleave', () => { mouse.isActive = false; });
       window.addEventListener('touchend', () => { mouse.isActive = false; });
 
+      class PopRing {
+        constructor(x, y, radius, hue) {
+          this.x = x;
+          this.y = y;
+          this.radius = radius;
+          this.currentRadius = radius * 0.5;
+          this.maxRadius = radius * 1.8;
+          this.hue = hue;
+          this.alpha = 0.8;
+        }
+
+        update() {
+          this.currentRadius += (this.maxRadius - this.currentRadius) * 0.25;
+          this.alpha -= 0.05;
+        }
+
+        draw() {
+          if (this.alpha <= 0) return;
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.currentRadius, 0, Math.PI * 2);
+          ctx.strokeStyle = `hsla(${this.hue}, 100%, 75%, ${this.alpha})`;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+
       class Bubble {
         constructor() {
           this.reset(true);
@@ -783,19 +839,26 @@
           this.baseVy = this.vy;
           
           this.alpha = Math.random() * 0.45 + 0.25;
-          this.hue = Math.random() > 0.5 ? 260 : 190; // Violet vs Cyan tones
+          this.hue = Math.random() > 0.5 ? 260 : 190;
+          this.cooldown = 0;
+        }
+
+        pop() {
+          triggerPopSound();
+          popRings.push(new PopRing(this.x, this.y, this.radius, this.hue));
+          this.reset(false);
         }
 
         update() {
-          // Move bubble naturally upward
+          if (this.cooldown > 0) this.cooldown--;
+
           this.x += this.vx;
           this.y += this.vy;
 
-          // Gentle friction to return to natural base speeds
           this.vx += (this.baseVx - this.vx) * 0.03;
           this.vy += (this.baseVy - this.vy) * 0.03;
 
-          // Interactive Cursor Repulsion Physics
+          // Interactive Repulsion Physics & Pop Triggering
           if (mouse.isActive) {
             const dx = this.x - mouse.x;
             const dy = this.y - mouse.y;
@@ -808,14 +871,18 @@
 
               this.vx += Math.cos(angle) * push * 0.3;
               this.vy += Math.sin(angle) * push * 0.3;
+
+              // Pop if mouse gets extremely close to center of bubble
+              if (dist < this.radius + 15 && this.cooldown === 0) {
+                this.pop();
+                return;
+              }
             }
           }
 
-          // Screen wrapping & bouncing off horizontal edges
           if (this.x - this.radius < 0) { this.x = this.radius; this.vx *= -0.8; }
           if (this.x + this.radius > width) { this.x = width - this.radius; this.vx *= -0.8; }
 
-          // Reset when floated off top screen
           if (this.y + this.radius < -20) {
             this.reset(false);
           }
@@ -826,7 +893,6 @@
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
 
-          // Glowing glassy gradient fill
           const grad = ctx.createRadialGradient(
             this.x - this.radius * 0.3,
             this.y - this.radius * 0.3,
@@ -843,12 +909,10 @@
           ctx.fillStyle = grad;
           ctx.fill();
 
-          // Outer glowing rim
           ctx.strokeStyle = `hsla(${this.hue}, 100%, 75%, ${this.alpha * 0.6})`;
           ctx.lineWidth = 1.2;
           ctx.stroke();
 
-          // Highlight shine dot
           ctx.beginPath();
           ctx.arc(this.x - this.radius * 0.35, this.y - this.radius * 0.35, this.radius * 0.22, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha * 0.7})`;
@@ -858,12 +922,36 @@
         }
       }
 
-      // Populate bubble array based on screen width
       const bubbleCount = Math.floor(Math.min(window.innerWidth / 16, 55));
       const bubbles = Array.from({ length: bubbleCount }, () => new Bubble());
 
+      // Direct Click/Tap on Canvas to Pop Nearest Bubble
+      canvas.addEventListener('pointerdown', (e) => {
+        const clickX = e.clientX;
+        const clickY = e.clientY;
+
+        for (let b of bubbles) {
+          const dist = Math.hypot(b.x - clickX, b.y - clickY);
+          if (dist < b.radius + 12) {
+            b.pop();
+            break;
+          }
+        }
+      });
+
       function animate() {
         ctx.clearRect(0, 0, width, height);
+
+        // Update and draw pop particle effects
+        for (let i = popRings.length - 1; i >= 0; i--) {
+          popRings[i].update();
+          popRings[i].draw();
+          if (popRings[i].alpha <= 0) {
+            popRings.splice(i, 1);
+          }
+        }
+
+        // Update and draw floating bubbles
         bubbles.forEach(b => {
           b.update();
           b.draw();
