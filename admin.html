@@ -11,9 +11,13 @@
   :root {
     --bg-dark: #05060d;
     --card-bg: rgba(255, 255, 255, 0.03);
+    --card-hover: rgba(255, 255, 255, 0.06);
     --border-color: rgba(255, 255, 255, 0.12);
     --accent-violet: #8b5cf6;
     --accent-cyan: #22d3ee;
+    --accent-emerald: #10b981;
+    --accent-rose: #f43f5e;
+    --accent-amber: #f59e0b;
     --text-main: #f5f3ff;
     --text-muted: #9ca3c9;
     --font-head: 'Space Grotesk', sans-serif;
@@ -21,1921 +25,970 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
   body {
     background-color: var(--bg-dark);
     color: var(--text-main);
-    font-family: var(--font-mono);
-    padding: 2.5rem 2rem;
+    font-family: var(--font-head);
     min-height: 100vh;
+    padding: 2rem 1rem;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
   }
 
   header {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
+    text-align: center;
+    margin-bottom: 2.5rem;
     border-bottom: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  header h1 {
-    font-family: var(--font-head);
-    font-size: 2.2rem;
-    background: linear-gradient(120deg, var(--text-main), var(--accent-violet), var(--accent-cyan));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  header p {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    margin-top: 0.4rem;
+    padding-bottom: 1.5rem;
   }
 
-  .tabs {
-    display: flex;
-    gap: 0.8rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
+  h1 {
+    font-size: 2.2rem;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
   }
-  .tab-btn {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
+
+  .subtitle {
     color: var(--text-muted);
-    padding: 0.65rem 1.2rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    transition: all 0.25s;
-    display: flex;
+    font-size: 0.95rem;
+  }
+
+  .badge-live {
+    display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-  }
-  .tab-btn.active, .tab-btn:hover {
-    color: #fff;
-    border-color: var(--accent-cyan);
-    background: rgba(34, 211, 238, 0.08);
-  }
-
-  .view-panel { display: none; }
-  .view-panel.active { display: block; }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 1.5rem;
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-emerald);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    font-family: var(--font-mono);
   }
 
-  .card {
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent-emerald);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent-emerald);
+    animation: pulse 1.8s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(0.95); opacity: 0.8; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0.8; }
+  }
+
+  .section-card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 14px;
-    padding: 1.5rem;
+    border-radius: 12px;
+    padding: 1.75rem;
+    margin-bottom: 2rem;
     backdrop-filter: blur(10px);
-    position: relative;
+    transition: border-color 0.2s ease;
   }
-  .card h2 {
-    font-family: var(--font-head);
-    font-size: 1.2rem;
-    color: var(--accent-cyan);
-    margin-bottom: 1rem;
+
+  .section-card:hover {
+    border-color: rgba(139, 92, 246, 0.3);
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+    color: var(--text-main);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 0.75rem;
+  }
+
+  .section-title span.icon-title {
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
 
-  .field { margin-bottom: 1.2rem; }
-  label {
-    display: block;
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    margin-bottom: 0.4rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  input[type="text"], input[type="file"], textarea, select {
-    width: 100%;
-    padding: 0.65rem 0.8rem;
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid var(--border-color);
-    color: #fff;
-    border-radius: 8px;
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-  }
-  input[type="color"] {
-    width: 60px;
-    height: 36px;
-    border: 1px solid var(--border-color);
-    background: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  input[type="text"]:focus, textarea:focus {
-    border-color: var(--accent-violet);
-    outline: none;
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 
-  .pfp-preview-wrap {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    margin-bottom: 1rem;
+  @media(min-width: 768px) {
+    .grid-2 { grid-template-columns: 1fr 1fr; }
   }
-  .pfp-img-preview {
-    width: 76px;
-    height: 76px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--accent-cyan);
-    background: rgba(0,0,0,0.5);
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+    font-family: var(--font-mono);
+  }
+
+  input[type="text"], input[type="url"], textarea, select {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+  }
+
+  input[type="text"]:focus, input[type="url"]:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent-violet);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
   }
 
   .btn {
-    background: linear-gradient(120deg, var(--accent-violet), var(--accent-cyan));
-    color: #05060d;
-    font-weight: 600;
-    border: none;
-    padding: 0.75rem 1.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
     border-radius: 8px;
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 0.9rem;
     cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+    transition: all 0.2s ease;
+    text-decoration: none;
   }
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 18px rgba(139, 92, 246, 0.4);
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent-violet), #6d28d9);
+    color: #fff;
   }
+  .btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .btn-cyan {
+    background: linear-gradient(135deg, var(--accent-cyan), #0891b2);
+    color: #000;
+  }
+  .btn-cyan:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .btn-emerald {
+    background: linear-gradient(135deg, var(--accent-emerald), #059669);
+    color: #fff;
+  }
+  .btn-emerald:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .btn-danger {
+    background: rgba(244, 63, 94, 0.15);
+    color: var(--accent-rose);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+  }
+  .btn-danger:hover {
+    background: rgba(244, 63, 94, 0.25);
+  }
+
   .btn-outline {
     background: transparent;
-    color: #fff;
+    color: var(--text-main);
     border: 1px solid var(--border-color);
   }
   .btn-outline:hover {
-    border-color: var(--accent-cyan);
     background: rgba(255, 255, 255, 0.05);
-  }
-  .btn-danger {
-    background: rgba(239, 68, 68, 0.2);
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    color: #fca5a5;
-    padding: 0.4rem 0.8rem;
-    font-size: 0.7rem;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  .btn-danger:hover {
-    background: rgba(239, 68, 68, 0.4);
+    border-color: var(--text-muted);
   }
 
-  pre {
-    background: #000;
-    border: 1px solid var(--border-color);
-    padding: 1.2rem;
-    border-radius: 8px;
-    overflow-x: auto;
-    font-size: 0.78rem;
-    color: #a7f3d0;
-    margin-top: 0.8rem;
-    max-height: 380px;
-  }
-
-  .item-list {
-    margin-top: 1rem;
-    max-height: 440px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-  .item-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem 0.9rem;
-    background: rgba(0,0,0,0.35);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
+  .btn-sm {
+    padding: 0.4rem 0.75rem;
     font-size: 0.8rem;
-    gap: 0.8rem;
   }
 
-  /* --- HORIZONTAL SLIDER GALLERY STYLES FOR RECENT BUILDS --- */
-  .gallery-slider-container {
-    position: relative;
-    margin-top: 1.2rem;
-  }
-  .gallery-track {
+  .btn-group {
     display: flex;
-    gap: 1.2rem;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding: 0.5rem 0.2rem 1rem 0.2rem;
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent-cyan) rgba(255,255,255,0.05);
-  }
-  .gallery-track::-webkit-scrollbar {
-    height: 8px;
-  }
-  .gallery-track::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.03);
-    border-radius: 4px;
-  }
-  .gallery-track::-webkit-scrollbar-thumb {
-    background: var(--accent-cyan);
-    border-radius: 4px;
-  }
-
-  .gallery-card {
-    min-width: 310px;
-    max-width: 310px;
-    background: rgba(0,0,0,0.5);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    flex-shrink: 0;
-    transition: transform 0.2s, border-color 0.2s;
-  }
-  .gallery-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--accent-violet);
-  }
-  .gallery-card-img-wrap {
-    width: 100%;
-    height: 160px;
-    background: rgba(255,255,255,0.05);
-    position: relative;
-    overflow: hidden;
-    border-bottom: 1px solid var(--border-color);
-  }
-  .gallery-card-img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .gallery-card-body {
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    justify-content: space-between;
-  }
-  .gallery-controls {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    margin-top: 0.8rem;
-  }
-  .slider-nav-btns {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 0.8rem;
-    justify-content: flex-end;
-  }
-
-  .slide-box {
-    background: rgba(255,255,255,0.02);
-    border: 1px dashed var(--border-color);
-    padding: 0.8rem;
-    border-radius: 8px;
-    margin-top: 0.6rem;
-  }
-
-  .action-row {
-    display: flex;
-    gap: 0.8rem;
-    margin-top: 1rem;
+    gap: 0.75rem;
     flex-wrap: wrap;
   }
 
-  .status-msg {
-    margin-top: 0.8rem;
-    font-size: 0.75rem;
-    color: #34d399;
-    display: none;
-  }
-
-  /* Live paste/upload preview thumbnail */
-  .mini-preview-wrap {
-    display: none;
-    align-items: center;
-    gap: 0.6rem;
-    margin-top: 0.5rem;
-    padding: 0.5rem;
-    background: rgba(0,0,0,0.3);
-    border: 1px dashed var(--border-color);
-    border-radius: 8px;
-  }
-  .mini-preview-wrap.show { display: flex; }
-  .mini-preview-wrap img {
-    width: 48px;
-    height: 48px;
-    border-radius: 6px;
-    object-fit: cover;
-    border: 1px solid var(--accent-cyan);
-  }
-  .mini-preview-wrap span {
-    font-size: 0.7rem;
-    color: var(--accent-cyan);
-  }
-
-  /* Slide reorder buttons */
-  .slide-move-btns {
+  /* Sync Panel Banner */
+  .sync-banner {
+    background: rgba(34, 211, 238, 0.05);
+    border: 1px solid rgba(34, 211, 238, 0.2);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
     display: flex;
-    gap: 0.3rem;
-  }
-  .slide-move-btns button {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid var(--border-color);
-    color: #fff;
-    width: 26px;
-    height: 26px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.75rem;
-  }
-  .slide-move-btns button:hover:not(:disabled) {
-    border-color: var(--accent-cyan);
-    background: rgba(34,211,238,0.12);
-  }
-  .slide-move-btns button:disabled {
-    opacity: 0.25;
-    cursor: not-allowed;
+    flex-direction: column;
+    gap: 1rem;
   }
 
-  /* Tag pill style */
-  .tag-pill {
-    display: inline-block;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    background: rgba(139, 92, 246, 0.2);
-    border: 1px solid rgba(139, 92, 246, 0.4);
+  @media(min-width: 768px) {
+    .sync-banner {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .sync-info h3 {
+    font-size: 1.1rem;
     color: var(--accent-cyan);
-    font-size: 0.7rem;
-    margin-top: 0.3rem;
+    margin-bottom: 0.25rem;
   }
 
-  /* ---------- Live Visual Preview Frame & Edit Overlay ---------- */
-  .preview-toolbar {
+  .sync-info p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  /* Builds Gallery Grid */
+  .builds-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+  }
+
+  .build-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .build-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-violet);
+  }
+
+  .build-preview-wrapper {
+    position: relative;
+    width: 100%;
+    height: 170px;
+    background: #000;
+    overflow: hidden;
+  }
+
+  .build-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .build-card-body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    flex-grow: 1;
+  }
+
+  .build-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .build-card-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .build-card-meta {
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    color: var(--accent-cyan);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(0,0,0,0.5);
-    padding: 0.8rem 1.2rem;
-    border-radius: 12px 12px 0 0;
-    border: 1px solid var(--border-color);
-    border-bottom: none;
-  }
-  .device-toggle button {
-    background: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--text-muted);
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.75rem;
-  }
-  .device-toggle button.active {
-    color: var(--accent-cyan);
-    border-color: var(--accent-cyan);
-    background: rgba(34,211,238,0.1);
+    margin-top: auto;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
   }
 
-  .preview-wrapper {
-    position: relative;
-    width: 100%;
-    height: 720px;
-    background: #05060d;
-    border: 1px solid var(--border-color);
-    border-radius: 0 0 12px 12px;
-    overflow: hidden;
+  .build-actions {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
   }
-  .preview-wrapper iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    transition: width 0.3s ease;
-  }
-  .preview-wrapper.tablet iframe { width: 768px; }
-  .preview-wrapper.mobile iframe { width: 380px; }
 
-  /* Floating Edit Pencil Pins */
-  .edit-pencil-btn {
-    position: absolute;
-    z-index: 50;
-    background: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
-    color: #05060d;
-    width: 36px;
-    height: 36px;
+  /* PFP Display */
+  .pfp-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .pfp-preview {
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    cursor: pointer;
-    box-shadow: 0 0 15px rgba(34,211,238,0.5);
-    transition: transform 0.2s;
-    border: none;
-  }
-  .edit-pencil-btn:hover {
-    transform: scale(1.15) rotate(15deg);
+    object-fit: cover;
+    border: 2px solid var(--accent-violet);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
   }
 
-  /* Inline Quick Edit Modal */
-  .modal-overlay {
+  /* Lists for Socials and Highlights */
+  .item-list-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+  }
+
+  .item-list-row input {
+    margin-bottom: 0;
+  }
+
+  /* Code output box */
+  .code-box {
+    background: #000;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent-cyan);
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 250px;
+    overflow-y: auto;
+  }
+
+  .status-toast {
     position: fixed;
-    inset: 0;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--accent-violet);
+    color: #fff;
+    padding: 0.85rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 9999;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* Modal Edit Build */
+  .modal-backdrop {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0,0,0,0.8);
-    backdrop-filter: blur(8px);
-    z-index: 300;
+    backdrop-filter: blur(5px);
     display: none;
     align-items: center;
     justify-content: center;
+    z-index: 10000;
   }
-  .modal-overlay.open { display: flex; }
+
   .modal-box {
-    background: #0b1a3d;
-    border: 1px solid var(--border-color);
-    width: min(580px, 92vw);
-    border-radius: 16px;
-    padding: 1.8rem;
-    position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-    max-height: 88vh;
-    overflow-y: auto;
+    background: var(--bg-dark);
+    border: 1px solid var(--accent-violet);
+    border-radius: 12px;
+    padding: 1.75rem;
+    width: 90%;
+    max-width: 550px;
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
   }
-  .modal-close {
-    position: absolute;
-    top: 1rem; right: 1rem;
-    color: #fff; border: none; background: none; font-size: 1.2rem; cursor: pointer;
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
   }
 </style>
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>Aayeddie Studio Master Control & Visual Editor</h1>
-    <p>Zero Vendor Lock-In · Separate Ring Covers & Multi-Image Highlights · Recent Builds Image Gallery · GitHub Suite</p>
-  </div>
-  <button class="btn btn-outline" onclick="triggerLiveRefresh()">🔄 Refresh Preview & Sync</button>
-</header>
+<div class="container">
+  <header>
+    <h1>Aayeddie Studio Admin</h1>
+    <p class="subtitle">Live Configuration Portal & GitHub Synchronization Engine</p>
+    <div class="badge-live">
+      <div class="pulse-dot"></div>
+      <span id="sync-status-indicator">Sync Engine Active</span>
+    </div>
+  </header>
 
-<div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('tab-preview', this)">✏️ Live Visual Preview & Edit</button>
-  <button class="tab-btn" onclick="switchTab('tab-hero', this)">🖼️ User PFP & Hero Branding</button>
-  <button class="tab-btn" onclick="switchTab('tab-builds', this)">🛠️ Recent Builds Gallery</button>
-  <button class="tab-btn" onclick="switchTab('tab-photography', this)">🎥 Photography Showcase</button>
-  <button class="tab-btn" onclick="switchTab('tab-content', this)">🎬 Multi-Image Highlights & Ring PFPs</button>
-  <button class="tab-btn" onclick="switchTab('tab-socials', this)">🌐 Social Channels</button>
-  <button class="tab-btn" onclick="switchTab('tab-sync', this)">📦 JSON Data Sync & Backup</button>
-  <button class="tab-btn" onclick="switchTab('tab-repo', this)">📁 GitHub Repository Setup</button>
-</div>
-
-<!-- TAB 1: LIVE VISUAL PREVIEW & EDIT PENCILS -->
-<div id="tab-preview" class="view-panel active">
-  <div class="preview-toolbar">
-    <span style="font-size: 0.8rem; color: var(--text-muted);">
-      💡 Click any <strong>✏️ Edit Pencil</strong> over the website elements to modify content live.
-    </span>
-    <div class="device-toggle">
-      <button class="active" onclick="setDevice('desktop', this)">🖥️ Desktop</button>
-      <button onclick="setDevice('tablet', this)">📱 Tablet</button>
-      <button onclick="setDevice('mobile', this)">📱 Mobile</button>
+  <!-- Global GitHub Sync Banner -->
+  <div class="sync-banner">
+    <div class="sync-info">
+      <h3>🚀 Real-Time GitHub Synchronization</h3>
+      <p>Synchronize your gallery, PFP, and links directly with your live repository <code>data.json</code>.</p>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-cyan" onclick="fetchLiveJSON(true)">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        Sync from GitHub / data.json
+      </button>
+      <button class="btn btn-emerald" onclick="saveAllAndExport()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        Save & Export data.json
+      </button>
     </div>
   </div>
-  
-  <div class="preview-wrapper" id="preview-container">
-    <button class="edit-pencil-btn" style="top: 80px; left: calc(50% + 180px);" onclick="openPencilModal('hero')" title="Edit Hero & User PFP">✏️</button>
-    <button class="edit-pencil-btn" style="top: 260px; right: 40px;" onclick="openPencilModal('highlights')" title="Edit Highlight Rings">✏️</button>
-    <button class="edit-pencil-btn" style="top: 350px; left: 40px;" onclick="openPencilModal('builds')" title="Edit Recent Builds Gallery">✏️</button>
-    <button class="edit-pencil-btn" style="top: 480px; right: 40px;" onclick="openPencilModal('socials')" title="Edit Social Hub">✏️</button>
-    <button class="edit-pencil-btn" style="top: 600px; left: 40px;" onclick="openPencilModal('theme')" title="Edit Theme Accents">✏️</button>
 
-    <iframe id="site-frame" src="index.html"></iframe>
-  </div>
-</div>
-
-<!-- TAB 2: HERO & USER PROFILE PICTURE (USER PFP) -->
-<div id="tab-hero" class="view-panel">
-  <div class="grid">
-    <div class="card">
-      <h2>🖼️ User Avatar / Hero Profile Picture (User PFP)</h2>
-      <div class="pfp-preview-wrap">
-        <img id="pfp-admin-preview" class="pfp-img-preview" src="" alt="Avatar Preview" style="display:none;">
-        <div>
-          <label>Upload Image File</label>
-          <input type="file" id="pfp-file-input" accept="image/*" onchange="handlePfpUpload(event)">
+  <!-- Profile Picture Settings -->
+  <div class="section-card">
+    <div class="section-title">
+      <span class="icon-title">📸 Profile Picture (PFP)</span>
+      <button class="btn btn-outline btn-sm" onclick="savePfp()">Save PFP</button>
+    </div>
+    <div class="pfp-container">
+      <img id="pfp-preview-img" src="" alt="PFP Preview" class="pfp-preview" onerror="this.src='https://via.placeholder.com/150?text=PFP'">
+      <div style="flex-grow: 1;">
+        <div class="form-group">
+          <label for="pfp-url-input">PFP Image URL</label>
+          <input type="url" id="pfp-url-input" placeholder="https://..." oninput="updatePfpPreview()">
         </div>
       </div>
-      <div class="field">
-        <label>Or Paste Image URL</label>
-        <input type="text" id="pfp-url-input" placeholder="https://example.com/pfp.png" oninput="handlePfpUrlChange(this.value)">
-      </div>
-      <div class="action-row">
-        <button class="btn" onclick="savePfpConfig()">Save User Profile Picture</button>
-        <button class="btn btn-danger" onclick="removePfp()">Remove PFP</button>
-      </div>
-      <div id="pfp-status" class="status-msg">Profile picture saved!</div>
-    </div>
-
-    <div class="card">
-      <h2>✨ Hero Text & Theme Accents</h2>
-      <div class="field">
-        <label>Hero Title</label>
-        <input type="text" id="hero-title-input" value="aayeddie">
-      </div>
-      <div class="field">
-        <label>Tagline / Description</label>
-        <textarea id="hero-tagline-input" rows="2" placeholder="Enter custom tagline..."></textarea>
-      </div>
-      <div class="field">
-        <label>Accent Primary (Violet)</label>
-        <input type="color" id="theme-c1" value="#8b5cf6">
-      </div>
-      <div class="field">
-        <label>Accent Secondary (Cyan)</label>
-        <input type="color" id="theme-c2" value="#22d3ee">
-      </div>
-      <button class="btn" onclick="saveHeroConfig()">Save Hero & Theme</button>
-      <div id="hero-status" class="status-msg">Hero & Theme updated!</div>
-    </div>
-  </div>
-</div>
-
-<!-- TAB 3: RECENT BUILDS IMAGE GALLERY MANAGEMENT -->
-<div id="tab-builds" class="view-panel">
-  <div class="grid">
-    <!-- Form to Add or Update Build -->
-    <div class="card">
-      <h2 id="build-form-title">🛠️ Add New Build</h2>
-      <input type="hidden" id="build-edit-id" value="">
-      
-      <div class="field">
-        <label>Build Title</label>
-        <input type="text" id="build-title" placeholder="e.g. DroidBay">
-      </div>
-      <div class="field">
-        <label>Category / Tech Stack Tag</label>
-        <input type="text" id="build-tag" placeholder="e.g. Electron / Android">
-      </div>
-      <div class="field">
-        <label>Description / Summary</label>
-        <textarea id="build-desc" rows="3" placeholder="e.g. Electron-based Android emulator launcher — APK import, metadata scraping..."></textarea>
-      </div>
-      <div class="field">
-        <label>Image / Thumbnail URL (Supports Image Links)</label>
-        <input type="text" id="build-img-url" placeholder="https://images.unsplash.com/... or image link">
-      </div>
-      <div class="field">
-        <label>Project / Demo Link (URL)</label>
-        <input type="text" id="build-url" placeholder="https://github.com/... or #">
-      </div>
-
-      <div class="action-row">
-        <button class="btn" id="btn-save-build" onclick="saveBuildItem()">Add Build</button>
-        <button class="btn btn-outline" id="btn-cancel-build" onclick="resetBuildForm()" style="display:none;">Cancel Edit</button>
-      </div>
-      <div id="build-status" class="status-msg">Build saved successfully!</div>
-    </div>
-
-    <!-- Active Recent Builds Horizontal Slider Gallery -->
-    <div class="card" style="grid-column: span 2;">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem;">
-        <div>
-          <h2>🚀 Recent Builds Image Gallery</h2>
-          <p style="font-size: 0.75rem; color: var(--text-muted);">
-            Scroll left/right or use the buttons to browse, reorder, or edit image cards in your portfolio slider.
-          </p>
-        </div>
-        <div class="slider-nav-btns" style="margin-bottom:0;">
-          <button class="btn btn-outline" style="padding:0.4rem 0.8rem; font-size:0.75rem;" onclick="scrollGallery(-1)">◀ Scroll Left</button>
-          <button class="btn btn-outline" style="padding:0.4rem 0.8rem; font-size:0.75rem;" onclick="scrollGallery(1)">Scroll Right ▶</button>
-        </div>
-      </div>
-      
-      <div class="gallery-slider-container">
-        <div class="gallery-track" id="builds-gallery-track"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- TAB: PHOTOGRAPHY SHOWCASE -->
-<div id="tab-photography" class="view-panel">
-  <div class="grid">
-    <!-- Form to Add or Update Photography Item -->
-    <div class="card">
-      <h2 id="photo-form-title">🎥 Add New Photo</h2>
-      <input type="hidden" id="photo-edit-id" value="">
-
-      <div class="field">
-        <label>Photo Title</label>
-        <input type="text" id="photo-title" placeholder="e.g. Golden Hour Rooftop">
-      </div>
-      <div class="field">
-        <label>Category / Tag</label>
-        <input type="text" id="photo-tag" placeholder="e.g. Portrait / Landscape / Street">
-      </div>
-      <div class="field">
-        <label>Description / Caption</label>
-        <textarea id="photo-desc" rows="3" placeholder="e.g. Shot on a rooftop downtown, edited for warm tones..."></textarea>
-      </div>
-      <div class="field">
-        <label>Image URL (Supports Image Links)</label>
-        <input type="text" id="photo-img-url" placeholder="https://images.unsplash.com/... or image link">
-      </div>
-      <div class="field">
-        <label>Upload Image (optional, overrides URL)</label>
-        <input type="file" id="photo-img-file" accept="image/*">
-      </div>
-
-      <div class="action-row">
-        <button class="btn" id="btn-save-photo" onclick="savePhotoItem()">Add Photo</button>
-        <button class="btn btn-outline" id="btn-cancel-photo" onclick="resetPhotoForm()" style="display:none;">Cancel Edit</button>
-      </div>
-      <div id="photo-status" class="status-msg">Photo saved successfully!</div>
-    </div>
-
-    <!-- Active Photography Showcase Horizontal Slider Gallery -->
-    <div class="card" style="grid-column: span 2;">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem;">
-        <div>
-          <h2>📸 Photography Showcase Gallery</h2>
-          <p style="font-size: 0.75rem; color: var(--text-muted);">
-            Scroll left/right or use the buttons to browse, reorder, or edit photos in your photography showcase.
-          </p>
-        </div>
-        <div class="slider-nav-btns" style="margin-bottom:0;">
-          <button class="btn btn-outline" style="padding:0.4rem 0.8rem; font-size:0.75rem;" onclick="scrollPhotoGallery(-1)">◀ Scroll Left</button>
-          <button class="btn btn-outline" style="padding:0.4rem 0.8rem; font-size:0.75rem;" onclick="scrollPhotoGallery(1)">Scroll Right ▶</button>
-        </div>
-      </div>
-
-      <div class="gallery-slider-container">
-        <div class="gallery-track" id="photography-gallery-track"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- TAB 4: HIGHLIGHT RINGS & MULTI-IMAGE SLIDE MANAGER -->
-<div id="tab-content" class="view-panel">
-  <div class="grid">
-    <!-- Step 1: Create Highlight Ring -->
-    <div class="card">
-      <h2>1️⃣ Create Highlight Ring (Set Ring Cover PFP)</h2>
-      <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">
-        Define the Highlight Ring's Category Name and its <strong>Highlight Ring Cover (Ring PFP)</strong> image or emoji icon.
-      </p>
-      
-      <div class="field"><label>Category Name</label><input type="text" id="hl-cat" placeholder="e.g. Photography, Projects, BTS"></div>
-      <div class="field"><label>Fallback Emoji / Icon</label><input type="text" id="hl-icon" value="🧩"></div>
-      
-      <div class="field">
-        <label>Upload Highlight Ring Cover (Ring PFP Image)</label>
-        <input type="file" id="hl-ring-file" accept="image/*" onchange="previewFileInput('hl-ring-file', 'hl-ring-preview')">
-      </div>
-      <div class="field">
-        <label>Or Ring Cover Image URL</label>
-        <input type="text" id="hl-ring-url" placeholder="https://example.com/ring-cover.png" oninput="previewUrlInput('hl-ring-url', 'hl-ring-preview')">
-      </div>
-      <div class="mini-preview-wrap" id="hl-ring-preview"><img src=""><span>Preview — this image will display</span></div>
-
-      <button class="btn" onclick="createNewHighlightRing()">Create Highlight Ring</button>
-      <div id="hl-ring-status" class="status-msg">Highlight Ring Created!</div>
-    </div>
-
-    <!-- Step 2: Add Slide Images to an Existing Highlight -->
-    <div class="card">
-      <h2>2️⃣ Add Slide / Image to Highlight Ring</h2>
-      <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">
-        Add multiple images or cards into a single Highlight Ring story sequence.
-      </p>
-
-      <div class="field">
-        <label>Select Target Highlight Ring</label>
-        <select id="hl-select-ring"></select>
-      </div>
-      <div class="field"><label>Slide Title</label><input type="text" id="slide-title" placeholder="e.g. Sunset Shot #1"></div>
-      <div class="field"><label>Slide Caption</label><input type="text" id="slide-caption" placeholder="Description shown in story viewer..."></div>
-      <div class="field"><label>Date / Tag</label><input type="text" id="slide-date" value="2026"></div>
-
-      <div class="field">
-        <label>Upload Slide Image File</label>
-        <input type="file" id="slide-file" accept="image/*" onchange="previewFileInput('slide-file', 'slide-preview')">
-      </div>
-      <div class="field">
-        <label>Or Slide Image URL</label>
-        <input type="text" id="slide-url" placeholder="https://example.com/slide.png" oninput="previewUrlInput('slide-url', 'slide-preview')">
-      </div>
-      <div class="mini-preview-wrap" id="slide-preview"><img src=""><span>Preview — this image will display in the gallery</span></div>
-
-      <button class="btn" onclick="addSlideToHighlight()">Add Slide to Highlight</button>
-      <div id="slide-status" class="status-msg">Slide Added to Highlight Ring!</div>
     </div>
   </div>
 
-  <div class="card" style="margin-top: 1.5rem;">
-    <h2>🔀 Merge Two Highlight Rings</h2>
-    <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">
-      Combine all photos from one Highlight Ring into another. The source ring is deleted afterward and its photos are appended to the end of the target ring's gallery.
+  <!-- Recent Builds Image Gallery -->
+  <div class="section-card">
+    <div class="section-title">
+      <span class="icon-title">🚀 Recent Builds Image Gallery</span>
+      <div class="btn-group">
+        <button class="btn btn-primary btn-sm" onclick="openAddBuildModal()">+ Add New Build</button>
+      </div>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+      Manage project showcases, gallery items, and recent works. All updates instantly save locally and prepare for GitHub sync.
     </p>
-    <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-end;">
-      <div class="field" style="flex:1; min-width:200px; margin-bottom:0;">
-        <label>Merge FROM (source, will be deleted)</label>
-        <select id="hl-merge-source"></select>
-      </div>
-      <div class="field" style="flex:1; min-width:200px; margin-bottom:0;">
-        <label>Merge INTO (target, keeps all photos)</label>
-        <select id="hl-merge-target"></select>
-      </div>
-      <button class="btn" style="margin-bottom:1.2rem;" onclick="mergeHighlightRings()">Merge Rings</button>
+
+    <div id="builds-container" class="builds-grid">
+      <!-- Build cards rendered here dynamically -->
     </div>
-    <div id="hl-merge-status" class="status-msg">Rings merged successfully!</div>
   </div>
 
-  <div class="card" style="margin-top: 1.5rem;">
-    <h2>🎬 Active Highlight Rings & Multiple Slides List</h2>
-    <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:0.4rem;">
-      Use ◀ ▶ to reorder photos within a ring, or delete individual photos.
+  <!-- Social Links -->
+  <div class="section-card">
+    <div class="section-title">
+      <span class="icon-title">🔗 Social Links</span>
+      <button class="btn btn-outline btn-sm" onclick="addSocialRow()">+ Add Social Link</button>
+    </div>
+    <div id="socials-container">
+      <!-- Social inputs rendered here -->
+    </div>
+    <div style="margin-top: 1rem;">
+      <button class="btn btn-emerald btn-sm" onclick="saveSocials()">Save Socials</button>
+    </div>
+  </div>
+
+  <!-- Highlights / Features -->
+  <div class="section-card">
+    <div class="section-title">
+      <span class="icon-title">✨ Highlights & Stats</span>
+      <button class="btn btn-outline btn-sm" onclick="addHighlightRow()">+ Add Highlight</button>
+    </div>
+    <div id="highlights-container">
+      <!-- Highlight inputs rendered here -->
+    </div>
+    <div style="margin-top: 1rem;">
+      <button class="btn btn-emerald btn-sm" onclick="saveHighlights()">Save Highlights</button>
+    </div>
+  </div>
+
+  <!-- GitHub Repository & Deployment Commands -->
+  <div class="section-card">
+    <div class="section-title">
+      <span class="icon-title">🛠️ GitHub Repository & Sync Tools</span>
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label for="gh-user">GitHub Username / Org</label>
+        <input type="text" id="gh-user" value="aayeddie" onchange="generateGitCmds()">
+      </div>
+      <div class="form-group">
+        <label for="gh-repo">Repository Name</label>
+        <input type="text" id="gh-repo" value="aayeddie-studio" onchange="generateGitCmds()">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="gh-branch">Branch Name</label>
+      <input type="text" id="gh-branch" value="main" onchange="generateGitCmds()">
+    </div>
+
+    <div style="margin-top: 1rem;">
+      <label>Git Deployment Commands</label>
+      <div id="out-commands" class="code-box">git init...</div>
+      <button class="btn btn-outline btn-sm" style="margin-top: 0.5rem;" onclick="copyText('out-commands')">Copy Commands</button>
+    </div>
+
+    <div style="margin-top: 1.5rem;">
+      <label>Repository README Template</label>
+      <div id="out-readme" class="code-box"># Repository README...</div>
+      <button class="btn btn-outline btn-sm" style="margin-top: 0.5rem;" onclick="copyText('out-readme')">Copy README</button>
+    </div>
+  </div>
+
+  <!-- JSON Import/Export Backup -->
+  <div class="section-card">
+    <div class="section-title">
+      <span class="icon-title">💾 Direct JSON Engine</span>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+      Directly edit or import raw <code>data.json</code> structure.
     </p>
-    <div id="highlights-rings-container" class="item-list"></div>
-  </div>
-</div>
-
-<!-- TAB 5: SOCIAL CHANNELS -->
-<div id="tab-socials" class="view-panel">
-  <div class="grid">
-    <div class="card">
-      <h2>🌐 Social Channels Manager</h2>
-      <div class="field"><label>Platform Name</label><input type="text" id="soc-name" placeholder="YouTube"></div>
-      <div class="field"><label>Handle</label><input type="text" id="soc-handle" placeholder="@aayeddie"></div>
-      <div class="field"><label>URL</label><input type="text" id="soc-url" placeholder="https://youtube.com/@aayeddie"></div>
-      <div class="field"><label>Color Accent</label><input type="color" id="soc-color" value="#FF3B3B"></div>
-      <button class="btn" onclick="addSocialItem()">Add Social Channel</button>
-      <div style="margin-top: 1.5rem;">
-        <label>Added Social Channels</label>
-        <div class="item-list" id="socials-list"></div>
-      </div>
+    <div class="form-group">
+      <textarea id="raw-json-editor" rows="10" placeholder="Raw JSON will appear here..."></textarea>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="applyRawJSON()">Apply Raw JSON to Portal</button>
+      <button class="btn btn-emerald" onclick="downloadDataJson()">Download data.json File</button>
+      <button class="btn btn-danger" onclick="resetDefaults()">Reset to Defaults</button>
     </div>
   </div>
 </div>
 
-<!-- TAB 6: LOCAL & REPOSITORY SYNC -->
-<div id="tab-sync" class="view-panel">
-  <div class="grid">
-    <div class="card" style="grid-column: span 2;">
-      <h2>📦 Complete Data Sync & Export (data.json)</h2>
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
-        Export your complete dataset to download a <code>data.json</code> file or synchronize directly with LocalStorage so <code>index.html</code> updates immediately. Commit the downloaded <code>data.json</code> to the repo root so every visitor sees your changes.
-      </p>
-      <div class="action-row">
-        <button class="btn" onclick="exportFullConfig()">Export & View JSON</button>
-        <button class="btn btn-outline" onclick="downloadJSONFile()">Download data.json</button>
-        <button class="btn btn-outline" onclick="resetDefaults()">Reset to Defaults</button>
-      </div>
-      <pre id="json-export-preview">Click Export to preview full unified site state...</pre>
-    </div>
-  </div>
-</div>
-
-<!-- TAB 7: GITHUB SETUP GENERATOR -->
-<div id="tab-repo" class="view-panel">
-  <div class="grid">
-    <div class="card">
-      <h2>📁 Repository Configurator</h2>
-      <div class="field"><label>GitHub Username</label><input type="text" id="gh-user" value="aayeddie"></div>
-      <div class="field"><label>Repository Name</label><input type="text" id="gh-repo" value="aayeddie-studio"></div>
-      <div class="field"><label>Branch Name</label><input type="text" id="gh-branch" value="main"></div>
-      <button class="btn" onclick="generateRepoFiles()">Generate Deployment Package</button>
-    </div>
-
-    <div class="card" style="grid-column: span 2;">
-      <h2>📜 Terminal Commands & Files</h2>
-      <div class="action-row">
-        <button class="btn btn-outline" onclick="copyText('out-commands')">Copy Git Terminal Commands</button>
-        <button class="btn btn-outline" onclick="copyText('out-readme')">Copy README.md</button>
-        <button class="btn btn-outline" onclick="copyText('out-workflow')">Copy GitHub Workflow</button>
-      </div>
-
-      <div class="field" style="margin-top: 1rem;">
-        <label>Git Terminal Commands</label>
-        <pre id="out-commands"># Run these commands inside your project folder:
-git init
-git add .
-git commit -m "Deploy site assets and data"
-git branch -M main
-git remote add origin https://github.com/aayeddie/aayeddie-studio.git
-git push -u origin main</pre>
-      </div>
-
-      <div class="field">
-        <label>Generated README.md</label>
-        <pre id="out-readme">Click Generate Deployment Package...</pre>
-      </div>
-
-      <div class="field">
-        <label>GitHub Pages Deployment Workflow (.github/workflows/deploy.yml)</label>
-        <pre id="out-workflow">name: Deploy Portfolio to GitHub Pages
-
-on:
-  push:
-    branches: ["main"]
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v4
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-      - id: deployment
-        uses: actions/deploy-pages@v4</pre>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- INLINE EDIT PENCIL MODAL -->
-<div class="modal-overlay" id="pencil-modal">
+<!-- Modal for Adding/Editing Build -->
+<div id="build-modal" class="modal-backdrop">
   <div class="modal-box">
-    <button class="modal-close" onclick="closePencilModal()">✕</button>
-    <h2 id="modal-pencil-title" style="font-family:var(--font-head); color:var(--accent-cyan); margin-bottom:1rem;">Edit Section</h2>
-    <div id="modal-pencil-body"></div>
-    <div class="action-row" style="margin-top:1.4rem;">
-      <button class="btn" onclick="savePencilModal()">Apply Changes</button>
-      <button class="btn btn-outline" onclick="closePencilModal()">Cancel</button>
+    <div class="modal-header">
+      <h3 id="modal-title" style="color: var(--accent-violet);">Add Build Showcase</h3>
+      <button class="btn btn-outline btn-sm" onclick="closeBuildModal()">✕</button>
+    </div>
+    <input type="hidden" id="build-edit-index" value="-1">
+    <div class="form-group">
+      <label for="modal-build-title">Title</label>
+      <input type="text" id="modal-build-title" placeholder="e.g. Next-Gen Web Engine">
+    </div>
+    <div class="form-group">
+      <label for="modal-build-image">Image URL</label>
+      <input type="url" id="modal-build-image" placeholder="https://...">
+    </div>
+    <div class="form-group">
+      <label for="modal-build-desc">Description</label>
+      <textarea id="modal-build-desc" rows="3" placeholder="Brief project details..."></textarea>
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label for="modal-build-link">Project Link</label>
+        <input type="url" id="modal-build-link" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label for="modal-build-date">Date / Year</label>
+        <input type="text" id="modal-build-date" placeholder="2026">
+      </div>
+    </div>
+    <div class="btn-group" style="margin-top: 1rem; justify-content: flex-end;">
+      <button class="btn btn-outline" onclick="closeBuildModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveBuildFromModal()">Save Build</button>
     </div>
   </div>
 </div>
+
+<!-- Toast notification -->
+<div id="status-toast" class="status-toast">Action Completed Successfully</div>
 
 <script>
-let currentPencilTarget = '';
-let currentPfpDataUrl = localStorage.getItem('aayeddie_pfp') || '';
+// Master State Object
+let appData = {
+  pfp: "",
+  builds: [],
+  socials: [],
+  highlights: []
+};
 
-// Default fallback highlights array with multi-slide architecture
-const defaultHighlights = [
-  {
-    icon:"🖼️",
-    coverImage: "",
-    cat:"Photography",
-    c1:"#8b5cf6",
-    c2:"#22d3ee",
-    slides: [
-      { image:"", title:"Behind the lens", caption:"Frame by frame — a running log of shots I keep coming back to.", date:"2026" }
-    ]
-  },
-  {
-    icon:"🎬",
-    coverImage: "",
-    cat:"BTS",
-    c1:"#ff2e9a",
-    c2:"#8b5cf6",
-    slides: [
-      { image:"", title:"How it actually gets built", caption:"The messy middle of every project, before it looks finished.", date:"2026" }
-    ]
-  },
-  {
-    icon:"📺",
-    coverImage: "",
-    cat:"YouTube",
-    c1:"#ffcc33",
-    c2:"#ff2e9a",
-    slides: [
-      { image:"", title:"On the channel", caption:"Builds, breakdowns, and working ideas.", date:"2026" }
-    ]
-  },
-  {
-    icon:"🧩",
-    coverImage: "",
-    cat:"Projects",
-    c1:"#22d3ee",
-    c2:"#00ff88",
-    slides: [
-      { image:"", title:"Currently shipping", caption:"DroidBay, an Android emulator shell, and Discord bots.", date:"2026" }
-    ]
-  },
-  {
-    icon:"🎮",
-    coverImage: "",
-    cat:"Roblox",
-    c1:"#00A2FF",
-    c2:"#8b5cf6",
-    slides: [
-      { image:"", title:"Oakview", caption:"A Roblox island town built with MCP tooling.", date:"2026" }
-    ]
-  }
-];
+const LOCAL_STORAGE_KEY = 'aayeddie_studio_admin_data';
 
-// Default Recent Builds dataset with image URLs
-const defaultBuilds = [
-  {
-    id: "build_1",
-    title: "DroidBay",
-    tag: "Electron / Android",
-    desc: "Electron-based Android emulator launcher — APK import, metadata scraping, and custom controls.",
-    imageUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80",
-    url: "#"
-  },
-  {
-    id: "build_2",
-    title: "Oakview (Roblox Studio)",
-    tag: "Roblox Studio / MCP",
-    desc: "An island town built in Roblox Studio via MCP tooling.",
-    imageUrl: "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_16x9.jpg?w=1200",
-    url: "#"
-  },
-  {
-    id: "build_3",
-    title: "Server Builder Bot",
-    tag: "Python / Discord.py",
-    desc: "A discord.py bot that builds out the Aayeddie's Studio server structure automatically.",
-    imageUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80",
-    url: "#"
-  },
-  {
-    id: "build_4",
-    title: "3D Estate Walkthrough",
-    tag: "Three.js / WebGL",
-    desc: "Three.js first-person walkthrough of a Mediterranean-style estate.",
-    imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&auto=format&fit=crop&q=80",
-    url: "#"
-  },
-  {
-    id: "build_5",
-    title: "FIFA 2026 Scoreboard",
-    tag: "HTML / SVG / JS",
-    desc: "Broadcast-style scoreboard editor with SVG flags and real-time animation overlay.",
-    imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop&q=80",
-    url: "#"
-  },
-  {
-    id: "build_6",
-    title: "Roblox Avatar Viewer",
-    tag: "Three.js / Web API",
-    desc: "A web viewer for Roblox avatars with pose controls and procedural animation preview.",
-    imageUrl: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&auto=format&fit=crop&q=80",
-    url: "#"
-  }
-];
+// Initialize App
+window.addEventListener('DOMContentLoaded', () => {
+  initPortal();
+});
 
-// --- TAB SWITCHING ---
-function switchTab(tabId, btn){
-  document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
-  if(btn) btn.classList.add('active');
-}
-
-// --- DEVICE FRAME TOGGLE ---
-function setDevice(type, btn){
-  document.querySelectorAll('.device-toggle button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const container = document.getElementById('preview-container');
-  container.className = 'preview-wrapper ' + type;
-}
-
-// --- REFRESH PREVIEW IFRAME & DISPATCH STORAGE SYNC ---
-function triggerLiveRefresh(){
-  const iframe = document.getElementById('site-frame');
-  if(iframe){
-    iframe.src = iframe.src;
-  }
-}
-
-// --- USER PFP MANAGEMENT ---
-function initPfpDisplay(){
-  const pfpPreview = document.getElementById('pfp-admin-preview');
-  if(currentPfpDataUrl){
-    pfpPreview.src = currentPfpDataUrl;
-    pfpPreview.style.display = 'block';
-  } else {
-    pfpPreview.style.display = 'none';
-  }
-}
-
-function handlePfpUpload(event){
-  const file = event.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e){
-    currentPfpDataUrl = e.target.result;
-    document.getElementById('pfp-url-input').value = '';
-    initPfpDisplay();
-  };
-  reader.readAsDataURL(file);
-}
-
-function handlePfpUrlChange(val){
-  if(val){
-    currentPfpDataUrl = val;
-    initPfpDisplay();
-  }
-}
-
-function savePfpConfig(){
-  if(currentPfpDataUrl){
-    localStorage.setItem('aayeddie_pfp', currentPfpDataUrl);
-  } else {
-    localStorage.removeItem('aayeddie_pfp');
-  }
-  showStatus('pfp-status');
-  triggerLiveRefresh();
-}
-
-function removePfp(){
-  currentPfpDataUrl = '';
-  localStorage.removeItem('aayeddie_pfp');
-  document.getElementById('pfp-file-input').value = '';
-  document.getElementById('pfp-url-input').value = '';
-  initPfpDisplay();
-  showStatus('pfp-status');
-  triggerLiveRefresh();
-}
-
-// --- RECENT BUILDS IMAGE GALLERY MANAGER ---
-function getStoredBuilds(){
-  const data = localStorage.getItem('aayeddie_custom_builds');
-  if(data){
-    try { return JSON.parse(data); } catch(e){}
-  }
-  return [...defaultBuilds];
-}
-
-function loadBuilds(){
-  const track = document.getElementById('builds-gallery-track');
-  if(!track) return;
-  track.innerHTML = '';
-
-  const builds = getStoredBuilds();
-
-  if(builds.length === 0){
-    track.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted); padding:1rem;">No builds added yet. Click "Add New Build" to create one.</div>`;
-    return;
-  }
-
-  builds.forEach((item, idx) => {
-    const card = document.createElement('div');
-    card.className = 'gallery-card';
-    
-    const displayImg = item.imageUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80';
-    
-    card.innerHTML = `
-      <div class="gallery-card-img-wrap">
-        <img src="${displayImg}" alt="${item.title}">
-      </div>
-      <div class="gallery-card-body">
-        <div>
-          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; justify-content:space-between;">
-            <strong style="color:#fff; font-size:0.95rem;">${item.title}</strong>
-            ${item.tag ? `<span class="tag-pill">${item.tag}</span>` : ''}
-          </div>
-          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.4rem; line-height:1.3;">${item.desc || 'No description provided.'}</p>
-        </div>
-        <div>
-          ${item.url && item.url !== '#' ? `<a href="${item.url}" target="_blank" style="font-size:0.7rem; color:var(--accent-cyan); text-decoration:none; display:inline-block; margin-top:0.5rem;">🔗 View Live Demo</a>` : ''}
-          <div class="gallery-controls">
-            <button class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="moveBuild(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.3;"' : ''}>◀</button>
-            <button class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="moveBuild(${idx}, 1)" ${idx === builds.length - 1 ? 'disabled style="opacity:0.3;"' : ''}>▶</button>
-            <button class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="editBuildItem('${item.id}')">✏️ Edit</button>
-            <button class="btn-danger" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="deleteBuildItem('${item.id}')">Delete</button>
-          </div>
-        </div>
-      </div>
-    `;
-    track.appendChild(card);
-  });
-}
-
-function scrollGallery(direction){
-  const track = document.getElementById('builds-gallery-track');
-  if(track){
-    track.scrollBy({ left: direction * 340, behavior: 'smooth' });
-  }
-}
-
-function saveBuildItem(){
-  const idInput = document.getElementById('build-edit-id').value;
-  const title = document.getElementById('build-title').value.trim();
-  const tag = document.getElementById('build-tag').value.trim();
-  const desc = document.getElementById('build-desc').value.trim();
-  const imageUrl = document.getElementById('build-img-url').value.trim();
-  const url = document.getElementById('build-url').value.trim();
-
-  if(!title){
-    alert("Please enter a Build Title!");
-    return;
-  }
-
-  let builds = getStoredBuilds();
-
-  if(idInput){
-    const idx = builds.findIndex(b => b.id === idInput);
-    if(idx !== -1){
-      builds[idx] = { id: idInput, title, tag, desc, imageUrl, url };
+async function initPortal() {
+  // First load from local storage if available
+  const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+  if (stored) {
+    try {
+      appData = JSON.parse(stored);
+      normalizeAppData();
+      renderAllSections();
+    } catch(e) {
+      console.error("Failed to parse localStorage data", e);
     }
-  } else {
-    const newBuild = {
-      id: 'build_' + Date.now(),
-      title,
-      tag,
-      desc,
-      imageUrl,
-      url: url || '#'
-    };
-    builds.push(newBuild);
   }
 
-  localStorage.setItem('aayeddie_custom_builds', JSON.stringify(builds));
-  resetBuildForm();
-  loadBuilds();
-  showStatus('build-status');
-  triggerLiveRefresh();
+  // Attempt live sync from data.json or GitHub with cache buster
+  await fetchLiveJSON(false);
+  generateGitCmds();
 }
 
-function editBuildItem(id){
-  const builds = getStoredBuilds();
-  const item = builds.find(b => b.id === id);
-  if(!item) return;
+// Normalize builds & data structure to avoid missing properties
+function normalizeAppData() {
+  if (!Array.isArray(appData.builds)) appData.builds = [];
+  if (!Array.isArray(appData.socials)) appData.socials = [];
+  if (!Array.isArray(appData.highlights)) appData.highlights = [];
 
-  document.getElementById('build-edit-id').value = item.id;
-  document.getElementById('build-title').value = item.title || '';
-  document.getElementById('build-tag').value = item.tag || '';
-  document.getElementById('build-desc').value = item.desc || '';
-  document.getElementById('build-img-url').value = item.imageUrl || '';
-  document.getElementById('build-url').value = item.url || '';
-
-  document.getElementById('build-form-title').textContent = '✏️ Edit Build Card';
-  document.getElementById('btn-save-build').textContent = 'Update Build';
-  document.getElementById('btn-cancel-build').style.display = 'inline-block';
-  switchTab('tab-builds');
+  // Normalize builds item structure
+  appData.builds = appData.builds.map(item => ({
+    title: item.title || item.name || "Untitled Build",
+    image: item.image || item.img || item.src || item.url || "https://via.placeholder.com/600x400?text=Build+Image",
+    desc: item.desc || item.description || item.caption || "",
+    link: item.link || item.url || item.href || "#",
+    date: item.date || item.year || new Date().getFullYear().toString()
+  }));
 }
 
-function resetBuildForm(){
-  document.getElementById('build-edit-id').value = '';
-  document.getElementById('build-title').value = '';
-  document.getElementById('build-tag').value = '';
-  document.getElementById('build-desc').value = '';
-  document.getElementById('build-img-url').value = '';
-  document.getElementById('build-url').value = '';
+// Synchronization Engine with Cache Busting
+async function fetchLiveJSON(isManualTrigger = false) {
+  const indicator = document.getElementById('sync-status-indicator');
+  if (indicator) indicator.textContent = "Syncing with GitHub...";
 
-  document.getElementById('build-form-title').textContent = '🛠️ Add New Build';
-  document.getElementById('btn-save-build').textContent = 'Add Build';
-  document.getElementById('btn-cancel-build').style.display = 'none';
-}
+  const cacheBuster = `?_t=${Date.now()}`;
+  const ghUser = document.getElementById('gh-user') ? document.getElementById('gh-user').value.trim() : 'aayeddie';
+  const ghRepo = document.getElementById('gh-repo') ? document.getElementById('gh-repo').value.trim() : 'aayeddie-studio';
+  const ghBranch = document.getElementById('gh-branch') ? document.getElementById('gh-branch').value.trim() : 'main';
 
-function deleteBuildItem(id){
-  if(confirm("Are you sure you want to delete this build card from the gallery?")){
-    let builds = getStoredBuilds();
-    builds = builds.filter(b => b.id !== id);
-    localStorage.setItem('aayeddie_custom_builds', JSON.stringify(builds));
-    loadBuilds();
-    triggerLiveRefresh();
-  }
-}
+  // Array of potential URLs to fetch from
+  const urlsToTry = [
+    `./data.json${cacheBuster}`,
+    `https://raw.githubusercontent.com/${ghUser}/${ghRepo}/${ghBranch}/data.json${cacheBuster}`
+  ];
 
-function moveBuild(idx, dir){
-  let builds = getStoredBuilds();
-  const targetIdx = idx + dir;
-  if(targetIdx < 0 || targetIdx >= builds.length) return;
+  let fetchedData = null;
 
-  const temp = builds[idx];
-  builds[idx] = builds[targetIdx];
-  builds[targetIdx] = temp;
-
-  localStorage.setItem('aayeddie_custom_builds', JSON.stringify(builds));
-  loadBuilds();
-  triggerLiveRefresh();
-}
-
-// --- PHOTOGRAPHY SHOWCASE MANAGER ---
-function getStoredPhotography(){
-  const data = localStorage.getItem('aayeddie_custom_photography');
-  if(data){
-    try { return JSON.parse(data); } catch(e){}
-  }
-  return [];
-}
-
-function loadPhotography(){
-  const track = document.getElementById('photography-gallery-track');
-  if(!track) return;
-  track.innerHTML = '';
-
-  const photos = getStoredPhotography();
-
-  if(photos.length === 0){
-    track.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted); padding:1rem;">No photos added yet. Click "Add New Photo" to create one.</div>`;
-    return;
-  }
-
-  photos.forEach((item, idx) => {
-    const card = document.createElement('div');
-    card.className = 'gallery-card';
-
-    const displayImg = item.imageUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80';
-
-    card.innerHTML = `
-      <div class="gallery-card-img-wrap">
-        <img src="${displayImg}" alt="${item.title}">
-      </div>
-      <div class="gallery-card-body">
-        <div>
-          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; justify-content:space-between;">
-            <strong style="color:#fff; font-size:0.95rem;">${item.title}</strong>
-            ${item.tag ? `<span class="tag-pill">${item.tag}</span>` : ''}
-          </div>
-          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.4rem; line-height:1.3;">${item.desc || 'No description provided.'}</p>
-        </div>
-        <div>
-          <div class="gallery-controls">
-            <button class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="movePhoto(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.3;"' : ''}>◀</button>
-            <button class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="movePhoto(${idx}, 1)" ${idx === photos.length - 1 ? 'disabled style="opacity:0.3;"' : ''}>▶</button>
-            <button class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="editPhotoItem('${item.id}')">✏️ Edit</button>
-            <button class="btn-danger" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="deletePhotoItem('${item.id}')">Delete</button>
-          </div>
-        </div>
-      </div>
-    `;
-    track.appendChild(card);
-  });
-}
-
-function scrollPhotoGallery(direction){
-  const track = document.getElementById('photography-gallery-track');
-  if(track){
-    track.scrollBy({ left: direction * 340, behavior: 'smooth' });
-  }
-}
-
-function savePhotoItem(){
-  const idInput = document.getElementById('photo-edit-id').value;
-  const title = document.getElementById('photo-title').value.trim();
-  const tag = document.getElementById('photo-tag').value.trim();
-  const desc = document.getElementById('photo-desc').value.trim();
-  const urlInput = document.getElementById('photo-img-url').value.trim();
-  const fileInput = document.getElementById('photo-img-file');
-
-  if(!title){
-    alert("Please enter a Photo Title!");
-    return;
-  }
-
-  const finalize = (imageUrl) => {
-    let photos = getStoredPhotography();
-
-    if(idInput){
-      const idx = photos.findIndex(p => p.id === idInput);
-      if(idx !== -1){
-        photos[idx] = { id: idInput, title, tag, desc, imageUrl };
+  for (const url of urlsToTry) {
+    try {
+      const response = await fetch(url, { cache: 'no-store' });
+      if (response.ok) {
+        fetchedData = await response.json();
+        break;
       }
-    } else {
-      const newPhoto = {
-        id: 'photo_' + Date.now(),
-        title,
-        tag,
-        desc,
-        imageUrl
-      };
-      photos.push(newPhoto);
+    } catch (err) {
+      console.warn(`Could not fetch from ${url}:`, err);
     }
+  }
 
-    localStorage.setItem('aayeddie_custom_photography', JSON.stringify(photos));
-    resetPhotoForm();
-    loadPhotography();
-    showStatus('photo-status');
-    triggerLiveRefresh();
-  };
-
-  if(fileInput && fileInput.files[0]){
-    const reader = new FileReader();
-    reader.onload = (e) => finalize(e.target.result);
-    reader.readAsDataURL(fileInput.files[0]);
+  if (fetchedData) {
+    appData = fetchedData;
+    normalizeAppData();
+    saveToLocalStorage();
+    renderAllSections();
+    if (indicator) indicator.textContent = "Synchronized with GitHub";
+    showToast(`Synced ${appData.builds.length} builds & settings from live data.json!`);
   } else {
-    // Keep existing image if editing and no new URL/file provided
-    let existingImg = urlInput;
-    if(!existingImg && idInput){
-      const photos = getStoredPhotography();
-      const existing = photos.find(p => p.id === idInput);
-      if(existing) existingImg = existing.imageUrl || '';
+    if (indicator) indicator.textContent = "Using Offline Cache";
+    if (isManualTrigger) {
+      showToast("Could not reach data.json. Retaining current settings.");
     }
-    finalize(existingImg || '');
   }
 }
 
-function editPhotoItem(id){
-  const photos = getStoredPhotography();
-  const item = photos.find(p => p.id === id);
-  if(!item) return;
-
-  document.getElementById('photo-edit-id').value = item.id;
-  document.getElementById('photo-title').value = item.title || '';
-  document.getElementById('photo-tag').value = item.tag || '';
-  document.getElementById('photo-desc').value = item.desc || '';
-  document.getElementById('photo-img-url').value = item.imageUrl || '';
-  document.getElementById('photo-img-file').value = '';
-
-  document.getElementById('photo-form-title').textContent = '✏️ Edit Photo';
-  document.getElementById('btn-save-photo').textContent = 'Update Photo';
-  document.getElementById('btn-cancel-photo').style.display = 'inline-block';
-  switchTab('tab-photography');
+function saveToLocalStorage() {
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(appData));
+  updateRawJsonEditor();
 }
 
-function resetPhotoForm(){
-  document.getElementById('photo-edit-id').value = '';
-  document.getElementById('photo-title').value = '';
-  document.getElementById('photo-tag').value = '';
-  document.getElementById('photo-desc').value = '';
-  document.getElementById('photo-img-url').value = '';
-  document.getElementById('photo-img-file').value = '';
-
-  document.getElementById('photo-form-title').textContent = '🎥 Add New Photo';
-  document.getElementById('btn-save-photo').textContent = 'Add Photo';
-  document.getElementById('btn-cancel-photo').style.display = 'none';
+function renderAllSections() {
+  renderPfp();
+  renderBuilds();
+  renderSocials();
+  renderHighlights();
+  updateRawJsonEditor();
 }
 
-function deletePhotoItem(id){
-  if(confirm("Are you sure you want to delete this photo from the showcase?")){
-    let photos = getStoredPhotography();
-    photos = photos.filter(p => p.id !== id);
-    localStorage.setItem('aayeddie_custom_photography', JSON.stringify(photos));
-    loadPhotography();
-    triggerLiveRefresh();
+// 📸 PFP Management
+function renderPfp() {
+  const input = document.getElementById('pfp-url-input');
+  const preview = document.getElementById('pfp-preview-img');
+  if (input) input.value = appData.pfp || '';
+  if (preview) preview.src = appData.pfp || 'https://via.placeholder.com/150?text=PFP';
+}
+
+function updatePfpPreview() {
+  const input = document.getElementById('pfp-url-input');
+  const preview = document.getElementById('pfp-preview-img');
+  if (input && preview) {
+    preview.src = input.value || 'https://via.placeholder.com/150?text=PFP';
   }
 }
 
-function movePhoto(idx, dir){
-  let photos = getStoredPhotography();
-  const targetIdx = idx + dir;
-  if(targetIdx < 0 || targetIdx >= photos.length) return;
-
-  const temp = photos[idx];
-  photos[idx] = photos[targetIdx];
-  photos[targetIdx] = temp;
-
-  localStorage.setItem('aayeddie_custom_photography', JSON.stringify(photos));
-  loadPhotography();
-  triggerLiveRefresh();
+function savePfp() {
+  const input = document.getElementById('pfp-url-input');
+  if (input) {
+    appData.pfp = input.value.trim();
+    saveToLocalStorage();
+    showToast("Profile Picture URL saved!");
+  }
 }
 
-// --- EDIT PENCIL MODALS ---
-function openPencilModal(section){
-  currentPencilTarget = section;
-  const modal = document.getElementById('pencil-modal');
-  const title = document.getElementById('modal-pencil-title');
-  const body = document.getElementById('modal-pencil-body');
+// 🚀 Recent Builds Image Gallery Management
+function renderBuilds() {
+  const container = document.getElementById('builds-container');
+  if (!container) return;
 
-  if(section === 'hero'){
-    title.textContent = '✏️ Edit Hero & User PFP';
-    const curTitle = localStorage.getItem('aayeddie_hero_title') || 'aayeddie';
-    const curTagline = localStorage.getItem('aayeddie_hero_tagline') || '';
-    body.innerHTML = `
-      <div class="field">
-        <label>Upload Profile Picture (User PFP)</label>
-        <input type="file" id="pencil-pfp-file" accept="image/*">
+  if (!appData.builds || appData.builds.length === 0) {
+    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">No builds added yet. Click "+ Add New Build" above to populate your gallery.</div>`;
+    return;
+  }
+
+  container.innerHTML = appData.builds.map((build, index) => `
+    <div class="build-card">
+      <div class="build-preview-wrapper">
+        <img src="${escapeHtml(build.image)}" class="build-preview-img" alt="${escapeHtml(build.title)}" onerror="this.src='https://via.placeholder.com/600x400?text=Image+Unavailable'">
       </div>
-      <div class="field">
-        <label>Hero Title</label>
-        <input type="text" id="pencil-hero-title" value="${curTitle}">
-      </div>
-      <div class="field">
-        <label>Hero Tagline</label>
-        <textarea id="pencil-hero-tagline" rows="2">${curTagline}</textarea>
-      </div>
-    `;
-  } else if(section === 'highlights'){
-    title.textContent = '✏️ Edit Highlight Rings';
-    body.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted);">Create a new Highlight Ring with a Cover Image (Ring PFP):</p>
-      <div class="field" style="margin-top:0.8rem;"><label>Category Name</label><input type="text" id="pencil-hl-cat" value="New Category"></div>
-      <div class="field"><label>Fallback Emoji</label><input type="text" id="pencil-hl-icon" value="🧩"></div>
-      <div class="field"><label>Ring Cover PFP File</label><input type="file" id="pencil-hl-ring-file" accept="image/*"></div>
-    `;
-  } else if(section === 'builds'){
-    title.textContent = '✏️ Edit Recent Builds Gallery';
-    body.innerHTML = `
-      <p style="font-size:0.85rem; color:var(--text-muted);">Quickly add a new card to your image gallery:</p>
-      <div class="field" style="margin-top:0.8rem;"><label>Build Title</label><input type="text" id="pencil-build-title" placeholder="e.g. DroidBay"></div>
-      <div class="field"><label>Tag / Category</label><input type="text" id="pencil-build-tag" placeholder="e.g. Electron / Android"></div>
-      <div class="field"><label>Image URL</label><input type="text" id="pencil-build-img" placeholder="https://image-url.com"></div>
-      <div class="field"><label>Description</label><textarea id="pencil-build-desc" rows="2" placeholder="Short description..."></textarea></div>
-      <button class="btn btn-outline" style="margin-top:0.5rem;" onclick="closePencilModal(); switchTab('tab-builds');">Open Full Gallery Manager Tab</button>
-    `;
-  } else if(section === 'socials'){
-    title.textContent = '✏️ Edit Social Hub';
-    body.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted);">Quickly add a social channel link:</p>
-      <div class="field" style="margin-top:0.8rem;"><label>Platform</label><input type="text" id="pencil-soc-name" placeholder="YouTube"></div>
-      <div class="field"><label>Handle</label><input type="text" id="pencil-soc-handle" placeholder="@aayeddie"></div>
-      <div class="field"><label>URL</label><input type="text" id="pencil-soc-url" placeholder="https://youtube.com/@aayeddie"></div>
-    `;
-  } else if(section === 'theme'){
-    title.textContent = '✏️ Edit Theme Accents';
-    body.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted);">Theme accents update portfolio glow:</p>
-      <div class="field" style="margin-top:0.8rem;"><label>Primary Accent</label><input type="color" id="pencil-c1" value="${localStorage.getItem('aayeddie_accent1') || '#8b5cf6'}"></div>
-      <div class="field"><label>Secondary Accent</label><input type="color" id="pencil-c2" value="${localStorage.getItem('aayeddie_accent2') || '#22d3ee'}"></div>
-    `;
-  }
-
-  modal.classList.add('open');
-}
-
-function closePencilModal(){
-  document.getElementById('pencil-modal').classList.remove('open');
-}
-
-function savePencilModal(){
-  if(currentPencilTarget === 'hero'){
-    const t = document.getElementById('pencil-hero-title').value;
-    const tag = document.getElementById('pencil-hero-tagline').value;
-    localStorage.setItem('aayeddie_hero_title', t);
-    localStorage.setItem('aayeddie_hero_tagline', tag);
-
-    const fileInput = document.getElementById('pencil-pfp-file');
-    if(fileInput && fileInput.files[0]){
-      const reader = new FileReader();
-      reader.onload = function(e){
-        localStorage.setItem('aayeddie_pfp', e.target.result);
-        currentPfpDataUrl = e.target.result;
-        initPfpDisplay();
-        triggerLiveRefresh();
-      };
-      reader.readAsDataURL(fileInput.files[0]);
-    } else {
-      triggerLiveRefresh();
-    }
-  } else if(currentPencilTarget === 'highlights'){
-    const cat = document.getElementById('pencil-hl-cat').value;
-    const icon = document.getElementById('pencil-hl-icon').value || '🧩';
-    const fileInput = document.getElementById('pencil-hl-ring-file');
-
-    const saveRing = (ringImg) => {
-      let highlights = getStoredHighlights();
-      highlights.push({
-        icon,
-        coverImage: ringImg || "",
-        cat,
-        c1: "#8b5cf6",
-        c2: "#22d3ee",
-        slides: [ { image: ringImg || "", title: cat, caption: "Story for " + cat, date: "2026" } ]
-      });
-      localStorage.setItem('aayeddie_custom_highlights', JSON.stringify(highlights));
-      loadHighlightsRings();
-      triggerLiveRefresh();
-    };
-
-    if(fileInput && fileInput.files[0]){
-      const reader = new FileReader();
-      reader.onload = (e) => saveRing(e.target.result);
-      reader.readAsDataURL(fileInput.files[0]);
-    } else {
-      saveRing("");
-    }
-  } else if(currentPencilTarget === 'builds'){
-    const title = document.getElementById('pencil-build-title').value;
-    const tag = document.getElementById('pencil-build-tag').value;
-    const imageUrl = document.getElementById('pencil-build-img').value;
-    const desc = document.getElementById('pencil-build-desc').value;
-    if(title){
-      let builds = getStoredBuilds();
-      builds.push({ id: 'build_' + Date.now(), title, tag, desc, imageUrl, url: '#' });
-      localStorage.setItem('aayeddie_custom_builds', JSON.stringify(builds));
-      loadBuilds();
-      triggerLiveRefresh();
-    }
-  } else if(currentPencilTarget === 'socials'){
-    const name = document.getElementById('pencil-soc-name').value;
-    const handle = document.getElementById('pencil-soc-handle').value;
-    const url = document.getElementById('pencil-soc-url').value;
-    if(name && handle && url){
-      const socials = JSON.parse(localStorage.getItem('aayeddie_custom_socials') || '[]');
-      socials.push({ name, handle, url, color:"#22d3ee", init: name.slice(0,2).toUpperCase() });
-      localStorage.setItem('aayeddie_custom_socials', JSON.stringify(socials));
-      loadSocials();
-      triggerLiveRefresh();
-    }
-  } else if(currentPencilTarget === 'theme'){
-    const c1 = document.getElementById('pencil-c1').value;
-    const c2 = document.getElementById('pencil-c2').value;
-    localStorage.setItem('aayeddie_accent1', c1);
-    localStorage.setItem('aayeddie_accent2', c2);
-    triggerLiveRefresh();
-  }
-
-  closePencilModal();
-}
-
-// --- HERO & BRANDING SYNC ---
-function saveHeroConfig(){
-  const title = document.getElementById('hero-title-input').value;
-  const tagline = document.getElementById('hero-tagline-input').value;
-  const c1 = document.getElementById('theme-c1').value;
-  const c2 = document.getElementById('theme-c2').value;
-
-  localStorage.setItem('aayeddie_hero_title', title);
-  localStorage.setItem('aayeddie_hero_tagline', tagline);
-  localStorage.setItem('aayeddie_accent1', c1);
-  localStorage.setItem('aayeddie_accent2', c2);
-
-  showStatus('hero-status');
-  triggerLiveRefresh();
-}
-
-// --- LIVE PREVIEW HELPERS (paste URL or pick a file, see it instantly) ---
-function previewUrlInput(inputId, previewWrapId){
-  const val = document.getElementById(inputId).value.trim();
-  const wrap = document.getElementById(previewWrapId);
-  if(!val){ wrap.classList.remove('show'); return; }
-  wrap.querySelector('img').src = val;
-  wrap.classList.add('show');
-}
-
-function previewFileInput(inputId, previewWrapId){
-  const fileInput = document.getElementById(inputId);
-  const wrap = document.getElementById(previewWrapId);
-  if(!fileInput.files || !fileInput.files[0]){ wrap.classList.remove('show'); return; }
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    wrap.querySelector('img').src = e.target.result;
-    wrap.classList.add('show');
-  };
-  reader.readAsDataURL(fileInput.files[0]);
-}
-
-function clearPreview(previewWrapId){
-  const wrap = document.getElementById(previewWrapId);
-  if(wrap){
-    wrap.classList.remove('show');
-    wrap.querySelector('img').src = '';
-  }
-}
-
-// --- MULTI-SLIDE HIGHLIGHT RING MANAGER ---
-function getStoredHighlights(){
-  if(localStorage.getItem('aayeddie_custom_highlights')){
-    try { return JSON.parse(localStorage.getItem('aayeddie_custom_highlights')); } catch(e){}
-  }
-  return [...defaultHighlights];
-}
-
-function loadHighlightsRings(selectedIdxToSet){
-  const container = document.getElementById('highlights-rings-container');
-  const selectRing = document.getElementById('hl-select-ring');
-  const mergeSource = document.getElementById('hl-merge-source');
-  const mergeTarget = document.getElementById('hl-merge-target');
-  container.innerHTML = '';
-  selectRing.innerHTML = '';
-  if(mergeSource) mergeSource.innerHTML = '';
-  if(mergeTarget) mergeTarget.innerHTML = '';
-
-  const highlights = getStoredHighlights();
-
-  highlights.forEach((ring, ringIdx) => {
-    const opt = document.createElement('option');
-    opt.value = ringIdx;
-    opt.textContent = `${ring.icon || '🧩'} ${ring.cat} (${ring.slides ? ring.slides.length : 0} Slides)`;
-    selectRing.appendChild(opt);
-
-    if(mergeSource) mergeSource.appendChild(opt.cloneNode(true));
-    if(mergeTarget) mergeTarget.appendChild(opt.cloneNode(true));
-
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.style.marginBottom = '1rem';
-
-    const ringCoverHtml = ring.coverImage 
-      ? `<img src="${ring.coverImage}" class="item-thumb" alt="cover">` 
-      : `<div class="item-thumb">${ring.icon || '🧩'}</div>`;
-
-    let slidesListHtml = '';
-    if(ring.slides && ring.slides.length > 0){
-      slidesListHtml = ring.slides.map((s, sIdx) => `
-        <div class="slide-box">
-          <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem;">
-            <div style="display:flex; align-items:center; gap:0.6rem; overflow:hidden;">
-              ${s.image ? `<img src="${s.image}" style="width:36px; height:36px; border-radius:6px; object-fit:cover;">` : `<span style="font-size:1.1rem;">📷</span>`}
-              <div>
-                <strong>${s.title || 'Untitled Slide'}</strong>
-                <div style="font-size:0.7rem; color:var(--text-muted);">${s.caption || 'No caption'}</div>
-              </div>
-            </div>
-            <div style="display:flex; align-items:center; gap:0.5rem;">
-              <div class="slide-move-btns">
-                <button onclick="moveSlide(${ringIdx}, ${sIdx}, -1)" ${sIdx === 0 ? 'disabled' : ''} title="Move earlier">◀</button>
-                <button onclick="moveSlide(${ringIdx}, ${sIdx}, 1)" ${sIdx === ring.slides.length - 1 ? 'disabled' : ''} title="Move later">▶</button>
-              </div>
-              <button class="btn-danger" onclick="deleteSlide(${ringIdx}, ${sIdx})">Delete Slide</button>
-            </div>
-          </div>
+      <div class="build-card-body">
+        <div class="build-card-title">${escapeHtml(build.title)}</div>
+        <div class="build-card-desc">${escapeHtml(build.desc || 'No description provided.')}</div>
+        <div class="build-card-meta">
+          <span>📅 ${escapeHtml(build.date || '2026')}</span>
+          ${build.link && build.link !== '#' ? `<a href="${escapeHtml(build.link)}" target="_blank" style="color: var(--accent-cyan); text-decoration: none;">View Link ↗</a>` : ''}
         </div>
-      `).join('');
-    } else {
-      slidesListHtml = `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.4rem;">No slides in this highlight yet.</div>`;
-    }
-
-    card.innerHTML = `
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div class="item-info">
-          ${ringCoverHtml}
-          <div>
-            <h3 style="font-family:var(--font-head); font-size:1.1rem; color:#fff;">${ring.cat}</h3>
-            <span style="font-size:0.72rem; color:var(--accent-cyan);">${ring.slides ? ring.slides.length : 0} Slides inside this ring</span>
-          </div>
+        <div class="build-actions">
+          <button class="btn btn-outline btn-sm" style="flex-grow: 1;" onclick="openEditBuildModal(${index})">Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteBuild(${index})">Delete</button>
         </div>
-        <button class="btn-danger" onclick="deleteHighlightRing(${ringIdx})">Delete Entire Ring</button>
       </div>
-      <div style="margin-top:0.8rem;">
-        <label>Slides Sequence in this Highlight Ring:</label>
-        ${slidesListHtml}
-      </div>
-    `;
-    container.appendChild(card);
-  });
-
-  if(selectedIdxToSet !== undefined && selectRing.options.length > selectedIdxToSet){
-    selectRing.selectedIndex = selectedIdxToSet;
-  }
+    </div>
+  `).join('');
 }
 
-function createNewHighlightRing(){
-  const cat = document.getElementById('hl-cat').value;
-  const icon = document.getElementById('hl-icon').value || '🧩';
-  const ringFileInput = document.getElementById('hl-ring-file');
-  const ringUrlInput = document.getElementById('hl-ring-url').value;
+function openAddBuildModal() {
+  document.getElementById('modal-title').textContent = "Add Build Showcase";
+  document.getElementById('build-edit-index').value = "-1";
+  document.getElementById('modal-build-title').value = "";
+  document.getElementById('modal-build-image').value = "";
+  document.getElementById('modal-build-desc').value = "";
+  document.getElementById('modal-build-link').value = "";
+  document.getElementById('modal-build-date').value = new Date().getFullYear().toString();
+  document.getElementById('build-modal').style.display = "flex";
+}
 
-  if(!cat){
-    alert("Please enter a category name for the Highlight Ring!");
+function openEditBuildModal(index) {
+  const build = appData.builds[index];
+  if (!build) return;
+  document.getElementById('modal-title').textContent = "Edit Build Showcase";
+  document.getElementById('build-edit-index').value = index;
+  document.getElementById('modal-build-title').value = build.title || "";
+  document.getElementById('modal-build-image').value = build.image || "";
+  document.getElementById('modal-build-desc').value = build.desc || "";
+  document.getElementById('modal-build-link').value = build.link || "";
+  document.getElementById('modal-build-date').value = build.date || "";
+  document.getElementById('build-modal').style.display = "flex";
+}
+
+function closeBuildModal() {
+  document.getElementById('build-modal').style.display = "none";
+}
+
+function saveBuildFromModal() {
+  const index = parseInt(document.getElementById('build-edit-index').value, 10);
+  const title = document.getElementById('modal-build-title').value.trim();
+  const image = document.getElementById('modal-build-image').value.trim();
+  const desc = document.getElementById('modal-build-desc').value.trim();
+  const link = document.getElementById('modal-build-link').value.trim();
+  const date = document.getElementById('modal-build-date').value.trim();
+
+  if (!title || !image) {
+    alert("Please provide both a Title and an Image URL.");
     return;
   }
 
-  const saveRing = (ringCoverData) => {
-    let highlights = getStoredHighlights();
-    const newRing = {
-      icon,
-      coverImage: ringCoverData || "",
-      cat,
-      c1: "#8b5cf6",
-      c2: "#22d3ee",
-      slides: [
-        {
-          image: ringCoverData || "",
-          title: cat,
-          caption: "Story highlight for " + cat,
-          date: "2026"
-        }
-      ]
-    };
-    
-    highlights.push(newRing);
-    const newIndex = highlights.length - 1;
+  const buildObj = { title, image, desc, link, date };
 
-    localStorage.setItem('aayeddie_custom_highlights', JSON.stringify(highlights));
-    document.getElementById('hl-cat').value = '';
-    document.getElementById('hl-ring-file').value = '';
-    document.getElementById('hl-ring-url').value = '';
-    clearPreview('hl-ring-preview');
-
-    loadHighlightsRings(newIndex);
-    showStatus('hl-ring-status');
-    triggerLiveRefresh();
-  };
-
-  if(ringFileInput && ringFileInput.files[0]){
-    const reader = new FileReader();
-    reader.onload = (e) => saveRing(e.target.result);
-    reader.readAsDataURL(ringFileInput.files[0]);
-  } else if(ringUrlInput){
-    saveRing(ringUrlInput);
+  if (index >= 0) {
+    appData.builds[index] = buildObj;
   } else {
-    saveRing("");
+    appData.builds.unshift(buildObj);
+  }
+
+  saveToLocalStorage();
+  renderBuilds();
+  closeBuildModal();
+  showToast(index >= 0 ? "Build showcase updated!" : "New build showcase added!");
+}
+
+function deleteBuild(index) {
+  if (confirm("Are you sure you want to remove this build showcase?")) {
+    appData.builds.splice(index, 1);
+    saveToLocalStorage();
+    renderBuilds();
+    showToast("Build removed.");
   }
 }
 
-function addSlideToHighlight(){
-  const ringIdx = document.getElementById('hl-select-ring').value;
-  const title = document.getElementById('slide-title').value;
-  const caption = document.getElementById('slide-caption').value;
-  const date = document.getElementById('slide-date').value || '2026';
-  const fileInput = document.getElementById('slide-file');
-  const urlInput = document.getElementById('slide-url').value;
+// 🔗 Socials Management
+function renderSocials() {
+  const container = document.getElementById('socials-container');
+  if (!container) return;
 
-  if(ringIdx === "" || ringIdx === null){
-    alert("Please select or create a Highlight Ring first!");
-    return;
-  }
+  container.innerHTML = appData.socials.map((soc, idx) => `
+    <div class="item-list-row">
+      <input type="text" value="${escapeHtml(soc.platform || soc.name || '')}" placeholder="Platform (e.g. GitHub)" onchange="updateSocialField(${idx}, 'platform', this.value)">
+      <input type="url" value="${escapeHtml(soc.url || soc.link || '')}" placeholder="URL (https://...)" onchange="updateSocialField(${idx}, 'url', this.value)">
+      <button class="btn btn-danger btn-sm" onclick="removeSocialRow(${idx})">✕</button>
+    </div>
+  `).join('');
+}
 
-  const saveSlide = (slideImgData) => {
-    let highlights = getStoredHighlights();
-    if(!highlights[ringIdx].slides) highlights[ringIdx].slides = [];
+function addSocialRow() {
+  appData.socials.push({ platform: "Instagram", url: "https://instagram.com/" });
+  renderSocials();
+}
 
-    highlights[ringIdx].slides.push({
-      image: slideImgData || "",
-      title: title || highlights[ringIdx].cat,
-      caption: caption || "",
-      date: date
-    });
-
-    localStorage.setItem('aayeddie_custom_highlights', JSON.stringify(highlights));
-    document.getElementById('slide-title').value = '';
-    document.getElementById('slide-caption').value = '';
-    document.getElementById('slide-file').value = '';
-    document.getElementById('slide-url').value = '';
-    clearPreview('slide-preview');
-
-    loadHighlightsRings(ringIdx);
-    showStatus('slide-status');
-    triggerLiveRefresh();
-  };
-
-  if(fileInput && fileInput.files[0]){
-    const reader = new FileReader();
-    reader.onload = (e) => saveSlide(e.target.result);
-    reader.readAsDataURL(fileInput.files[0]);
-  } else if(urlInput){
-    saveSlide(urlInput);
-  } else {
-    saveSlide("");
+function updateSocialField(index, key, val) {
+  if (appData.socials[index]) {
+    appData.socials[index][key] = val.trim();
   }
 }
 
-function deleteSlide(ringIdx, slideIdx){
-  let highlights = getStoredHighlights();
-  if(highlights[ringIdx] && highlights[ringIdx].slides){
-    highlights[ringIdx].slides.splice(slideIdx, 1);
-    localStorage.setItem('aayeddie_custom_highlights', JSON.stringify(highlights));
-    loadHighlightsRings(ringIdx);
-    triggerLiveRefresh();
+function removeSocialRow(index) {
+  appData.socials.splice(index, 1);
+  renderSocials();
+}
+
+function saveSocials() {
+  saveToLocalStorage();
+  showToast("Social links saved!");
+}
+
+// ✨ Highlights Management
+function renderHighlights() {
+  const container = document.getElementById('highlights-container');
+  if (!container) return;
+
+  container.innerHTML = appData.highlights.map((hl, idx) => `
+    <div class="item-list-row">
+      <input type="text" value="${escapeHtml(hl.title || hl.label || '')}" placeholder="Label (e.g. Total Projects)" onchange="updateHighlightField(${idx}, 'title', this.value)">
+      <input type="text" value="${escapeHtml(hl.value || hl.stat || '')}" placeholder="Value (e.g. 50+)" onchange="updateHighlightField(${idx}, 'value', this.value)">
+      <button class="btn btn-danger btn-sm" onclick="removeHighlightRow(${idx})">✕</button>
+    </div>
+  `).join('');
+}
+
+function addHighlightRow() {
+  appData.highlights.push({ title: "Featured Projects", value: "12+" });
+  renderHighlights();
+}
+
+function updateHighlightField(index, key, val) {
+  if (appData.highlights[index]) {
+    appData.highlights[index][key] = val.trim();
   }
 }
 
-function deleteHighlightRing(ringIdx){
-  if(confirm("Delete this entire Highlight Ring and all its slides?")){
-    let highlights = getStoredHighlights();
-    highlights.splice(ringIdx, 1);
-    localStorage.setItem('aayeddie_custom_highlights', JSON.stringify(highlights));
-    loadHighlightsRings();
-    triggerLiveRefresh();
+function removeHighlightRow(index) {
+  appData.highlights.splice(index, 1);
+  renderHighlights();
+}
+
+function saveHighlights() {
+  saveToLocalStorage();
+  showToast("Highlights saved!");
+}
+
+// 💾 JSON Editor & File Export
+function updateRawJsonEditor() {
+  const textarea = document.getElementById('raw-json-editor');
+  if (textarea) {
+    textarea.value = JSON.stringify(appData, null, 2);
   }
 }
 
-// Move a photo's position within its highlight ring's gallery (left/right reorder)
-function moveSlide(ringIdx, slideIdx, dir){
-  let highlights = getStoredHighlights();
-  const ring = highlights[ringIdx];
-  if(!ring || !ring.slides) return;
-
-  const targetIdx = slideIdx + dir;
-  if(targetIdx < 0 || targetIdx >= ring.slides.length) return;
-
-  const tmp = ring.slides[slideIdx];
-  ring.slides[slideIdx] = ring.slides[targetIdx];
-  ring.slides[targetIdx] = tmp;
-
-  localStorage.setItem('aayeddie_custom_highlights', JSON.stringify(highlights));
-  loadHighlightsRings(ringIdx);
-  triggerLiveRefresh();
-}
-
-// Merge all photos from one Highlight Ring into another; source ring is removed
-function mergeHighlightRings(){
-  const sourceSel = document.getElementById('hl-merge-source');
-  const targetSel = document.getElementById('hl-merge-target');
-  if(!sourceSel.value || !targetSel.value){
-    alert("Please choose both a source and a target Highlight Ring!");
-    return;
+function applyRawJSON() {
+  const textarea = document.getElementById('raw-json-editor');
+  try {
+    const parsed = JSON.parse(textarea.value);
+    appData = parsed;
+    normalizeAppData();
+    saveToLocalStorage();
+    renderAllSections();
+    showToast("Raw JSON successfully applied!");
+  } catch(e) {
+    alert("Invalid JSON format. Please check your syntax.");
   }
-  const sourceIdx = parseInt(sourceSel.value, 10);
-  const targetIdx = parseInt(targetSel.value, 10);
-
-  if(sourceIdx === targetIdx){
-    alert("Choose two different Highlight Rings to merge!");
-    return;
-  }
-  if(!confirm("Merge all photos from the source ring into the target ring? The source ring will be deleted afterward.")) return;
-
-  let highlights = getStoredHighlights();
-  const sourceSlides = highlights[sourceIdx].slides || [];
-  if(!highlights[targetIdx].slides) highlights[targetIdx].slides = [];
-
-  highlights[targetIdx].slides = highlights[targetIdx].slides.concat(sourceSlides);
-  highlights.splice(sourceIdx, 1);
-
-  localStorage.setItem('aayeddie_custom_highlights', JSON.stringify(highlights));
-  loadHighlightsRings();
-  showStatus('hl-merge-status');
-  triggerLiveRefresh();
 }
 
-// --- SOCIAL MANAGERS ---
-function loadSocials(){
-  const list = document.getElementById('socials-list');
-  list.innerHTML = '';
-  const socials = JSON.parse(localStorage.getItem('aayeddie_custom_socials') || '[]');
-  socials.forEach((item, idx) => {
-    const row = document.createElement('div');
-    row.className = 'item-row';
-    row.innerHTML = `<span><strong>${item.name}</strong> (${item.handle})</span> <button class="btn-danger" onclick="deleteSocial(${idx})">Delete</button>`;
-    list.appendChild(row);
-  });
+function saveAllAndExport() {
+  savePfp();
+  saveToLocalStorage();
+  downloadDataJson();
 }
 
-function addSocialItem(){
-  const name = document.getElementById('soc-name').value;
-  const handle = document.getElementById('soc-handle').value;
-  const url = document.getElementById('soc-url').value;
-  const color = document.getElementById('soc-color').value;
-  if(!name || !handle || !url) return;
-
-  const socials = JSON.parse(localStorage.getItem('aayeddie_custom_socials') || '[]');
-  socials.push({ name, handle, url, color, init: name.slice(0,2).toUpperCase() });
-  localStorage.setItem('aayeddie_custom_socials', JSON.stringify(socials));
-  loadSocials();
-  triggerLiveRefresh();
-}
-
-function deleteSocial(idx){
-  const socials = JSON.parse(localStorage.getItem('aayeddie_custom_socials') || '[]');
-  socials.splice(idx, 1);
-  localStorage.setItem('aayeddie_custom_socials', JSON.stringify(socials));
-  loadSocials();
-  triggerLiveRefresh();
-}
-
-// --- JSON EXPORT / REPO HELPER ---
-function exportFullConfig(){
-  const data = {
-    pfp: localStorage.getItem('aayeddie_pfp') || '',
-    hero: {
-      title: localStorage.getItem('aayeddie_hero_title') || 'aayeddie',
-      tagline: localStorage.getItem('aayeddie_hero_tagline') || ''
-    },
-    theme: {
-      accent1: localStorage.getItem('aayeddie_accent1') || '#8b5cf6',
-      accent2: localStorage.getItem('aayeddie_accent2') || '#22d3ee'
-    },
-    builds: getStoredBuilds(),
-    photography: getStoredPhotography(),
-    socials: JSON.parse(localStorage.getItem('aayeddie_custom_socials') || '[]'),
-    highlights: getStoredHighlights()
-  };
-  document.getElementById('json-export-preview').textContent = JSON.stringify(data, null, 2);
-  return data;
-}
-
-function downloadJSONFile(){
-  const data = exportFullConfig();
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+function downloadDataJson() {
+  const jsonStr = JSON.stringify(appData, null, 2);
+  const blob = new Blob([jsonStr], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
   a.download = 'data.json';
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast("data.json downloaded! Replace it in your GitHub repository root.");
 }
 
-function resetDefaults(){
-  if(confirm("Reset site synchronization settings to defaults?")){
-    localStorage.clear();
-    currentPfpDataUrl = '';
-    initPfpDisplay();
-    loadBuilds();
-    loadPhotography();
-    loadSocials();
-    loadHighlightsRings();
-    exportFullConfig();
-    triggerLiveRefresh();
+function resetDefaults() {
+  if (confirm("Reset portal to default empty data state?")) {
+    appData = {
+      pfp: "",
+      builds: [],
+      socials: [],
+      highlights: []
+    };
+    saveToLocalStorage();
+    renderAllSections();
+    showToast("Portal reset to defaults.");
   }
 }
 
-function generateRepoFiles(){
-  const user = document.getElementById('gh-user').value || 'aayeddie';
-  const repo = document.getElementById('gh-repo').value || 'aayeddie-studio';
-  const branch = document.getElementById('gh-branch').value || 'main';
+// 🛠️ Git Command Generator
+function generateGitCmds() {
+  const user = document.getElementById('gh-user').value.trim() || 'aayeddie';
+  const repo = document.getElementById('gh-repo').value.trim() || 'aayeddie-studio';
+  const branch = document.getElementById('gh-branch').value.trim() || 'main';
 
-  const cmds = `# Initialize & Push to GitHub:
-git init
-git add .
-git commit -m "Deploy site assets and data"
-git branch -M ${branch}
-git remote add origin https://github.com/${user}/${repo}.git
-git push -u origin ${branch}`;
+  const cmds = `# Initialize & Push Latest data.json to GitHub:
+git add data.json
+git commit -m "Update recent builds and gallery data"
+git push origin ${branch}`;
 
   const readme = `# ${repo}
 
@@ -1944,36 +997,37 @@ Official portfolio and media web engine for @${user}.
 ## 🚀 Live Site
 Deployment active at: https://${user}.github.io/${repo}/
 
-## 🛠️ Local Customization
-1. Open \`admin.html\` locally (or on the deployed site) to edit site text, PFP, builds gallery, social links, and highlights.
-2. Click **Download data.json** and place it in the repo root, replacing the existing one.
-3. Commit and push — \`index.html\` loads \`data.json\` on every visit, so your changes go live for all visitors after deployment via GitHub Actions.
+## 🛠️ Local Customization & Sync
+1. Open \`admin.html\` locally or on your site to edit content and recent builds.
+2. Click **Sync from GitHub / data.json** to pull the latest online builds.
+3. Click **Download data.json** and place it in the root directory.
+4. Commit and push — \`index.html\` loads \`data.json\` live on every visit!
 `;
 
   document.getElementById('out-commands').textContent = cmds;
   document.getElementById('out-readme').textContent = readme;
 }
 
-function copyText(elementId){
+function copyText(elementId) {
   const txt = document.getElementById(elementId).textContent;
-  navigator.clipboard.writeText(txt).then(() => alert("Copied to clipboard!"));
+  navigator.clipboard.writeText(txt).then(() => showToast("Copied to clipboard!"));
 }
 
-function showStatus(id){
-  const el = document.getElementById(id);
-  if(el){
-    el.style.display = 'block';
-    setTimeout(() => el.style.display = 'none', 3000);
+function showToast(msg) {
+  const toast = document.getElementById('status-toast');
+  if (toast) {
+    toast.textContent = msg;
+    toast.style.display = 'block';
+    setTimeout(() => {
+      toast.style.display = 'none';
+    }, 3200);
   }
 }
 
-// Initial Loading
-initPfpDisplay();
-loadBuilds();
-loadPhotography();
-loadSocials();
-loadHighlightsRings();
-generateRepoFiles();
+function escapeHtml(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
 </script>
 </body>
 </html>
