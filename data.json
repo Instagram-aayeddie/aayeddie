@@ -178,7 +178,36 @@
       "url": "#"
     }
   ],
-  "socials": [],
+  "socials": [
+    {
+      "name": "YouTube",
+      "handle": "@aayeddie",
+      "url": "https://www.youtube.com/@aayeddie",
+      "color": "#ff3b3b",
+      "init": "YO"
+    },
+    {
+      "name": "Instagram",
+      "handle": "@aayeddie",
+      "url": "https://www.instagram.com/aayeddie",
+      "color": "#fd80ff",
+      "init": "IN"
+    },
+    {
+      "name": "Twitter",
+      "handle": "@aayeddie",
+      "url": "https://x.com/aayeddie",
+      "color": "#d2c8bc",
+      "init": "TW"
+    },
+    {
+      "name": "Roblox",
+      "handle": "@helixjump234",
+      "url": "https://www.roblox.com/users/1294774062/profile?friendshipSourceType=PlayerSearch",
+      "color": "#5baed2",
+      "init": "RO"
+    }
+  ],
   "highlights": [
     {
       "icon": "🌟",
