@@ -265,15 +265,15 @@
     color: var(--text-muted);
   }
 
-  /* Builds Gallery Grid */
-  .builds-grid {
+  /* Builds & Photography Gallery Grid */
+  .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.25rem;
     margin-top: 1.25rem;
   }
 
-  .build-card {
+  .item-card {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--border-color);
     border-radius: 10px;
@@ -284,26 +284,26 @@
     transition: transform 0.2s ease, border-color 0.2s ease;
   }
 
-  .build-card:hover {
+  .item-card:hover {
     transform: translateY(-2px);
     border-color: var(--accent-violet);
   }
 
-  .build-preview-wrapper {
+  .card-preview-wrapper {
     position: relative;
     width: 100%;
-    height: 170px;
+    height: 180px;
     background: #000;
     overflow: hidden;
   }
 
-  .build-preview-img {
+  .card-preview-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
-  .build-card-body {
+  .card-body {
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -311,13 +311,13 @@
     flex-grow: 1;
   }
 
-  .build-card-title {
+  .card-title {
     font-size: 1rem;
     font-weight: 700;
     color: #fff;
   }
 
-  .build-card-desc {
+  .card-desc {
     font-size: 0.8rem;
     color: var(--text-muted);
     display: -webkit-box;
@@ -326,7 +326,7 @@
     overflow: hidden;
   }
 
-  .build-card-meta {
+  .card-meta {
     font-size: 0.75rem;
     font-family: var(--font-mono);
     color: var(--accent-cyan);
@@ -338,7 +338,7 @@
     border-top: 1px solid rgba(255, 255, 255, 0.05);
   }
 
-  .build-actions {
+  .card-actions {
     display: flex;
     gap: 0.5rem;
     margin-top: 0.5rem;
@@ -411,7 +411,7 @@
     to { transform: translateY(0); opacity: 1; }
   }
 
-  /* Modal Edit Build */
+  /* Modal Backdrop */
   .modal-backdrop {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
@@ -457,7 +457,7 @@
   <div class="sync-banner">
     <div class="sync-info">
       <h3>🚀 Real-Time GitHub Synchronization</h3>
-      <p>Synchronize your gallery, PFP, and links directly with your live repository <code>data.json</code>.</p>
+      <p>Synchronize your gallery, photography, PFP, and links directly with your live repository <code>data.json</code>.</p>
     </div>
     <div class="btn-group">
       <button class="btn btn-cyan" onclick="fetchLiveJSON(true)">
@@ -500,8 +500,25 @@
       Manage project showcases, gallery items, and recent works. All updates instantly save locally and prepare for GitHub sync.
     </p>
 
-    <div id="builds-container" class="builds-grid">
-      <!-- Build cards rendered here dynamically -->
+    <div id="builds-container" class="gallery-grid">
+      <!-- Build cards rendered dynamically -->
+    </div>
+  </div>
+
+  <!-- 📷 Photography Showcase Gallery -->
+  <div class="section-card">
+    <div class="section-title">
+      <span class="icon-title">📷 Photography Showcase Gallery</span>
+      <div class="btn-group">
+        <button class="btn btn-primary btn-sm" onclick="openAddPhotoModal()">+ Add Photo Item</button>
+      </div>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+      Manage your photography portfolios, shot highlights, and media captures. Synchronized directly with <code>photography</code> / <code>photos</code> in <code>data.json</code>.
+    </p>
+
+    <div id="photography-container" class="gallery-grid">
+      <!-- Photography cards rendered dynamically -->
     </div>
   </div>
 
@@ -622,6 +639,43 @@
   </div>
 </div>
 
+<!-- Modal for Adding/Editing Photography -->
+<div id="photo-modal" class="modal-backdrop">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="photo-modal-title" style="color: var(--accent-cyan);">Add Photography Showcase</h3>
+      <button class="btn btn-outline btn-sm" onclick="closePhotoModal()">✕</button>
+    </div>
+    <input type="hidden" id="photo-edit-index" value="-1">
+    <div class="form-group">
+      <label for="modal-photo-title">Photo Title / Caption</label>
+      <input type="text" id="modal-photo-title" placeholder="e.g. Sunset Horizon Shot">
+    </div>
+    <div class="form-group">
+      <label for="modal-photo-image">Image URL</label>
+      <input type="url" id="modal-photo-image" placeholder="https://...">
+    </div>
+    <div class="form-group">
+      <label for="modal-photo-desc">Description / Specs</label>
+      <textarea id="modal-photo-desc" rows="3" placeholder="Shot details, camera settings, location..."></textarea>
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label for="modal-photo-location">Location / Date</label>
+        <input type="text" id="modal-photo-location" placeholder="e.g. Tokyo, 2026">
+      </div>
+      <div class="form-group">
+        <label for="modal-photo-link">Link / Instagram URL</label>
+        <input type="url" id="modal-photo-link" placeholder="https://...">
+      </div>
+    </div>
+    <div class="btn-group" style="margin-top: 1rem; justify-content: flex-end;">
+      <button class="btn btn-outline" onclick="closePhotoModal()">Cancel</button>
+      <button class="btn btn-cyan" onclick="savePhotoFromModal()">Save Photo</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast notification -->
 <div id="status-toast" class="status-toast">Action Completed Successfully</div>
 
@@ -630,6 +684,7 @@
 let appData = {
   pfp: "",
   builds: [],
+  photography: [],
   socials: [],
   highlights: []
 };
@@ -642,7 +697,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 async function initPortal() {
-  // First load from local storage if available
+  // Load from local storage if present
   const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
   if (stored) {
     try {
@@ -654,18 +709,31 @@ async function initPortal() {
     }
   }
 
-  // Attempt live sync from data.json or GitHub with cache buster
+  // Live sync from data.json or GitHub with cache-busting
   await fetchLiveJSON(false);
   generateGitCmds();
 }
 
-// Normalize builds & data structure to avoid missing properties
+// Normalize builds, photography & data structure
 function normalizeAppData() {
   if (!Array.isArray(appData.builds)) appData.builds = [];
   if (!Array.isArray(appData.socials)) appData.socials = [];
   if (!Array.isArray(appData.highlights)) appData.highlights = [];
 
-  // Normalize builds item structure
+  // Normalize Photography / Photos key compatibility
+  let rawPhotos = appData.photography || appData.photos || [];
+  if (!Array.isArray(rawPhotos)) rawPhotos = [];
+
+  appData.photography = rawPhotos.map(item => ({
+    title: item.title || item.caption || item.name || "Untitled Photograph",
+    image: item.image || item.img || item.src || item.url || "https://via.placeholder.com/600x400?text=Photo+Unavailable",
+    desc: item.desc || item.description || item.camera || "",
+    location: item.location || item.date || item.place || "2026",
+    link: item.link || item.url || item.href || "#"
+  }));
+  appData.photos = appData.photography; // keeps key sync across schemas
+
+  // Normalize Builds
   appData.builds = appData.builds.map(item => ({
     title: item.title || item.name || "Untitled Build",
     image: item.image || item.img || item.src || item.url || "https://via.placeholder.com/600x400?text=Build+Image",
@@ -685,7 +753,6 @@ async function fetchLiveJSON(isManualTrigger = false) {
   const ghRepo = document.getElementById('gh-repo') ? document.getElementById('gh-repo').value.trim() : 'aayeddie-studio';
   const ghBranch = document.getElementById('gh-branch') ? document.getElementById('gh-branch').value.trim() : 'main';
 
-  // Array of potential URLs to fetch from
   const urlsToTry = [
     `./data.json${cacheBuster}`,
     `https://raw.githubusercontent.com/${ghUser}/${ghRepo}/${ghBranch}/data.json${cacheBuster}`
@@ -711,7 +778,7 @@ async function fetchLiveJSON(isManualTrigger = false) {
     saveToLocalStorage();
     renderAllSections();
     if (indicator) indicator.textContent = "Synchronized with GitHub";
-    showToast(`Synced ${appData.builds.length} builds & settings from live data.json!`);
+    showToast(`Synced ${appData.builds.length} builds & ${appData.photography.length} photos from live data.json!`);
   } else {
     if (indicator) indicator.textContent = "Using Offline Cache";
     if (isManualTrigger) {
@@ -728,6 +795,7 @@ function saveToLocalStorage() {
 function renderAllSections() {
   renderPfp();
   renderBuilds();
+  renderPhotography();
   renderSocials();
   renderHighlights();
   updateRawJsonEditor();
@@ -769,18 +837,18 @@ function renderBuilds() {
   }
 
   container.innerHTML = appData.builds.map((build, index) => `
-    <div class="build-card">
-      <div class="build-preview-wrapper">
-        <img src="${escapeHtml(build.image)}" class="build-preview-img" alt="${escapeHtml(build.title)}" onerror="this.src='https://via.placeholder.com/600x400?text=Image+Unavailable'">
+    <div class="item-card">
+      <div class="card-preview-wrapper">
+        <img src="${escapeHtml(build.image)}" class="card-preview-img" alt="${escapeHtml(build.title)}" onerror="this.src='https://via.placeholder.com/600x400?text=Image+Unavailable'">
       </div>
-      <div class="build-card-body">
-        <div class="build-card-title">${escapeHtml(build.title)}</div>
-        <div class="build-card-desc">${escapeHtml(build.desc || 'No description provided.')}</div>
-        <div class="build-card-meta">
+      <div class="card-body">
+        <div class="card-title">${escapeHtml(build.title)}</div>
+        <div class="card-desc">${escapeHtml(build.desc || 'No description provided.')}</div>
+        <div class="card-meta">
           <span>📅 ${escapeHtml(build.date || '2026')}</span>
           ${build.link && build.link !== '#' ? `<a href="${escapeHtml(build.link)}" target="_blank" style="color: var(--accent-cyan); text-decoration: none;">View Link ↗</a>` : ''}
         </div>
-        <div class="build-actions">
+        <div class="card-actions">
           <button class="btn btn-outline btn-sm" style="flex-grow: 1;" onclick="openEditBuildModal(${index})">Edit</button>
           <button class="btn btn-danger btn-sm" onclick="deleteBuild(${index})">Delete</button>
         </div>
@@ -850,6 +918,106 @@ function deleteBuild(index) {
     saveToLocalStorage();
     renderBuilds();
     showToast("Build removed.");
+  }
+}
+
+// 📷 Photography Showcase Management
+function renderPhotography() {
+  const container = document.getElementById('photography-container');
+  if (!container) return;
+
+  const photos = appData.photography || [];
+  if (photos.length === 0) {
+    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">No photography items added yet. Click "+ Add Photo Item" above to showcase your shots.</div>`;
+    return;
+  }
+
+  container.innerHTML = photos.map((photo, index) => `
+    <div class="item-card">
+      <div class="card-preview-wrapper">
+        <img src="${escapeHtml(photo.image)}" class="card-preview-img" alt="${escapeHtml(photo.title)}" onerror="this.src='https://via.placeholder.com/600x400?text=Photo+Unavailable'">
+      </div>
+      <div class="card-body">
+        <div class="card-title">${escapeHtml(photo.title)}</div>
+        <div class="card-desc">${escapeHtml(photo.desc || 'No caption provided.')}</div>
+        <div class="card-meta">
+          <span>📍 ${escapeHtml(photo.location || 'Location')}</span>
+          ${photo.link && photo.link !== '#' ? `<a href="${escapeHtml(photo.link)}" target="_blank" style="color: var(--accent-cyan); text-decoration: none;">View Shot ↗</a>` : ''}
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-outline btn-sm" style="flex-grow: 1;" onclick="openEditPhotoModal(${index})">Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deletePhoto(${index})">Delete</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openAddPhotoModal() {
+  document.getElementById('photo-modal-title').textContent = "Add Photography Showcase";
+  document.getElementById('photo-edit-index').value = "-1";
+  document.getElementById('modal-photo-title').value = "";
+  document.getElementById('modal-photo-image').value = "";
+  document.getElementById('modal-photo-desc').value = "";
+  document.getElementById('modal-photo-location').value = "";
+  document.getElementById('modal-photo-link').value = "";
+  document.getElementById('photo-modal').style.display = "flex";
+}
+
+function openEditPhotoModal(index) {
+  const photo = appData.photography[index];
+  if (!photo) return;
+  document.getElementById('photo-modal-title').textContent = "Edit Photography Showcase";
+  document.getElementById('photo-edit-index').value = index;
+  document.getElementById('modal-photo-title').value = photo.title || "";
+  document.getElementById('modal-photo-image').value = photo.image || "";
+  document.getElementById('modal-photo-desc').value = photo.desc || "";
+  document.getElementById('modal-photo-location').value = photo.location || "";
+  document.getElementById('modal-photo-link').value = photo.link || "";
+  document.getElementById('photo-modal').style.display = "flex";
+}
+
+function closePhotoModal() {
+  document.getElementById('photo-modal').style.display = "none";
+}
+
+function savePhotoFromModal() {
+  const index = parseInt(document.getElementById('photo-edit-index').value, 10);
+  const title = document.getElementById('modal-photo-title').value.trim();
+  const image = document.getElementById('modal-photo-image').value.trim();
+  const desc = document.getElementById('modal-photo-desc').value.trim();
+  const location = document.getElementById('modal-photo-location').value.trim();
+  const link = document.getElementById('modal-photo-link').value.trim();
+
+  if (!title || !image) {
+    alert("Please provide both a Caption/Title and an Image URL.");
+    return;
+  }
+
+  const photoObj = { title, image, desc, location, link };
+
+  if (!Array.isArray(appData.photography)) appData.photography = [];
+
+  if (index >= 0) {
+    appData.photography[index] = photoObj;
+  } else {
+    appData.photography.unshift(photoObj);
+  }
+  appData.photos = appData.photography;
+
+  saveToLocalStorage();
+  renderPhotography();
+  closePhotoModal();
+  showToast(index >= 0 ? "Photography item updated!" : "New photography item added!");
+}
+
+function deletePhoto(index) {
+  if (confirm("Are you sure you want to remove this photo from your showcase?")) {
+    appData.photography.splice(index, 1);
+    appData.photos = appData.photography;
+    saveToLocalStorage();
+    renderPhotography();
+    showToast("Photography item removed.");
   }
 }
 
@@ -970,6 +1138,8 @@ function resetDefaults() {
     appData = {
       pfp: "",
       builds: [],
+      photography: [],
+      photos: [],
       socials: [],
       highlights: []
     };
@@ -987,7 +1157,7 @@ function generateGitCmds() {
 
   const cmds = `# Initialize & Push Latest data.json to GitHub:
 git add data.json
-git commit -m "Update recent builds and gallery data"
+git commit -m "Update builds, photography gallery, and data"
 git push origin ${branch}`;
 
   const readme = `# ${repo}
@@ -998,8 +1168,8 @@ Official portfolio and media web engine for @${user}.
 Deployment active at: https://${user}.github.io/${repo}/
 
 ## 🛠️ Local Customization & Sync
-1. Open \`admin.html\` locally or on your site to edit content and recent builds.
-2. Click **Sync from GitHub / data.json** to pull the latest online builds.
+1. Open \`admin.html\` locally or on your site to edit builds, photography, and links.
+2. Click **Sync from GitHub / data.json** to pull the latest online JSON data.
 3. Click **Download data.json** and place it in the root directory.
 4. Commit and push — \`index.html\` loads \`data.json\` live on every visit!
 `;
