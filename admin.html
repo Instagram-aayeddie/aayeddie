@@ -268,13 +268,13 @@
   /* Builds & Photography Gallery Grid */
   .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
     gap: 1.25rem;
     margin-top: 1.25rem;
   }
 
   .item-card {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
     border: 1px solid var(--border-color);
     border-radius: 10px;
     overflow: hidden;
@@ -324,6 +324,20 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  .url-display-box {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent-cyan);
+    word-break: break-all;
+    max-height: 50px;
+    overflow-y: auto;
+    margin-top: 0.25rem;
   }
 
   .card-meta {
@@ -464,6 +478,10 @@
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         Sync from GitHub / data.json
       </button>
+      <label class="btn btn-outline" style="cursor: pointer;">
+        📁 Upload local data.json
+        <input type="file" id="json-file-input" accept=".json" style="display:none;" onchange="uploadLocalJson(event)">
+      </label>
       <button class="btn btn-emerald" onclick="saveAllAndExport()">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
         Save & Export data.json
@@ -497,7 +515,7 @@
       </div>
     </div>
     <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
-      Manage project showcases, gallery items, and recent works. All updates instantly save locally and prepare for GitHub sync.
+      Manage project showcases, gallery items, and recent works. All image URLs and details from <code>data.json</code> are listed below.
     </p>
 
     <div id="builds-container" class="gallery-grid">
@@ -514,7 +532,7 @@
       </div>
     </div>
     <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
-      Manage your photography portfolios, shot highlights, and media captures. Synchronized directly with <code>photography</code> / <code>photos</code> in <code>data.json</code>.
+      Manage photography portfolios, media shots, and photo highlights listed in <code>data.json</code>.
     </p>
 
     <div id="photography-container" class="gallery-grid">
@@ -697,7 +715,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 async function initPortal() {
-  // Load from local storage if present
+  // 1. First, check if there is cached data in local storage
   const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
   if (stored) {
     try {
@@ -709,41 +727,57 @@ async function initPortal() {
     }
   }
 
-  // Live sync from data.json or GitHub with cache-busting
+  // 2. Perform Live Fetch from GitHub / relative data.json
   await fetchLiveJSON(false);
   generateGitCmds();
 }
 
-// Normalize builds, photography & data structure
+// Normalize builds, photography & data structure to handle missing fields or flexible keys
 function normalizeAppData() {
-  if (!Array.isArray(appData.builds)) appData.builds = [];
-  if (!Array.isArray(appData.socials)) appData.socials = [];
-  if (!Array.isArray(appData.highlights)) appData.highlights = [];
+  // Support flexible key naming in JSON (e.g. builds, recentBuilds, recent_builds)
+  let rawBuilds = appData.builds || appData.recentBuilds || appData.recent_builds || appData.projects || [];
+  if (!Array.isArray(rawBuilds)) rawBuilds = [];
 
-  // Normalize Photography / Photos key compatibility
-  let rawPhotos = appData.photography || appData.photos || [];
+  // Support flexible key naming for photography (e.g. photography, photos, gallery, images)
+  let rawPhotos = appData.photography || appData.photos || appData.gallery || appData.images || [];
   if (!Array.isArray(rawPhotos)) rawPhotos = [];
 
-  appData.photography = rawPhotos.map(item => ({
-    title: item.title || item.caption || item.name || "Untitled Photograph",
-    image: item.image || item.img || item.src || item.url || "https://via.placeholder.com/600x400?text=Photo+Unavailable",
-    desc: item.desc || item.description || item.camera || "",
-    location: item.location || item.date || item.place || "2026",
-    link: item.link || item.url || item.href || "#"
-  }));
-  appData.photos = appData.photography; // keeps key sync across schemas
+  appData.builds = rawBuilds.map((item, idx) => {
+    const imgUrl = typeof item === 'string' ? item : (item.image || item.img || item.src || item.url || "");
+    const titleVal = (typeof item === 'object' && (item.title || item.name)) ? (item.title || item.name) : `Build Showcase #${idx + 1}`;
+    const descVal = (typeof item === 'object' && (item.desc || item.description || item.caption)) ? (item.desc || item.description || item.caption) : "";
+    const linkVal = (typeof item === 'object' && (item.link || item.url || item.href)) ? (item.link || item.url || item.href) : "#";
+    const dateVal = (typeof item === 'object' && (item.date || item.year)) ? (item.date || item.year) : "2026";
+    return {
+      title: titleVal,
+      image: imgUrl,
+      desc: descVal,
+      link: linkVal,
+      date: dateVal
+    };
+  });
 
-  // Normalize Builds
-  appData.builds = appData.builds.map(item => ({
-    title: item.title || item.name || "Untitled Build",
-    image: item.image || item.img || item.src || item.url || "https://via.placeholder.com/600x400?text=Build+Image",
-    desc: item.desc || item.description || item.caption || "",
-    link: item.link || item.url || item.href || "#",
-    date: item.date || item.year || new Date().getFullYear().toString()
-  }));
+  appData.photography = rawPhotos.map((item, idx) => {
+    const imgUrl = typeof item === 'string' ? item : (item.image || item.img || item.src || item.url || "");
+    const titleVal = (typeof item === 'object' && (item.title || item.caption || item.name)) ? (item.title || item.caption || item.name) : `Photo #${idx + 1}`;
+    const descVal = (typeof item === 'object' && (item.desc || item.description || item.camera)) ? (item.desc || item.description || item.camera) : "";
+    const locVal = (typeof item === 'object' && (item.location || item.date || item.place)) ? (item.location || item.date || item.place) : "2026";
+    const linkVal = (typeof item === 'object' && (item.link || item.url || item.href)) ? (item.link || item.url || item.href) : "#";
+    return {
+      title: titleVal,
+      image: imgUrl,
+      desc: descVal,
+      location: locVal,
+      link: linkVal
+    };
+  });
+  appData.photos = appData.photography; // double key alias to ensure seamless export
+
+  if (!Array.isArray(appData.socials)) appData.socials = [];
+  if (!Array.isArray(appData.highlights)) appData.highlights = [];
 }
 
-// Synchronization Engine with Cache Busting
+// Synchronization Engine with Cache-Busting
 async function fetchLiveJSON(isManualTrigger = false) {
   const indicator = document.getElementById('sync-status-indicator');
   if (indicator) indicator.textContent = "Syncing with GitHub...";
@@ -778,13 +812,34 @@ async function fetchLiveJSON(isManualTrigger = false) {
     saveToLocalStorage();
     renderAllSections();
     if (indicator) indicator.textContent = "Synchronized with GitHub";
-    showToast(`Synced ${appData.builds.length} builds & ${appData.photography.length} photos from live data.json!`);
+    showToast(`Loaded ${appData.builds.length} builds & ${appData.photography.length} photos!`);
   } else {
-    if (indicator) indicator.textContent = "Using Offline Cache";
+    if (indicator) indicator.textContent = "Using Offline / Local Data";
     if (isManualTrigger) {
-      showToast("Could not reach data.json. Retaining current settings.");
+      showToast("Could not reach online data.json. Retaining current local settings.");
     }
   }
+}
+
+// Handle Direct Upload of local data.json
+function uploadLocalJson(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      appData = parsed;
+      normalizeAppData();
+      saveToLocalStorage();
+      renderAllSections();
+      showToast(`Successfully imported ${appData.builds.length} builds & ${appData.photography.length} photos from file!`);
+    } catch(err) {
+      alert("Error parsing uploaded JSON file. Please verify syntax.");
+    }
+  };
+  reader.readAsText(file);
 }
 
 function saveToLocalStorage() {
@@ -832,18 +887,22 @@ function renderBuilds() {
   if (!container) return;
 
   if (!appData.builds || appData.builds.length === 0) {
-    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">No builds added yet. Click "+ Add New Build" above to populate your gallery.</div>`;
+    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">No builds found in data.json. Click "+ Add New Build" above to populate your gallery.</div>`;
     return;
   }
 
   container.innerHTML = appData.builds.map((build, index) => `
     <div class="item-card">
       <div class="card-preview-wrapper">
-        <img src="${escapeHtml(build.image)}" class="card-preview-img" alt="${escapeHtml(build.title)}" onerror="this.src='https://via.placeholder.com/600x400?text=Image+Unavailable'">
+        <img src="${escapeHtml(build.image)}" class="card-preview-img" alt="${escapeHtml(build.title)}" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400?text=Image+URL+Listed';">
       </div>
       <div class="card-body">
         <div class="card-title">${escapeHtml(build.title)}</div>
         <div class="card-desc">${escapeHtml(build.desc || 'No description provided.')}</div>
+        
+        <label style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem;">Image URL in JSON:</label>
+        <div class="url-display-box">${escapeHtml(build.image || 'No Image URL listed')}</div>
+
         <div class="card-meta">
           <span>📅 ${escapeHtml(build.date || '2026')}</span>
           ${build.link && build.link !== '#' ? `<a href="${escapeHtml(build.link)}" target="_blank" style="color: var(--accent-cyan); text-decoration: none;">View Link ↗</a>` : ''}
@@ -887,14 +946,14 @@ function closeBuildModal() {
 
 function saveBuildFromModal() {
   const index = parseInt(document.getElementById('build-edit-index').value, 10);
-  const title = document.getElementById('modal-build-title').value.trim();
+  const title = document.getElementById('modal-build-title').value.trim() || `Build Showcase #${index >= 0 ? index + 1 : appData.builds.length + 1}`;
   const image = document.getElementById('modal-build-image').value.trim();
   const desc = document.getElementById('modal-build-desc').value.trim();
   const link = document.getElementById('modal-build-link').value.trim();
   const date = document.getElementById('modal-build-date').value.trim();
 
-  if (!title || !image) {
-    alert("Please provide both a Title and an Image URL.");
+  if (!image) {
+    alert("Please provide an Image URL.");
     return;
   }
 
@@ -928,20 +987,24 @@ function renderPhotography() {
 
   const photos = appData.photography || [];
   if (photos.length === 0) {
-    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">No photography items added yet. Click "+ Add Photo Item" above to showcase your shots.</div>`;
+    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">No photography items found in data.json. Click "+ Add Photo Item" above to showcase your shots.</div>`;
     return;
   }
 
   container.innerHTML = photos.map((photo, index) => `
     <div class="item-card">
       <div class="card-preview-wrapper">
-        <img src="${escapeHtml(photo.image)}" class="card-preview-img" alt="${escapeHtml(photo.title)}" onerror="this.src='https://via.placeholder.com/600x400?text=Photo+Unavailable'">
+        <img src="${escapeHtml(photo.image)}" class="card-preview-img" alt="${escapeHtml(photo.title)}" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400?text=Photo+URL+Listed';">
       </div>
       <div class="card-body">
         <div class="card-title">${escapeHtml(photo.title)}</div>
         <div class="card-desc">${escapeHtml(photo.desc || 'No caption provided.')}</div>
+        
+        <label style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem;">Image URL in JSON:</label>
+        <div class="url-display-box">${escapeHtml(photo.image || 'No Image URL listed')}</div>
+
         <div class="card-meta">
-          <span>📍 ${escapeHtml(photo.location || 'Location')}</span>
+          <span>📍 ${escapeHtml(photo.location || 'Location / Date')}</span>
           ${photo.link && photo.link !== '#' ? `<a href="${escapeHtml(photo.link)}" target="_blank" style="color: var(--accent-cyan); text-decoration: none;">View Shot ↗</a>` : ''}
         </div>
         <div class="card-actions">
@@ -983,14 +1046,14 @@ function closePhotoModal() {
 
 function savePhotoFromModal() {
   const index = parseInt(document.getElementById('photo-edit-index').value, 10);
-  const title = document.getElementById('modal-photo-title').value.trim();
+  const title = document.getElementById('modal-photo-title').value.trim() || `Photo #${index >= 0 ? index + 1 : appData.photography.length + 1}`;
   const image = document.getElementById('modal-photo-image').value.trim();
   const desc = document.getElementById('modal-photo-desc').value.trim();
   const location = document.getElementById('modal-photo-location').value.trim();
   const link = document.getElementById('modal-photo-link').value.trim();
 
-  if (!title || !image) {
-    alert("Please provide both a Caption/Title and an Image URL.");
+  if (!image) {
+    alert("Please provide an Image URL.");
     return;
   }
 
@@ -1169,8 +1232,8 @@ Deployment active at: https://${user}.github.io/${repo}/
 
 ## 🛠️ Local Customization & Sync
 1. Open \`admin.html\` locally or on your site to edit builds, photography, and links.
-2. Click **Sync from GitHub / data.json** to pull the latest online JSON data.
-3. Click **Download data.json** and place it in the root directory.
+2. Click **Sync from GitHub / data.json** or **📁 Upload local data.json** to load your items.
+3. Click **Download data.json** and place it in the repository root.
 4. Commit and push — \`index.html\` loads \`data.json\` live on every visit!
 `;
 
