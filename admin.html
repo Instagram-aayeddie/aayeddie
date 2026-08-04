@@ -494,6 +494,7 @@
   <button class="tab-btn active" onclick="switchTab('tab-preview', this)">✏️ Live Visual Preview & Edit</button>
   <button class="tab-btn" onclick="switchTab('tab-hero', this)">🖼️ User PFP & Hero Branding</button>
   <button class="tab-btn" onclick="switchTab('tab-builds', this)">🛠️ Recent Builds Gallery</button>
+  <button class="tab-btn" onclick="switchTab('tab-photography', this)">🎥 Photography Showcase</button>
   <button class="tab-btn" onclick="switchTab('tab-content', this)">🎬 Multi-Image Highlights & Ring PFPs</button>
   <button class="tab-btn" onclick="switchTab('tab-socials', this)">🌐 Social Channels</button>
   <button class="tab-btn" onclick="switchTab('tab-sync', this)">📦 JSON Data Sync & Backup</button>
@@ -624,6 +625,64 @@
       
       <div class="gallery-slider-container">
         <div class="gallery-track" id="builds-gallery-track"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: PHOTOGRAPHY SHOWCASE -->
+<div id="tab-photography" class="view-panel">
+  <div class="grid">
+    <!-- Form to Add or Update Photography Item -->
+    <div class="card">
+      <h2 id="photo-form-title">🎥 Add New Photo</h2>
+      <input type="hidden" id="photo-edit-id" value="">
+
+      <div class="field">
+        <label>Photo Title</label>
+        <input type="text" id="photo-title" placeholder="e.g. Golden Hour Rooftop">
+      </div>
+      <div class="field">
+        <label>Category / Tag</label>
+        <input type="text" id="photo-tag" placeholder="e.g. Portrait / Landscape / Street">
+      </div>
+      <div class="field">
+        <label>Description / Caption</label>
+        <textarea id="photo-desc" rows="3" placeholder="e.g. Shot on a rooftop downtown, edited for warm tones..."></textarea>
+      </div>
+      <div class="field">
+        <label>Image URL (Supports Image Links)</label>
+        <input type="text" id="photo-img-url" placeholder="https://images.unsplash.com/... or image link">
+      </div>
+      <div class="field">
+        <label>Upload Image (optional, overrides URL)</label>
+        <input type="file" id="photo-img-file" accept="image/*">
+      </div>
+
+      <div class="action-row">
+        <button class="btn" id="btn-save-photo" onclick="savePhotoItem()">Add Photo</button>
+        <button class="btn btn-outline" id="btn-cancel-photo" onclick="resetPhotoForm()" style="display:none;">Cancel Edit</button>
+      </div>
+      <div id="photo-status" class="status-msg">Photo saved successfully!</div>
+    </div>
+
+    <!-- Active Photography Showcase Horizontal Slider Gallery -->
+    <div class="card" style="grid-column: span 2;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem;">
+        <div>
+          <h2>📸 Photography Showcase Gallery</h2>
+          <p style="font-size: 0.75rem; color: var(--text-muted);">
+            Scroll left/right or use the buttons to browse, reorder, or edit photos in your photography showcase.
+          </p>
+        </div>
+        <div class="slider-nav-btns" style="margin-bottom:0;">
+          <button class="btn btn-outline" style="padding:0.4rem 0.8rem; font-size:0.75rem;" onclick="scrollPhotoGallery(-1)">◀ Scroll Left</button>
+          <button class="btn btn-outline" style="padding:0.4rem 0.8rem; font-size:0.75rem;" onclick="scrollPhotoGallery(1)">Scroll Right ▶</button>
+        </div>
+      </div>
+
+      <div class="gallery-slider-container">
+        <div class="gallery-track" id="photography-gallery-track"></div>
       </div>
     </div>
   </div>
@@ -1169,6 +1228,176 @@ function moveBuild(idx, dir){
   triggerLiveRefresh();
 }
 
+// --- PHOTOGRAPHY SHOWCASE MANAGER ---
+function getStoredPhotography(){
+  const data = localStorage.getItem('aayeddie_custom_photography');
+  if(data){
+    try { return JSON.parse(data); } catch(e){}
+  }
+  return [];
+}
+
+function loadPhotography(){
+  const track = document.getElementById('photography-gallery-track');
+  if(!track) return;
+  track.innerHTML = '';
+
+  const photos = getStoredPhotography();
+
+  if(photos.length === 0){
+    track.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted); padding:1rem;">No photos added yet. Click "Add New Photo" to create one.</div>`;
+    return;
+  }
+
+  photos.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'gallery-card';
+
+    const displayImg = item.imageUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80';
+
+    card.innerHTML = `
+      <div class="gallery-card-img-wrap">
+        <img src="${displayImg}" alt="${item.title}">
+      </div>
+      <div class="gallery-card-body">
+        <div>
+          <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; justify-content:space-between;">
+            <strong style="color:#fff; font-size:0.95rem;">${item.title}</strong>
+            ${item.tag ? `<span class="tag-pill">${item.tag}</span>` : ''}
+          </div>
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.4rem; line-height:1.3;">${item.desc || 'No description provided.'}</p>
+        </div>
+        <div>
+          <div class="gallery-controls">
+            <button class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="movePhoto(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.3;"' : ''}>◀</button>
+            <button class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="movePhoto(${idx}, 1)" ${idx === photos.length - 1 ? 'disabled style="opacity:0.3;"' : ''}>▶</button>
+            <button class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="editPhotoItem('${item.id}')">✏️ Edit</button>
+            <button class="btn-danger" style="padding:0.25rem 0.5rem; font-size:0.65rem;" onclick="deletePhotoItem('${item.id}')">Delete</button>
+          </div>
+        </div>
+      </div>
+    `;
+    track.appendChild(card);
+  });
+}
+
+function scrollPhotoGallery(direction){
+  const track = document.getElementById('photography-gallery-track');
+  if(track){
+    track.scrollBy({ left: direction * 340, behavior: 'smooth' });
+  }
+}
+
+function savePhotoItem(){
+  const idInput = document.getElementById('photo-edit-id').value;
+  const title = document.getElementById('photo-title').value.trim();
+  const tag = document.getElementById('photo-tag').value.trim();
+  const desc = document.getElementById('photo-desc').value.trim();
+  const urlInput = document.getElementById('photo-img-url').value.trim();
+  const fileInput = document.getElementById('photo-img-file');
+
+  if(!title){
+    alert("Please enter a Photo Title!");
+    return;
+  }
+
+  const finalize = (imageUrl) => {
+    let photos = getStoredPhotography();
+
+    if(idInput){
+      const idx = photos.findIndex(p => p.id === idInput);
+      if(idx !== -1){
+        photos[idx] = { id: idInput, title, tag, desc, imageUrl };
+      }
+    } else {
+      const newPhoto = {
+        id: 'photo_' + Date.now(),
+        title,
+        tag,
+        desc,
+        imageUrl
+      };
+      photos.push(newPhoto);
+    }
+
+    localStorage.setItem('aayeddie_custom_photography', JSON.stringify(photos));
+    resetPhotoForm();
+    loadPhotography();
+    showStatus('photo-status');
+    triggerLiveRefresh();
+  };
+
+  if(fileInput && fileInput.files[0]){
+    const reader = new FileReader();
+    reader.onload = (e) => finalize(e.target.result);
+    reader.readAsDataURL(fileInput.files[0]);
+  } else {
+    // Keep existing image if editing and no new URL/file provided
+    let existingImg = urlInput;
+    if(!existingImg && idInput){
+      const photos = getStoredPhotography();
+      const existing = photos.find(p => p.id === idInput);
+      if(existing) existingImg = existing.imageUrl || '';
+    }
+    finalize(existingImg || '');
+  }
+}
+
+function editPhotoItem(id){
+  const photos = getStoredPhotography();
+  const item = photos.find(p => p.id === id);
+  if(!item) return;
+
+  document.getElementById('photo-edit-id').value = item.id;
+  document.getElementById('photo-title').value = item.title || '';
+  document.getElementById('photo-tag').value = item.tag || '';
+  document.getElementById('photo-desc').value = item.desc || '';
+  document.getElementById('photo-img-url').value = item.imageUrl || '';
+  document.getElementById('photo-img-file').value = '';
+
+  document.getElementById('photo-form-title').textContent = '✏️ Edit Photo';
+  document.getElementById('btn-save-photo').textContent = 'Update Photo';
+  document.getElementById('btn-cancel-photo').style.display = 'inline-block';
+  switchTab('tab-photography');
+}
+
+function resetPhotoForm(){
+  document.getElementById('photo-edit-id').value = '';
+  document.getElementById('photo-title').value = '';
+  document.getElementById('photo-tag').value = '';
+  document.getElementById('photo-desc').value = '';
+  document.getElementById('photo-img-url').value = '';
+  document.getElementById('photo-img-file').value = '';
+
+  document.getElementById('photo-form-title').textContent = '🎥 Add New Photo';
+  document.getElementById('btn-save-photo').textContent = 'Add Photo';
+  document.getElementById('btn-cancel-photo').style.display = 'none';
+}
+
+function deletePhotoItem(id){
+  if(confirm("Are you sure you want to delete this photo from the showcase?")){
+    let photos = getStoredPhotography();
+    photos = photos.filter(p => p.id !== id);
+    localStorage.setItem('aayeddie_custom_photography', JSON.stringify(photos));
+    loadPhotography();
+    triggerLiveRefresh();
+  }
+}
+
+function movePhoto(idx, dir){
+  let photos = getStoredPhotography();
+  const targetIdx = idx + dir;
+  if(targetIdx < 0 || targetIdx >= photos.length) return;
+
+  const temp = photos[idx];
+  photos[idx] = photos[targetIdx];
+  photos[targetIdx] = temp;
+
+  localStorage.setItem('aayeddie_custom_photography', JSON.stringify(photos));
+  loadPhotography();
+  triggerLiveRefresh();
+}
+
 // --- EDIT PENCIL MODALS ---
 function openPencilModal(section){
   currentPencilTarget = section;
@@ -1663,6 +1892,7 @@ function exportFullConfig(){
       accent2: localStorage.getItem('aayeddie_accent2') || '#22d3ee'
     },
     builds: getStoredBuilds(),
+    photography: getStoredPhotography(),
     socials: JSON.parse(localStorage.getItem('aayeddie_custom_socials') || '[]'),
     highlights: getStoredHighlights()
   };
@@ -1686,6 +1916,7 @@ function resetDefaults(){
     currentPfpDataUrl = '';
     initPfpDisplay();
     loadBuilds();
+    loadPhotography();
     loadSocials();
     loadHighlightsRings();
     exportFullConfig();
@@ -1739,6 +1970,7 @@ function showStatus(id){
 // Initial Loading
 initPfpDisplay();
 loadBuilds();
+loadPhotography();
 loadSocials();
 loadHighlightsRings();
 generateRepoFiles();
