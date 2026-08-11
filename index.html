@@ -674,6 +674,32 @@
   <!-- INTERACTIVE BUBBLE CANVAS BACKGROUND -->
   <canvas id="bubble-canvas"></canvas>
 
+  <script>
+    /*
+      Desktop browser zoom compensation:
+      Chrome can make the entire document extremely tiny at 25%/33% zoom.
+      Instead of letting the page become microscopic, apply a gentler
+      compensation so zooming out reveals substantially more content while
+      keeping the UI readable. At 100% this does nothing.
+    */
+    (function applyReadableZoomOut() {
+      function updateReadableZoom() {
+        const dpr = window.devicePixelRatio || 1;
+        let factor = 1;
+
+        if (dpr < 0.9) {
+          factor = Math.min(2, 1 / Math.sqrt(dpr));
+        }
+
+        document.documentElement.style.setProperty('--readable-zoom', factor);
+        document.body.style.zoom = factor;
+      }
+
+      updateReadableZoom();
+      window.addEventListener('resize', updateReadableZoom, { passive: true });
+    })();
+  </script>
+
   <div class="container">
     <header>
       <div class="pfp-wrapper">
