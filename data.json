@@ -119,7 +119,13 @@
   "highlights": [
     {
       "icon": "📸",
-      "coverImage": "https://github.com/Instagram-aayeddie/IMAGES/blob/main/_MG_7230.JPG?raw=true"
+      "coverImage": "https://i.pinimg.com/736x/4d/04/77/4d04777b9f8dcadcf3a208d426025bf5.jpg",
+      "slides": [
+        {
+          "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzGB6qTYqD3jCBwtbS571Vhnt1B-5ujg2u89zXYTBNtB0d6ATPgemQU31o&s=10",
+          "caption": "aayeddie"
+        }
+      ]
     }
   ]
 }
