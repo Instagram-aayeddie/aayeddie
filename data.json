@@ -1,18 +1,15 @@
 {
   "profile": {
     "pfp": "https://github.com/Instagram-aayeddie/IMAGES/blob/main/_MG_3272.jpg?raw=true",
-
     "hero": {
       "title": "aayeddie",
       "tagline": "Photographer & Creator"
     }
   },
-
   "theme": {
     "accent1": "#8b5cf6",
     "accent2": "#22d3ee"
   },
-
   "builds": [
     {
       "id": "build_1785791442960",
@@ -22,7 +19,6 @@
       "imageUrl": "https://github.com/Instagram-aayeddie/IMAGES/blob/main/_MG_3272.jpg?raw=true",
       "url": "#"
     },
-
     {
       "id": "build_1785793359570",
       "title": "High School",
@@ -31,16 +27,6 @@
       "imageUrl": "https://github.com/Instagram-aayeddie/IMAGES/blob/main/3DCCDA82-F88E-4EED-B40B-6E39977B53E1_1_105_c.jpeg?raw=true",
       "url": "#"
     },
-
-    {
-      "id": "build_1785793612033",
-      "title": "Sister at Graduation",
-      "tag": "Graduation",
-      "desc": "",
-      "imageUrl": "https://github.com/Instagram-aayeddie/IMAGES/blob/main/_MG_4829.JPG?raw=true",
-      "url": "#"
-    },
-
     {
       "id": "build_1785793269979",
       "title": "Dallas 📍",
@@ -49,7 +35,14 @@
       "imageUrl": "https://github.com/Instagram-aayeddie/IMAGES/blob/main/_MG_4939.jpg?raw=true",
       "url": "#"
     },
-
+    {
+      "id": "build_1788941259570",
+      "title": "Familia",
+      "tag": "Home",
+      "desc": "",
+      "imageUrl": "https://raw.githubusercontent.com/Instagram-aayeddie/IMAGES/460f624eaeffe2b7bf08aa7158554022bb41e7d8/IMG_1371.jpg",
+      "url": "#"
+    },
     {
       "id": "build_1785793411144",
       "title": "High School",
@@ -58,27 +51,16 @@
       "imageUrl": "https://github.com/Instagram-aayeddie/IMAGES/blob/main/F9751DFE-6647-476C-BE24-C86EAF5DA461_1_105_c.jpeg?raw=true",
       "url": "#"
     },
-
-        {
-      "id": "build_1788941259570",
-      "title": "Familia",
-      "tag": "Home",
+    {
+      "id": "build_1785793612033",
+      "title": "Sister at Graduation",
+      "tag": "Graduation",
       "desc": "",
-      "imageUrl": "https://raw.githubusercontent.com/Instagram-aayeddie/IMAGES/460f624eaeffe2b7bf08aa7158554022bb41e7d8/IMG_1371.jpg",
+      "imageUrl": "https://github.com/Instagram-aayeddie/IMAGES/blob/main/_MG_4829.JPG?raw=true",
       "url": "#"
     }
   ],
-
   "photography": [
-    {
-      "id": "photo_1785793612035",
-      "title": "aayeddie",
-      "tag": "Photography",
-      "desc": "",
-      "imageUrl": "https://github.com/Instagram-aayeddie/IMAGES/blob/main/_MG_7230.JPG?raw=true",
-      "url": "#"
-    },
-
     {
       "id": "photo_1743793411144",
       "title": "aayeddie",
@@ -87,7 +69,14 @@
       "imageUrl": "https://raw.githubusercontent.com/Instagram-aayeddie/IMAGES/364aaa3612131391439ceed3ac74d93db8b7a804/_MG_7698.JPG",
       "url": "#"
     },
-
+    {
+      "id": "photo_1785793612035",
+      "title": "aayeddie",
+      "tag": "Photography",
+      "desc": "",
+      "imageUrl": "https://github.com/Instagram-aayeddie/IMAGES/blob/main/_MG_7230.JPG?raw=true",
+      "url": "#"
+    },
     {
       "id": "photo_1785623531144",
       "title": "aayeddie",
@@ -97,7 +86,6 @@
       "url": "#"
     }
   ],
-
   "socials": [
     {
       "name": "YouTube",
@@ -106,7 +94,6 @@
       "color": "#ff3b3b",
       "init": "YO"
     },
-
     {
       "name": "Instagram",
       "handle": "@aayeddie",
@@ -114,7 +101,6 @@
       "color": "#fd80ff",
       "init": "IN"
     },
-
     {
       "name": "Twitter",
       "handle": "@aayeddie",
@@ -122,7 +108,6 @@
       "color": "#d2c8bc",
       "init": "TW"
     },
-
     {
       "name": "Roblox",
       "handle": "@helixjump234",
@@ -131,7 +116,6 @@
       "init": "RO"
     }
   ],
-
   "highlights": [
     {
       "icon": "📸",
