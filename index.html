@@ -173,65 +173,7 @@
       text-shadow: 0 0 12px rgba(34, 211, 238, 0.4);
     }
 
-    /* HIGHLIGHT RINGS */
-    .highlights-scroll {
-      display: flex;
-      gap: 1.2rem;
-      overflow-x: auto;
-      padding-bottom: 0.8rem;
-      scrollbar-width: thin;
-    }
-
-    .highlight-ring {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-      min-width: 80px;
-    }
-
-    .ring-outer {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      padding: 3px;
-      background: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .highlight-ring:hover .ring-outer {
-      transform: scale(1.08);
-      box-shadow: 0 0 18px rgba(139, 92, 246, 0.55), 0 0 34px rgba(34, 211, 238, 0.35);
-    }
-
-    .ring-inner {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: var(--bg-dark);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      overflow: hidden;
-    }
-
-    .ring-inner img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .ring-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 0.5rem;
-      text-align: center;
-    }
-
-    /* =============================================== */
-    /* SLIDING GALLERY (DYNAMIC ASPECT RATIO)         */
-    /* =============================================== */
+    /* SLIDING GALLERY */
     .gallery-wrapper {
       position: relative;
       width: 100%;
@@ -403,203 +345,6 @@
 
     .fullscreen-close:hover { opacity: 1; }
 
-    /* INSTAGRAM-STYLE STORY VIEWER */
-    .story-modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(5, 6, 13, 0.96);
-      backdrop-filter: blur(10px);
-      z-index: 999;
-      justify-content: center;
-      align-items: center;
-      padding: 1.2rem;
-    }
-
-    .story-content {
-      width: 100%;
-      max-width: 420px;
-      height: min(88vh, 780px);
-      background: #0a0b16;
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-    }
-
-    .story-progress-row {
-      display: flex;
-      gap: 4px;
-      padding: 10px 12px 0;
-      flex-shrink: 0;
-    }
-    .story-progress-seg {
-      flex: 1;
-      height: 3px;
-      border-radius: 2px;
-      background: rgba(255,255,255,0.25);
-      overflow: hidden;
-    }
-    .story-progress-fill {
-      height: 100%;
-      width: 0%;
-      background: #fff;
-    }
-
-    .story-header {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      padding: 10px 12px;
-      flex-shrink: 0;
-    }
-    .story-ring-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background-size: cover;
-      background-position: center;
-      flex-shrink: 0;
-      border: 1px solid var(--border-color);
-    }
-    .story-header-text { flex: 1; min-width: 0; }
-    .story-cat-name {
-      font-family: var(--font-head);
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .story-slide-date {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-    }
-    .story-gallery-btn, .story-close-btn {
-      background: rgba(255,255,255,0.08);
-      border: none;
-      color: #fff;
-      width: 32px;
-      height: 32px;
-      min-width: 32px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s ease, transform 0.2s ease;
-    }
-    .story-gallery-btn:hover, .story-close-btn:hover {
-      background: rgba(255,255,255,0.18);
-      transform: scale(1.08);
-    }
-
-    .story-stage {
-      flex: 1;
-      position: relative;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      touch-action: none;
-      user-select: none;
-      cursor: pointer;
-    }
-    .story-img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      background: #000;
-      pointer-events: none;
-    }
-    .story-caption-wrap {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 1.6rem 1rem 1rem;
-      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-      pointer-events: none;
-    }
-    .story-caption-title {
-      font-family: var(--font-head);
-      font-size: 0.95rem;
-      color: #fff;
-      margin-bottom: 0.2rem;
-    }
-    .story-caption-text {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      line-height: 1.35;
-    }
-
-    .modal-gallery-wrap {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.5rem 0.3rem;
-      overflow: hidden;
-    }
-    .modal-gallery-scroll {
-      flex: 1;
-      display: flex;
-      gap: 1rem;
-      overflow-x: auto;
-      scroll-behavior: smooth;
-      scroll-snap-type: x mandatory;
-      padding: 0.8rem 0.6rem;
-      scrollbar-width: thin;
-      scrollbar-color: var(--accent-cyan) rgba(255,255,255,0.05);
-      height: 100%;
-      align-items: center;
-    }
-    .modal-gallery-nav {
-      background: rgba(255,255,255,0.08);
-      border: none;
-      color: #fff;
-      width: 32px;
-      height: 32px;
-      min-width: 32px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.1rem;
-      flex-shrink: 0;
-      transition: background 0.2s ease;
-    }
-    .modal-gallery-nav:hover { background: rgba(255,255,255,0.2); }
-
-    .modal-gallery-photo {
-      position: relative;
-      min-width: 78%;
-      max-width: 78%;
-      height: 92%;
-      border-radius: 16px;
-      overflow: hidden;
-      cursor: pointer;
-      flex-shrink: 0;
-      scroll-snap-align: center;
-      background: #000;
-    }
-    .modal-gallery-photo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .modal-gallery-caption {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 0.6rem 0.7rem;
-      font-size: 0.72rem;
-      color: #fff;
-      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
-    }
-
     footer {
       text-align: center;
       margin-top: 4rem;
@@ -607,10 +352,6 @@
       color: rgba(255, 255, 255, 0.3);
     }
 
-    /* ZOOM-OUT / LARGE CSS VIEWPORT SUPPORT
-       Browser zoom-out makes the CSS viewport much wider. Keep the layout
-       using viewport-relative sizing so the site remains comfortably visible
-       instead of collapsing into a tiny centered column. */
     @media (min-width: 1800px) {
       body { padding-left: 2vw; padding-right: 2vw; }
       .container { width: 88vw; }
@@ -625,8 +366,6 @@
     @media (max-width: 700px) {
       .container { width: 94vw; }
       .gallery-card { min-width: 82%; max-width: 82%; }
-      .story-content { height: 92vh; border-radius: 14px; }
-      .modal-gallery-photo { min-width: 88%; max-width: 88%; }
     }
   </style>
 
@@ -663,25 +402,13 @@
     function handleFullscreenImgError(img) {
       if (img) img.style.display = 'none';
     }
-
-    function handleStoryImgError(img) {
-      if (img) img.style.display = 'none';
-    }
   </script>
 </head>
 <body>
 
-  <!-- INTERACTIVE BUBBLE CANVAS BACKGROUND -->
   <canvas id="bubble-canvas"></canvas>
 
   <script>
-    /*
-      Desktop browser zoom compensation:
-      Chrome can make the entire document extremely tiny at 25%/33% zoom.
-      Instead of letting the page become microscopic, apply a gentler
-      compensation so zooming out reveals substantially more content while
-      keeping the UI readable. At 100% this does nothing.
-    */
     (function applyReadableZoomOut() {
       function updateReadableZoom() {
         const dpr = window.devicePixelRatio || 1;
@@ -711,11 +438,6 @@
 
       <div id="socials-grid" class="social-grid"></div>
     </header>
-
-    <section id="highlights-section" style="display:none;">
-      <h2 class="section-title">✨ Highlights</h2>
-      <div id="highlights-scroll" class="highlights-scroll"></div>
-    </section>
 
     <section id="gallery-section" style="display:none;">
       <h2 class="section-title">🖼️ Gallery Showcase</h2>
@@ -747,38 +469,6 @@
     </div>
   </div>
 
-  <div id="modal" class="story-modal">
-    <div class="story-content" onclick="event.stopPropagation()">
-
-      <div class="story-progress-row" id="story-progress-row"></div>
-
-      <div class="story-header">
-        <div class="story-ring-avatar" id="story-avatar"></div>
-        <div class="story-header-text">
-          <div class="story-cat-name" id="story-cat-name"></div>
-          <div class="story-slide-date" id="story-slide-date"></div>
-        </div>
-        <button class="story-gallery-btn" id="story-gallery-toggle" onclick="toggleGalleryMode()" title="View as scrollable gallery">▦</button>
-        <button class="story-close-btn" onclick="closeModal()" title="Close">&times;</button>
-      </div>
-
-      <div class="story-stage" id="story-stage">
-        <img id="story-img" class="story-img" src="" alt="Highlight slide" onerror="handleStoryImgError(this)">
-        <div class="story-caption-wrap">
-          <div class="story-caption-title" id="story-caption-title"></div>
-          <div class="story-caption-text" id="story-caption-text"></div>
-        </div>
-      </div>
-
-      <div class="modal-gallery-wrap" id="modal-gallery-wrap" style="display:none;">
-        <button class="modal-gallery-nav" onclick="scrollHighlightGallery(-1)">‹</button>
-        <div class="modal-gallery-scroll" id="modal-gallery-scroll"></div>
-        <button class="modal-gallery-nav" onclick="scrollHighlightGallery(1)">›</button>
-      </div>
-
-    </div>
-  </div>
-
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -802,11 +492,9 @@
       return audioCtx;
     }
 
-    // Direct User Interaction Unlock
     window.addEventListener('pointerdown', getAudioContext, { once: true });
     window.addEventListener('keydown', getAudioContext, { once: true });
 
-    /* Instant Provocative Pop Sound (Web Audio Synthesizer) */
     function triggerPopSound() {
       const now = Date.now();
       if (now - lastPopSoundTime < 30) return;
@@ -817,11 +505,10 @@
 
       const currentTime = ctx.currentTime;
 
-      // Primary Pitch-Dropped Sine Oscillator
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
 
-      const baseFreq = 420 + Math.random() * 260; // Vibrant randomized frequency range
+      const baseFreq = 420 + Math.random() * 260;
       osc.type = 'sine';
       osc.frequency.setValueAtTime(baseFreq, currentTime);
       osc.frequency.exponentialRampToValueAtTime(80, currentTime + 0.08);
@@ -831,8 +518,7 @@
 
       osc.connect(gain);
 
-      // Metallic High Transient Noise Snap
-      const bufferSize = ctx.sampleRate * 0.02; // 20ms burst
+      const bufferSize = ctx.sampleRate * 0.02;
       const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const output = noiseBuffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) {
@@ -862,7 +548,6 @@
       noise.stop(currentTime + 0.03);
     }
 
-    /* Cinematic Deep Sub Whoosh (Web Audio Synthesizer) */
     function triggerWhooshSound() {
       const now = Date.now();
       if (now - lastWhooshSoundTime < 180) return;
@@ -874,7 +559,6 @@
       const currentTime = ctx.currentTime;
       const duration = 0.22;
 
-      // Filtered Pink Noise Burst
       const bufferSize = ctx.sampleRate * duration;
       const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const output = noiseBuffer.getChannelData(0);
@@ -896,10 +580,9 @@
       const noise = ctx.createBufferSource();
       noise.buffer = noiseBuffer;
 
-      // Dynamic Lowpass Sweeping Filter
       const filter = ctx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.Q.value = 4.0; // Resonant sweep boost
+      filter.Q.value = 4.0;
       filter.frequency.setValueAtTime(120, currentTime);
       filter.frequency.exponentialRampToValueAtTime(1400, currentTime + duration * 0.5);
       filter.frequency.exponentialRampToValueAtTime(80, currentTime + duration);
@@ -1041,7 +724,6 @@
           triggerPopSound();
           popRings.push(new PopRing(this.x, this.y, this.radius, this.hue));
           
-          // Spawn vibrant explosion particles
           for (let i = 0; i < 6; i++) {
             popParticles.push(new PopParticle(this.x, this.y, this.hue));
           }
@@ -1058,7 +740,6 @@
           this.vx += (this.baseVx - this.vx) * 0.03;
           this.vy += (this.baseVy - this.vy) * 0.03;
 
-          // Interactive Repulsion Physics & Instant Pop Triggering
           if (mouse.isActive) {
             const dx = this.x - mouse.x;
             const dy = this.y - mouse.y;
@@ -1072,7 +753,6 @@
               this.vx += Math.cos(angle) * push * 0.3;
               this.vy += Math.sin(angle) * push * 0.3;
 
-              // Pop if pointer touches center of bubble
               if (dist < this.radius + 18 && this.cooldown === 0) {
                 this.pop();
                 return;
@@ -1125,7 +805,6 @@
       const bubbleCount = Math.floor(Math.min(window.innerWidth / 16, 55));
       const bubbles = Array.from({ length: bubbleCount }, () => new Bubble());
 
-      // Direct Click/Tap on Canvas to Pop Nearest Bubble
       canvas.addEventListener('pointerdown', (e) => {
         getAudioContext();
         const clickX = e.clientX;
@@ -1143,7 +822,6 @@
       function animate() {
         ctx.clearRect(0, 0, width, height);
 
-        // Update and draw pop particle effects
         for (let i = popRings.length - 1; i >= 0; i--) {
           popRings[i].update();
           popRings[i].draw();
@@ -1160,7 +838,6 @@
           }
         }
 
-        // Update and draw floating bubbles
         bubbles.forEach(b => {
           b.update();
           b.draw();
@@ -1186,10 +863,9 @@
         }
       } catch (e) {}
 
-      // Check localStorage for overrides
-      const pfp = localStorage.getItem('aayeddie_pfp') || data.pfp;
-      const title = localStorage.getItem('aayeddie_hero_title') || (data.hero && data.hero.title) || 'aayeddie';
-      const tagline = localStorage.getItem('aayeddie_hero_tagline') || (data.hero && data.hero.tagline) || '';
+      const pfp = localStorage.getItem('aayeddie_pfp') || (data.profile && data.profile.pfp) || data.pfp;
+      const title = localStorage.getItem('aayeddie_hero_title') || (data.profile && data.profile.hero && data.profile.hero.title) || (data.hero && data.hero.title) || 'aayeddie';
+      const tagline = localStorage.getItem('aayeddie_hero_tagline') || (data.profile && data.profile.hero && data.profile.hero.tagline) || (data.hero && data.hero.tagline) || '';
 
       if (pfp) {
         const img = document.getElementById('pfp-img');
@@ -1214,38 +890,18 @@
         </a>
       `).join('');
 
-      // Highlights
-      const highlightsData = localStorage.getItem('aayeddie_custom_highlights');
-      const highlights = highlightsData ? JSON.parse(highlightsData) : (data.highlights || []);
-      if (highlights.length > 0) {
-        document.getElementById('highlights-section').style.display = 'block';
-        document.getElementById('highlights-scroll').innerHTML = highlights.map((h, index) => `
-          <div class="highlight-ring" onclick="openHighlight(${index})">
-            <div class="ring-outer" style="background: linear-gradient(135deg, ${h.c1 || '#8b5cf6'}, ${h.c2 || '#22d3ee'});">
-              <div class="ring-inner">
-                ${h.coverImage ? `<img src="${h.coverImage}" alt="${h.cat}" onerror="this.onerror=null; this.parentElement.innerHTML='<span>${h.icon || '⭐'}</span>';">` : `<span>${h.icon || '⭐'}</span>`}
-              </div>
-            </div>
-            <span class="ring-label">${h.cat}</span>
-          </div>
-        `).join('');
-        window.siteHighlights = highlights;
-      }
-
-      // RENDER BUILDS / GALLERY
+      // Builds / Gallery
       const buildsData = localStorage.getItem('aayeddie_custom_builds');
       const builds = buildsData ? JSON.parse(buildsData) : (data.builds || []);
       const galleryData = localStorage.getItem('aayeddie_custom_gallery');
       const gallery = galleryData ? JSON.parse(galleryData) : (data.gallery || []);
 
       const items = builds.length > 0 ? builds : gallery;
-
       renderCardScroller(items, 'gallery-section', 'main-gallery-scroll');
 
-      // RENDER PHOTOGRAPHY SHOWCASE
+      // Photography
       const photographyData = localStorage.getItem('aayeddie_custom_photography');
       const photography = photographyData ? JSON.parse(photographyData) : (data.photography || []);
-
       renderCardScroller(photography, 'photography-section', 'photography-gallery-scroll');
     }
 
@@ -1255,8 +911,8 @@
       document.getElementById(sectionId).style.display = 'block';
       const scrollEl = document.getElementById(scrollId);
 
-      scrollEl.innerHTML = items.map((b, idx) => {
-        const imageSrc = b.image || b.img || b.cover || b.imageUrl || b.thumbnail || b.url_image || '';
+      scrollEl.innerHTML = items.map((b) => {
+        const imageSrc = b.imageUrl || b.image || b.img || b.cover || b.thumbnail || b.url_image || '';
         const title = b.title || '';
         const desc = b.desc || b.caption || '';
 
@@ -1279,11 +935,9 @@
       setupDragToScroll(scrollEl);
     }
 
-    /* DRAG & SWIPE ENGINE WITH CINEMATIC WHOOSH FOR MAIN GALLERY */
     function setupDragToScroll(slider) {
       lastScrollPos = slider.scrollLeft;
 
-      // Whoosh on drag / swipe / touch scroll
       slider.addEventListener('scroll', () => {
         const delta = Math.abs(slider.scrollLeft - lastScrollPos);
         if (delta > 35) {
@@ -1315,7 +969,7 @@
         if (!isDragging) return;
         e.preventDefault();
         const x = e.pageX - slider.offsetLeft;
-        const walk = (x - startX) * 1.6; // Scroll speed multiplier
+        const walk = (x - startX) * 1.6;
         if (Math.abs(walk) > 5) {
           hasDraggedDistance = true;
         }
@@ -1323,9 +977,8 @@
       });
     }
 
-    /* OPEN FULLSCREEN IMAGE VIEW ON CLICK */
     function onCardClick(e, encImg, encTitle, encDesc) {
-      if (hasDraggedDistance) return; // Don't open lightbox if user was dragging
+      if (hasDraggedDistance) return;
       const img = decodeURIComponent(encImg);
       const title = decodeURIComponent(encTitle);
       const desc = decodeURIComponent(encDesc);
@@ -1348,196 +1001,11 @@
       document.getElementById('fullscreen-modal').style.display = 'none';
     }
 
-    /* =====================================================
-       INSTAGRAM-STYLE STORY VIEWER ENGINE
-       ===================================================== */
-    const STORY_DURATION = 4500;
-
-    let storySlides = [];
-    let storyIndex = 0;
-    let storyTimer = null;
-    let galleryModeOn = false;
-    let pointerDownAt = 0;
-
-    function openHighlight(index) {
-      const h = window.siteHighlights[index];
-      if (!h || !h.slides || h.slides.length === 0) return;
-
-      storySlides = h.slides;
-      storyIndex = 0;
-      galleryModeOn = false;
-
-      const avatar = document.getElementById('story-avatar');
-      avatar.style.background = h.coverImage
-        ? `url('${h.coverImage}') center/cover`
-        : `linear-gradient(135deg, ${h.c1 || '#8b5cf6'}, ${h.c2 || '#22d3ee'})`;
-      document.getElementById('story-cat-name').textContent = h.cat || '';
-
-      buildProgressBars();
-      setGalleryMode(false);
-
-      document.getElementById('modal').style.display = 'flex';
-      document.addEventListener('keydown', handleKeydown);
-
-      showStorySlide(0);
-    }
-
-    function buildProgressBars() {
-      const row = document.getElementById('story-progress-row');
-      row.innerHTML = storySlides.map((_, i) => `
-        <div class="story-progress-seg"><div class="story-progress-fill" id="story-fill-${i}"></div></div>
-      `).join('');
-    }
-
-    function showStorySlide(i) {
-      clearTimeout(storyTimer);
-
-      if (i < 0 || i >= storySlides.length) { closeModal(); return; }
-
-      storyIndex = i;
-      const slide = storySlides[i];
-
-      const storyImg = document.getElementById('story-img');
-      storyImg.style.display = 'block';
-      storyImg.src = slide.image || '';
-      document.getElementById('story-caption-title').textContent = slide.title || '';
-      document.getElementById('story-caption-text').textContent = slide.caption || '';
-      document.getElementById('story-slide-date').textContent = slide.date ? `Date: ${slide.date}` : '';
-
-      storySlides.forEach((_, idx) => {
-        const fill = document.getElementById('story-fill-' + idx);
-        if (!fill) return;
-        fill.style.transition = 'none';
-        fill.style.width = idx < i ? '100%' : '0%';
-      });
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const fill = document.getElementById('story-fill-' + i);
-          if (fill) {
-            fill.style.transition = `width ${STORY_DURATION}ms linear`;
-            fill.style.width = '100%';
-          }
-        });
-      });
-
-      if (!galleryModeOn) {
-        storyTimer = setTimeout(() => storyNext(), STORY_DURATION);
-      }
-    }
-
-    function storyNext() { showStorySlide(storyIndex + 1); }
-    function storyPrev() { showStorySlide(storyIndex - 1); }
-
-    function pauseStory() {
-      clearTimeout(storyTimer);
-      const fill = document.getElementById('story-fill-' + storyIndex);
-      if (fill) {
-        const computed = getComputedStyle(fill).width;
-        fill.style.transition = 'none';
-        fill.style.width = computed;
-      }
-    }
-
-    function resumeStory() {
-      if (galleryModeOn) return;
-      const fill = document.getElementById('story-fill-' + storyIndex);
-      if (!fill) return;
-      const seg = fill.parentElement;
-      const ratioDone = seg.offsetWidth > 0 ? (fill.getBoundingClientRect().width / seg.getBoundingClientRect().width) : 0;
-      const remaining = Math.max(STORY_DURATION * (1 - ratioDone), 150);
-
-      requestAnimationFrame(() => {
-        fill.style.transition = `width ${remaining}ms linear`;
-        fill.style.width = '100%';
-      });
-      storyTimer = setTimeout(() => storyNext(), remaining);
-    }
-
-    function handleKeydown(e) {
+    window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        closeModal();
         closeFullscreen();
       }
-      if (document.getElementById('modal').style.display === 'flex') {
-        if (e.key === 'ArrowRight') storyNext();
-        else if (e.key === 'ArrowLeft') storyPrev();
-      }
-    }
-
-    (function setupStoryStage() {
-      const stage = document.getElementById('story-stage');
-      stage.addEventListener('pointerdown', () => {
-        pointerDownAt = Date.now();
-        pauseStory();
-      });
-      stage.addEventListener('pointerup', (e) => {
-        const heldFor = Date.now() - pointerDownAt;
-        resumeStory();
-        if (heldFor < 250) {
-          const rect = stage.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          if (x < rect.width / 2) storyPrev();
-          else storyNext();
-        }
-      });
-      stage.addEventListener('pointerleave', () => resumeStory());
-    })();
-
-    function closeModal(e) {
-      if (e) e.stopPropagation();
-      document.getElementById('modal').style.display = 'none';
-      clearTimeout(storyTimer);
-    }
-
-    document.getElementById('modal').addEventListener('click', (e) => {
-      if (e.target.id === 'modal') closeModal();
     });
-
-    function toggleGalleryMode() {
-      galleryModeOn = !galleryModeOn;
-      setGalleryMode(galleryModeOn);
-    }
-
-    function setGalleryMode(on) {
-      document.getElementById('story-stage').style.display = on ? 'none' : 'flex';
-      document.getElementById('story-progress-row').style.display = on ? 'none' : 'flex';
-      document.getElementById('modal-gallery-wrap').style.display = on ? 'flex' : 'none';
-      const btn = document.getElementById('story-gallery-toggle');
-      btn.textContent = on ? '▶' : '▦';
-      btn.title = on ? 'Back to Story View' : 'View as scrollable gallery';
-
-      if (on) {
-        clearTimeout(storyTimer);
-        renderHighlightGallery();
-      } else {
-        showStorySlide(storyIndex);
-      }
-    }
-
-    function renderHighlightGallery() {
-      const wrap = document.getElementById('modal-gallery-scroll');
-      wrap.innerHTML = storySlides.map((s, idx) => `
-        <div class="modal-gallery-photo" onclick="jumpToStorySlide(${idx})">
-          <img src="${s.image || ''}" alt="${s.title || ''}" onerror="this.onerror=null; this.src=''; this.alt='Image unavailable';">
-          <div class="modal-gallery-caption">${s.title || ''}</div>
-        </div>
-      `).join('');
-    }
-
-    function jumpToStorySlide(idx) {
-      galleryModeOn = false;
-      setGalleryMode(false);
-      showStorySlide(idx);
-    }
-
-    function scrollHighlightGallery(dir) {
-      const el = document.getElementById('modal-gallery-scroll');
-      if (el) {
-        el.scrollBy({ left: dir * 300, behavior: 'smooth' });
-        triggerWhooshSound();
-      }
-    }
 
     loadSiteData();
   </script>
