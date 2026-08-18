@@ -147,6 +147,10 @@
       display: inline-block;
     }
 
+    p.tagline:empty {
+      display: none;
+    }
+
     .social-grid {
       display: flex;
       flex-wrap: wrap;
@@ -605,13 +609,62 @@
   <div class="container">
     <header>
       <div class="pfp-wrapper">
-        <img id="pfp-img" class="pfp-img" src="" alt="Profile Picture" style="display:none;" onerror="handlePfpError(this)">
-        <div id="pfp-fallback" class="pfp-fallback">⚡</div>
+        <img id="pfp-img" class="pfp-img" src="https://github.com/Instagram-aayeddie/IMAGES/blob/main/_MG_3272.jpg?raw=true" alt="Profile Picture" onerror="handlePfpError(this)">
+        <div id="pfp-fallback" class="pfp-fallback" style="display:none;">⚡</div>
       </div>
       <h1 id="hero-title">aayeddie</h1>
-      <p id="hero-tagline" class="tagline">Builder of small worlds — apps, games, and things that glow.</p>
+      <p id="hero-tagline" class="tagline"></p>
 
-      <div id="socials-grid" class="social-grid"></div>
+      <!-- STATICALLY EMBEDDED SOCIAL CARDS -->
+      <div id="socials-grid" class="social-grid">
+        <a class="social-card" href="https://www.youtube.com/@aayeddie" target="_blank" rel="noopener" style="--card-glow: rgba(255, 0, 0, 0.45)" onmouseenter="triggerWhoopInSound()" onmouseleave="triggerWhoopOutSound()">
+          <div class="social-icon-wrapper">
+            <img class="social-icon" src="https://github.com/Instagram-aayeddie/IMAGES/blob/main/youtube-logo-youtube-icon-transparent-free-png.webp?raw=true" alt="YouTube" onerror="handleSocialIconError(this)">
+            <div class="social-badge" style="background:#ff0000; display:none;">YO</div>
+          </div>
+          <div class="social-info">
+            <div class="social-name">YouTube</div>
+            <div class="social-handle">@aayeddie</div>
+          </div>
+          <div class="social-arrow">↗</div>
+        </a>
+
+        <a class="social-card" href="https://www.instagram.com/aayeddie" target="_blank" rel="noopener" style="--card-glow: rgba(225, 48, 108, 0.45)" onmouseenter="triggerWhoopInSound()" onmouseleave="triggerWhoopOutSound()">
+          <div class="social-icon-wrapper">
+            <img class="social-icon" src="https://github.com/Instagram-aayeddie/IMAGES/blob/main/Instagram-Gradient-Logo-PNG.png?raw=true" alt="Instagram" onerror="handleSocialIconError(this)">
+            <div class="social-badge" style="background:#e1306c; display:none;">IN</div>
+          </div>
+          <div class="social-info">
+            <div class="social-name">Instagram</div>
+            <div class="social-handle">@aayeddie</div>
+          </div>
+          <div class="social-arrow">↗</div>
+        </a>
+
+        <a class="social-card" href="https://x.com/aayeddie" target="_blank" rel="noopener" style="--card-glow: rgba(255, 255, 255, 0.35)" onmouseenter="triggerWhoopInSound()" onmouseleave="triggerWhoopOutSound()">
+          <div class="social-icon-wrapper">
+            <img class="social-icon" src="https://github.com/Instagram-aayeddie/IMAGES/blob/main/twitter-x-logo-png_seeklogo-492397.png?raw=true" alt="Twitter" onerror="handleSocialIconError(this)">
+            <div class="social-badge" style="background:#ffffff; display:none;">TW</div>
+          </div>
+          <div class="social-info">
+            <div class="social-name">Twitter</div>
+            <div class="social-handle">@aayeddie</div>
+          </div>
+          <div class="social-arrow">↗</div>
+        </a>
+
+        <a class="social-card" href="https://www.roblox.com/users/1294774062/profile?friendshipSourceType=PlayerSearch" target="_blank" rel="noopener" style="--card-glow: rgba(0, 162, 255, 0.45)" onmouseenter="triggerWhoopInSound()" onmouseleave="triggerWhoopOutSound()">
+          <div class="social-icon-wrapper">
+            <img class="social-icon" src="https://github.com/Instagram-aayeddie/IMAGES/blob/main/0eeeb19633422b1241f4306419a0f15f39d58de9.png?raw=true" alt="Roblox" onerror="handleSocialIconError(this)">
+            <div class="social-badge" style="background:#00a2ff; display:none;">RO</div>
+          </div>
+          <div class="social-info">
+            <div class="social-name">Roblox</div>
+            <div class="social-handle">@helixjump234</div>
+          </div>
+          <div class="social-arrow">↗</div>
+        </a>
+      </div>
     </header>
 
     <section id="gallery-section" style="display:none;">
@@ -1053,14 +1106,12 @@
         draw() {
           ctx.save();
           
-          // Outer glowing shadow
           ctx.shadowColor = `hsla(${this.hue}, 100%, 70%, 0.55)`;
           ctx.shadowBlur = 12;
 
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
 
-          // Rich Frutiger Aero radial gradient fill
           const grad = ctx.createRadialGradient(
             this.x - this.radius * 0.35,
             this.y - this.radius * 0.35,
@@ -1078,26 +1129,22 @@
           ctx.fillStyle = grad;
           ctx.fill();
 
-          // Crisp glowing rim outline
           ctx.shadowBlur = 0;
           ctx.strokeStyle = `hsla(${this.hue}, 100%, 85%, ${this.alpha * 0.95})`;
           ctx.lineWidth = 2;
           ctx.stroke();
 
-          // Top specular reflection arc (Frutiger Aero signature curve)
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.radius * 0.78, Math.PI * 1.15, Math.PI * 1.85);
           ctx.strokeStyle = `rgba(255, 255, 255, ${this.alpha * 0.85})`;
           ctx.lineWidth = Math.max(1.8, this.radius * 0.12);
           ctx.stroke();
 
-          // Bright specular glare spot
           ctx.beginPath();
           ctx.arc(this.x - this.radius * 0.38, this.y - this.radius * 0.38, Math.max(2.5, this.radius * 0.2), 0, Math.PI * 2);
           ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha * 0.95})`;
           ctx.fill();
 
-          // Secondary bottom reflection rim
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.radius * 0.82, Math.PI * 0.2, Math.PI * 0.7);
           ctx.strokeStyle = `rgba(255, 255, 255, ${this.alpha * 0.45})`;
@@ -1176,8 +1223,8 @@
       } catch (e) {}
 
       const pfp = localStorage.getItem('aayeddie_pfp') || (data.profile && data.profile.pfp) || data.pfp;
-      const title = localStorage.getItem('aayeddie_hero_title') || (data.profile && data.profile.hero && data.profile.hero.title) || (data.hero && data.hero.title) || 'aayeddie';
-      const tagline = localStorage.getItem('aayeddie_hero_tagline') || (data.profile && data.profile.hero && data.profile.hero.tagline) || (data.hero && data.tagline) || '';
+      const title = localStorage.getItem('aayeddie_hero_title') || (data.profile && data.profile.hero && data.profile.hero.title) || (data.hero && data.hero.title);
+      const tagline = localStorage.getItem('aayeddie_hero_tagline') || (data.profile && data.profile.hero && data.profile.hero.tagline) || (data.hero && data.tagline);
 
       if (pfp) {
         const img = document.getElementById('pfp-img');
@@ -1186,65 +1233,8 @@
         document.getElementById('pfp-fallback').style.display = 'none';
       }
 
-      document.getElementById('hero-title').textContent = title;
-      document.getElementById('hero-tagline').textContent = tagline;
-
-      const defaultPlatformSocials = [
-        {
-          name: 'YouTube',
-          handle: '@aayeddie',
-          url: 'https://youtube.com/@aayeddie',
-          icon: 'https://github.com/Instagram-aayeddie/IMAGES/blob/main/youtube-logo-youtube-icon-transparent-free-png.webp?raw=true',
-          glow: 'rgba(255, 0, 0, 0.45)',
-          color: '#ff0000'
-        },
-        {
-          name: 'Instagram',
-          handle: '@aayeddie',
-          url: 'https://instagram.com/aayeddie',
-          icon: 'https://github.com/Instagram-aayeddie/IMAGES/blob/main/Instagram-Gradient-Logo-PNG.png?raw=true',
-          glow: 'rgba(225, 48, 108, 0.45)',
-          color: '#e1306c'
-        },
-        {
-          name: 'Twitter',
-          handle: '@aayeddie',
-          url: 'https://x.com/aayeddie',
-          icon: 'https://github.com/Instagram-aayeddie/IMAGES/blob/main/twitter-x-logo-png_seeklogo-492397.png?raw=true',
-          glow: 'rgba(255, 255, 255, 0.35)',
-          color: '#ffffff'
-        },
-        {
-          name: 'Roblox',
-          handle: '@helixjump234',
-          url: 'https://www.roblox.com/users/helixjump234',
-          icon: 'https://github.com/Instagram-aayeddie/IMAGES/blob/main/0eeeb19633422b1241f4306419a0f15f39d58de9.png?raw=true',
-          glow: 'rgba(0, 162, 255, 0.45)',
-          color: '#00a2ff'
-        }
-      ];
-
-      const socialsData = localStorage.getItem('aayeddie_custom_socials');
-      const socials = socialsData ? JSON.parse(socialsData) : (data.socials && data.socials.length > 0 ? data.socials : defaultPlatformSocials);
-
-      document.getElementById('socials-grid').innerHTML = socials.map(s => {
-        const iconUrl = s.icon || s.logo || s.imageUrl || '';
-        const glowColor = s.glow || (s.color ? s.color + '66' : 'rgba(34, 211, 238, 0.35)');
-        
-        return `
-          <a class="social-card" href="${s.url || '#'}" target="_blank" rel="noopener" style="--card-glow: ${glowColor}" onmouseenter="triggerWhoopInSound()" onmouseleave="triggerWhoopOutSound()">
-            <div class="social-icon-wrapper">
-              ${iconUrl ? `<img class="social-icon" src="${iconUrl}" alt="${s.name}" onerror="handleSocialIconError(this)">` : ''}
-              <div class="social-badge" style="background:${s.color || 'var(--accent-violet)'}; ${iconUrl ? 'display:none;' : ''}">${s.init || s.name[0]}</div>
-            </div>
-            <div class="social-info">
-              <div class="social-name">${s.name}</div>
-              <div class="social-handle">${s.handle || ''}</div>
-            </div>
-            <div class="social-arrow">↗</div>
-          </a>
-        `;
-      }).join('');
+      if (title) document.getElementById('hero-title').textContent = title;
+      if (tagline) document.getElementById('hero-tagline').textContent = tagline;
 
       // Builds / Gallery
       const buildsData = localStorage.getItem('aayeddie_custom_builds');
