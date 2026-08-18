@@ -10,12 +10,12 @@
   <style>
     :root {
       --bg-dark: #05060d;
-      --card-bg: rgba(18, 21, 38, 0.45);
-      --border-color: rgba(255, 255, 255, 0.15);
+      --card-bg: rgba(12, 15, 30, 0.65);
+      --border-color: rgba(255, 255, 255, 0.25);
       --accent-violet: #8b5cf6;
       --accent-cyan: #22d3ee;
-      --text-main: #f5f3ff;
-      --text-muted: #9ca3c9;
+      --text-main: #ffffff;
+      --text-muted: #c4caeb;
       --font-head: 'Space Grotesk', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
@@ -24,12 +24,6 @@
 
     body {
       background-color: var(--bg-dark);
-      background-image: 
-        linear-gradient(135deg, rgba(5, 6, 13, 0.92), rgba(8, 10, 22, 0.85)),
-        url('https://scontent-hou1-1.cdninstagram.com/v/t51.82787-15/522608365_17957052389967403_6724229147812826609_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=106&ig_cache_key=MzY4NDU0NjA4NDgxNzg5NDgxNw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuNzE5LnNkci5yZWd1bGFyX3Bob3RvLkMzIn0%3D&_nc_ohc=mR9xJIl3wPwQ7kNvwFSMPob&_nc_oc=AdqTkJwXS-jiKzWaxDGOqqGrmIteJVi0T_xaSG1NuV-dFmjiYqjuEpZPAeEVQ8FkF1E&_nc_zt=23&_nc_ht=scontent-hou1-1.cdninstagram.com&_nc_gid=yKMir1IB-19vaWsaVUzY3A&_nc_ss=7b289&oh=00_AQG4ipO_kd_ZwVaHn2IZKn7C1GcLweNF6wcQ1aTlnGjeXQ&oe=6A772CB4');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
       color: var(--text-main);
       font-family: var(--font-mono);
       min-height: 100vh;
@@ -38,6 +32,38 @@
       justify-content: center;
       position: relative;
       overflow-x: hidden;
+    }
+
+    /* VIBRANT BRIGHT FADING SLIDESHOW */
+    .bg-slideshow {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      overflow: hidden;
+      background-color: #030408;
+    }
+
+    .bg-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 2.2s ease-in-out;
+      transform: scale(1.01);
+    }
+
+    .bg-slide.active {
+      opacity: 0.95;
+    }
+
+    /* Light minimal vignette overlay for clean readability without heavy tinting */
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(circle at center, rgba(5, 6, 13, 0.15) 0%, rgba(5, 6, 13, 0.45) 100%);
+      pointer-events: none;
     }
 
     /* BUBBLE CANVAS BACKGROUND */
@@ -49,6 +75,7 @@
       height: 100vh;
       pointer-events: auto;
       z-index: 0;
+      cursor: crosshair;
     }
 
     .container {
@@ -70,13 +97,13 @@
     }
 
     .pfp-wrapper {
-      width: 110px;
-      height: 110px;
+      width: 115px;
+      height: 115px;
       margin: 0 auto 1.2rem;
       border-radius: 50%;
       padding: 3px;
       background: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
-      box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
+      box-shadow: 0 0 30px rgba(34, 211, 238, 0.5), 0 0 15px rgba(139, 92, 246, 0.5);
     }
 
     .pfp-img {
@@ -101,21 +128,27 @@
 
     h1 {
       font-family: var(--font-head);
-      font-size: 2.4rem;
+      font-size: 2.6rem;
       font-weight: 700;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #ffffff, var(--text-muted));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #ffffff;
+      text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 2px 8px rgba(0,0,0,0.9);
       margin-bottom: 0.5rem;
     }
 
     p.tagline {
-      color: var(--text-muted);
-      font-size: 0.95rem;
+      color: #ffffff;
+      font-size: 0.98rem;
       max-width: 550px;
       margin: 0 auto;
       line-height: 1.5;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.85);
+      background: rgba(5, 6, 13, 0.4);
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: inline-block;
     }
 
     /* SOCIAL LINKS HUB */
@@ -131,28 +164,30 @@
       display: flex;
       align-items: center;
       gap: 0.6rem;
-      padding: 0.6rem 1.1rem;
+      padding: 0.65rem 1.2rem;
       background: var(--card-bg);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border: 1px solid var(--border-color);
-      border-radius: 10px;
+      border-radius: 12px;
       color: var(--text-main);
       text-decoration: none;
-      font-size: 0.85rem;
-      transition: all 0.2s ease;
+      font-size: 0.88rem;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
     }
 
     .social-card:hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px);
       border-color: var(--accent-cyan);
-      box-shadow: 0 4px 15px rgba(34, 211, 238, 0.2);
+      box-shadow: 0 6px 20px rgba(34, 211, 238, 0.35);
+      background: rgba(18, 23, 48, 0.82);
     }
 
     .social-badge {
-      width: 24px;
-      height: 24px;
-      border-radius: 6px;
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -164,13 +199,13 @@
     /* SECTION TITLES */
     .section-title {
       font-family: var(--font-head);
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       color: var(--accent-cyan);
       margin: 2.5rem 0 1.2rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      text-shadow: 0 0 12px rgba(34, 211, 238, 0.4);
+      text-shadow: 0 0 15px rgba(34, 211, 238, 0.7), 0 2px 6px rgba(0,0,0,0.9);
     }
 
     /* SLIDING GALLERY */
@@ -188,7 +223,7 @@
       scroll-snap-type: x mandatory;
       padding: 0.5rem 0.2rem 1.2rem;
       scrollbar-width: thin;
-      scrollbar-color: var(--accent-cyan) rgba(255,255,255,0.05);
+      scrollbar-color: var(--accent-cyan) rgba(255,255,255,0.1);
       width: 100%;
       cursor: grab;
       user-select: none;
@@ -202,7 +237,7 @@
     }
 
     .gallery-scroll::-webkit-scrollbar { height: 6px; }
-    .gallery-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 4px; }
+    .gallery-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 4px; }
     .gallery-scroll::-webkit-scrollbar-thumb { background: var(--accent-cyan); border-radius: 4px; }
 
     .gallery-card {
@@ -213,9 +248,9 @@
       position: relative;
       scroll-snap-align: center;
       border: 1px solid var(--border-color);
-      background: rgba(10, 11, 22, 0.7);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(8, 10, 22, 0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       flex-shrink: 0;
       transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
       display: flex;
@@ -224,6 +259,7 @@
       text-decoration: none;
       cursor: pointer;
       align-self: flex-start;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
     .gallery-card img {
@@ -237,7 +273,7 @@
     .gallery-card-placeholder {
       width: 100%;
       aspect-ratio: 16 / 9;
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(34, 211, 238, 0.15));
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(34, 211, 238, 0.25));
       display: flex;
       align-items: center;
       justify-content: center;
@@ -247,8 +283,8 @@
 
     .gallery-card:hover {
       border-color: var(--accent-cyan);
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 25px rgba(34, 211, 238, 0.25);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.8), 0 0 25px rgba(34, 211, 238, 0.35);
     }
 
     .gallery-card:hover img {
@@ -262,7 +298,7 @@
       right: 0;
       z-index: 2;
       padding: 2rem 1.2rem 1rem;
-      background: linear-gradient(to top, rgba(5, 6, 13, 0.95) 20%, rgba(5, 6, 13, 0.6) 70%, transparent);
+      background: linear-gradient(to top, rgba(3, 4, 10, 0.95) 20%, rgba(3, 4, 10, 0.6) 70%, transparent);
       pointer-events: none;
     }
 
@@ -288,7 +324,7 @@
       position: fixed;
       inset: 0;
       background: rgba(3, 4, 9, 0.95);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(16px);
       z-index: 2000;
       justify-content: center;
       align-items: center;
@@ -310,7 +346,7 @@
       max-height: 82vh;
       object-fit: contain;
       border-radius: 12px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(34, 211, 238, 0.2);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(34, 211, 238, 0.3);
     }
 
     .fullscreen-caption {
@@ -348,8 +384,9 @@
     footer {
       text-align: center;
       margin-top: 4rem;
-      font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.3);
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.6);
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
     }
 
     @media (min-width: 1800px) {
@@ -406,6 +443,20 @@
 </head>
 <body>
 
+  <!-- BRIGHT FRUTIGER BACKGROUND SLIDESHOW -->
+  <div class="bg-slideshow">
+    <div class="bg-slide active" style="background-image: url('https://github.com/Instagram-aayeddie/IMAGES/blob/main/FRUTIGER1.png?raw=true');"></div>
+    <div class="bg-slide" style="background-image: url('https://github.com/Instagram-aayeddie/IMAGES/blob/main/FRUTIGER2.png?raw=true');"></div>
+    <div class="bg-slide" style="background-image: url('https://github.com/Instagram-aayeddie/IMAGES/blob/main/FRUTIGER3.png?raw=true');"></div>
+  </div>
+  <div class="bg-overlay"></div>
+
+  <!-- AUTOMATIC CONTINUOUS BACKGROUND MUSIC -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="https://raw.githubusercontent.com/Instagram-aayeddie/IMAGES/main/Nintendo%20Wii%20U%20%20-%20Mii%20Maker%20Menu%20%28Gamepad%29%20%5B7VeJNkC5FOc%5D.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- INTERACTIVE PLAYABLE BUBBLE CANVAS BACKGROUND -->
   <canvas id="bubble-canvas"></canvas>
 
   <script>
@@ -473,7 +524,42 @@
     document.getElementById('year').textContent = new Date().getFullYear();
 
     /* =====================================================
-       ZERO-LATENCY WEB AUDIO SYNTHESIZER ENGINE
+       BACKGROUND IMAGE FADING LOOP ENGINE
+       ===================================================== */
+    (function initBackgroundSlideshow() {
+      const slides = document.querySelectorAll('.bg-slide');
+      if (slides.length <= 1) return;
+      let currentSlide = 0;
+
+      setInterval(() => {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+      }, 5500);
+    })();
+
+    /* =====================================================
+       ALWAYS-ON AUTOMATIC BACKGROUND MUSIC ENGINE
+       ===================================================== */
+    const bgMusic = document.getElementById('bg-music');
+    bgMusic.volume = 0.45;
+
+    function startMusic() {
+      if (bgMusic.paused) {
+        bgMusic.play().catch(() => {});
+      }
+    }
+
+    // Try auto-play immediately on script load
+    startMusic();
+
+    // Ensure music always starts seamlessly on first user interaction
+    ['pointerdown', 'touchstart', 'click', 'keydown', 'scroll'].forEach(evt => {
+      window.addEventListener(evt, startMusic, { passive: true });
+    });
+
+    /* =====================================================
+       ZERO-LATENCY WEB AUDIO POP SYNTHESIZER ENGINE
        ===================================================== */
     let audioCtx = null;
     let lastPopSoundTime = 0;
@@ -497,7 +583,7 @@
 
     function triggerPopSound() {
       const now = Date.now();
-      if (now - lastPopSoundTime < 30) return;
+      if (now - lastPopSoundTime < 25) return;
       lastPopSoundTime = now;
 
       const ctx = getAudioContext();
@@ -505,20 +591,22 @@
 
       const currentTime = ctx.currentTime;
 
+      // Bright popping synth drop
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
 
-      const baseFreq = 420 + Math.random() * 260;
+      const baseFreq = 480 + Math.random() * 320;
       osc.type = 'sine';
       osc.frequency.setValueAtTime(baseFreq, currentTime);
-      osc.frequency.exponentialRampToValueAtTime(80, currentTime + 0.08);
+      osc.frequency.exponentialRampToValueAtTime(70, currentTime + 0.08);
 
-      gain.gain.setValueAtTime(0.7, currentTime);
+      gain.gain.setValueAtTime(0.85, currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, currentTime + 0.08);
 
       osc.connect(gain);
 
-      const bufferSize = ctx.sampleRate * 0.02;
+      // Pop snap transient
+      const bufferSize = ctx.sampleRate * 0.018;
       const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const output = noiseBuffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) {
@@ -530,10 +618,10 @@
 
       const noiseFilter = ctx.createBiquadFilter();
       noiseFilter.type = 'highpass';
-      noiseFilter.frequency.value = 1800;
+      noiseFilter.frequency.value = 2200;
 
       const noiseGain = ctx.createGain();
-      noiseGain.gain.setValueAtTime(0.4, currentTime);
+      noiseGain.gain.setValueAtTime(0.5, currentTime);
       noiseGain.gain.exponentialRampToValueAtTime(0.01, currentTime + 0.02);
 
       noise.connect(noiseFilter);
@@ -545,7 +633,7 @@
       osc.start(currentTime);
       noise.start(currentTime);
       osc.stop(currentTime + 0.09);
-      noise.stop(currentTime + 0.03);
+      noise.stop(currentTime + 0.025);
     }
 
     function triggerWhooshSound() {
@@ -613,7 +701,7 @@
       const mouse = {
         x: -1000,
         y: -1000,
-        radius: 180,
+        radius: 190,
         isActive: false
       };
 
@@ -646,10 +734,10 @@
           this.x = x;
           this.y = y;
           const angle = Math.random() * Math.PI * 2;
-          const speed = Math.random() * 4 + 1.5;
+          const speed = Math.random() * 5 + 2;
           this.vx = Math.cos(angle) * speed;
           this.vy = Math.sin(angle) * speed;
-          this.size = Math.random() * 3 + 2;
+          this.size = Math.random() * 4 + 2;
           this.hue = hue;
           this.alpha = 1.0;
         }
@@ -657,7 +745,7 @@
         update() {
           this.x += this.vx;
           this.y += this.vy;
-          this.alpha -= 0.04;
+          this.alpha -= 0.045;
         }
 
         draw() {
@@ -665,7 +753,7 @@
           ctx.save();
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-          ctx.fillStyle = `hsla(${this.hue}, 100%, 80%, ${this.alpha})`;
+          ctx.fillStyle = `hsla(${this.hue}, 100%, 85%, ${this.alpha})`;
           ctx.fill();
           ctx.restore();
         }
@@ -677,14 +765,14 @@
           this.y = y;
           this.radius = radius;
           this.currentRadius = radius * 0.4;
-          this.maxRadius = radius * 2.2;
+          this.maxRadius = radius * 2.4;
           this.hue = hue;
-          this.alpha = 0.9;
+          this.alpha = 0.95;
         }
 
         update() {
-          this.currentRadius += (this.maxRadius - this.currentRadius) * 0.3;
-          this.alpha -= 0.06;
+          this.currentRadius += (this.maxRadius - this.currentRadius) * 0.32;
+          this.alpha -= 0.065;
         }
 
         draw() {
@@ -692,8 +780,8 @@
           ctx.save();
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.currentRadius, 0, Math.PI * 2);
-          ctx.strokeStyle = `hsla(${this.hue}, 100%, 75%, ${this.alpha})`;
-          ctx.lineWidth = 2.5;
+          ctx.strokeStyle = `hsla(${this.hue}, 100%, 80%, ${this.alpha})`;
+          ctx.lineWidth = 3;
           ctx.stroke();
           ctx.restore();
         }
@@ -705,18 +793,20 @@
         }
 
         reset(initial = false) {
-          this.radius = Math.random() * 26 + 10;
+          this.radius = Math.random() * 28 + 12;
           this.x = Math.random() * width;
-          this.y = initial ? Math.random() * height : height + this.radius + Math.random() * 50;
+          this.y = initial ? Math.random() * height : height + this.radius + Math.random() * 60;
           
-          this.vx = (Math.random() - 0.5) * 0.8;
-          this.vy = -Math.random() * 0.9 - 0.3;
+          this.vx = (Math.random() - 0.5) * 0.9;
+          this.vy = -Math.random() * 1.1 - 0.4;
           
           this.baseVx = this.vx;
           this.baseVy = this.vy;
           
-          this.alpha = Math.random() * 0.45 + 0.25;
-          this.hue = Math.random() > 0.5 ? 260 : 190;
+          this.alpha = Math.random() * 0.5 + 0.4;
+          // Frutiger palette hues: cyan (190), violet/magenta (280), aqua (170)
+          const hues = [190, 280, 170, 210];
+          this.hue = hues[Math.floor(Math.random() * hues.length)];
           this.cooldown = 0;
         }
 
@@ -724,7 +814,7 @@
           triggerPopSound();
           popRings.push(new PopRing(this.x, this.y, this.radius, this.hue));
           
-          for (let i = 0; i < 6; i++) {
+          for (let i = 0; i < 8; i++) {
             popParticles.push(new PopParticle(this.x, this.y, this.hue));
           }
 
@@ -748,12 +838,13 @@
             if (dist < mouse.radius) {
               const force = (mouse.radius - dist) / mouse.radius;
               const angle = Math.atan2(dy, dx);
-              const push = force * 6.5;
+              const push = force * 7.5;
 
-              this.vx += Math.cos(angle) * push * 0.3;
-              this.vy += Math.sin(angle) * push * 0.3;
+              this.vx += Math.cos(angle) * push * 0.35;
+              this.vy += Math.sin(angle) * push * 0.35;
 
-              if (dist < this.radius + 18 && this.cooldown === 0) {
+              // Pop when cursor/touch is right over the bubble center
+              if (dist < this.radius + 16 && this.cooldown === 0) {
                 this.pop();
                 return;
               }
@@ -782,37 +873,40 @@
             this.radius
           );
 
-          grad.addColorStop(0, `hsla(${this.hue}, 90%, 80%, ${this.alpha * 0.7})`);
-          grad.addColorStop(0.6, `hsla(${this.hue}, 80%, 55%, ${this.alpha * 0.3})`);
-          grad.addColorStop(1, `hsla(${this.hue}, 80%, 40%, 0.05)`);
+          grad.addColorStop(0, `hsla(${this.hue}, 100%, 90%, ${this.alpha * 0.85})`);
+          grad.addColorStop(0.55, `hsla(${this.hue}, 90%, 65%, ${this.alpha * 0.45})`);
+          grad.addColorStop(1, `hsla(${this.hue}, 90%, 50%, 0.1)`);
 
           ctx.fillStyle = grad;
           ctx.fill();
 
-          ctx.strokeStyle = `hsla(${this.hue}, 100%, 75%, ${this.alpha * 0.6})`;
-          ctx.lineWidth = 1.2;
+          ctx.strokeStyle = `hsla(${this.hue}, 100%, 80%, ${this.alpha * 0.85})`;
+          ctx.lineWidth = 1.6;
           ctx.stroke();
 
+          // High-contrast highlight spec
           ctx.beginPath();
-          ctx.arc(this.x - this.radius * 0.35, this.y - this.radius * 0.35, this.radius * 0.22, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha * 0.7})`;
+          ctx.arc(this.x - this.radius * 0.35, this.y - this.radius * 0.35, this.radius * 0.25, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha * 0.85})`;
           ctx.fill();
 
           ctx.restore();
         }
       }
 
-      const bubbleCount = Math.floor(Math.min(window.innerWidth / 16, 55));
+      const bubbleCount = Math.floor(Math.min(window.innerWidth / 14, 60));
       const bubbles = Array.from({ length: bubbleCount }, () => new Bubble());
 
-      canvas.addEventListener('pointerdown', (e) => {
+      // Tap / Click anywhere on window to pop nearest bubble
+      window.addEventListener('pointerdown', (e) => {
         getAudioContext();
+        startMusic();
         const clickX = e.clientX;
         const clickY = e.clientY;
 
         for (let b of bubbles) {
           const dist = Math.hypot(b.x - clickX, b.y - clickY);
-          if (dist < b.radius + 14) {
+          if (dist < b.radius + 22) {
             b.pop();
             break;
           }
@@ -865,7 +959,7 @@
 
       const pfp = localStorage.getItem('aayeddie_pfp') || (data.profile && data.profile.pfp) || data.pfp;
       const title = localStorage.getItem('aayeddie_hero_title') || (data.profile && data.profile.hero && data.profile.hero.title) || (data.hero && data.hero.title) || 'aayeddie';
-      const tagline = localStorage.getItem('aayeddie_hero_tagline') || (data.profile && data.profile.hero && data.profile.hero.tagline) || (data.hero && data.hero.tagline) || '';
+      const tagline = localStorage.getItem('aayeddie_hero_tagline') || (data.profile && data.profile.hero && data.profile.hero.tagline) || (data.hero && data.tagline) || '';
 
       if (pfp) {
         const img = document.getElementById('pfp-img');
@@ -948,6 +1042,7 @@
 
       slider.addEventListener('mousedown', (e) => {
         getAudioContext();
+        startMusic();
         isDragging = true;
         hasDraggedDistance = false;
         slider.classList.add('active');
