@@ -115,22 +115,5 @@
       "color": "#5baed2",
       "init": "RO"
     }
-  ],
-  "highlights": [
-    {
-      "cat": "Highlights",
-      "icon": "📸",
-      "c1": "#8b5cf6",
-      "c2": "#22d3ee",
-      "coverImage": "https://i.pinimg.com/736x/4d/04/77/4d04777b9f8dcadcf3a208d426025bf5.jpg",
-      "slides": [
-        {
-          "image": "https://scontent-hou1-1.cdninstagram.com/v/t51.82787-15/689274761_17959428831121164_4260723724417407630_n.jpg?stp=dst-jpegr_e35_tt6&_nc_cat=111&ig_cache_key=Mzg5MzY3Njk1MTUzODE1NDg4MQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMjMxNi5oZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=sBjUp82AZtUQ7kNvwG8WQns&_nc_oc=AdoKy_A8XY_7drscx3qWJ6GBee-aUzlID17nmzHDYTtDurwy5oYMgLRlXalW72yBtl0&_nc_ad=z-m&_nc_cid=1087&_nc_zt=23&_nc_ht=scontent-hou1-1.cdninstagram.com&_nc_gid=qoB3mcEqYHVnbZ9rdSUa1Q&_nc_ss=7a22e&oh=00_AQF8PyNrmNpBb5iRafCUUc5x1g2PrT6bw3soghHFEeq73A&oe=6A827A9E",
-          "title": "aayeddie",
-          "caption": "Highlights reel",
-          "date": "2026"
-        }
-      ]
-    }
   ]
 }
