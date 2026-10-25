@@ -1250,7 +1250,20 @@
       // Photography
       const photographyData = localStorage.getItem('aayeddie_custom_photography');
       const photography = photographyData ? JSON.parse(photographyData) : (data.photography || []);
-      renderCardScroller([...folder.photos, ...photography], 'photography-section', 'photography-gallery-scroll');
+      const allPhotos = [...folder.photos, ...photography];
+      renderCardScroller(SHUFFLE_PHOTOGRAPHY ? shuffleArray(allPhotos) : allPhotos, 'photography-section', 'photography-gallery-scroll');
+    }
+
+    // Set to false to keep photos in a fixed order instead of a new random order on every page load.
+    const SHUFFLE_PHOTOGRAPHY = true;
+
+    function shuffleArray(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
     }
 
     // Drop-a-file galleries: images in photos/ and gallery/ show up automatically.
