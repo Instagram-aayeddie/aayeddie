@@ -17,7 +17,23 @@ https://<your-username>.github.io/<your-repo>/
 | `index.html` | The public portfolio site (hero, highlights, social hub, project gallery). |
 | `admin.html` | A local/private control panel: live preview + edit pencils, PFP & theme editor, highlight/slide manager, social channel manager, JSON export, and a repo-setup helper. **Do not link to this from the public site** — it's a tool for you, not visitors. |
 | `data.json` | The site's committed default content (hero text, theme colors, socials, highlights). `index.html` fetches this on load. |
+| `photos/`, `gallery/` | Drop images here and they appear on the site automatically. |
+| `scan.py` | Builds `photos.json` from those folders (runs automatically on deploy). |
 | `.github/workflows/deploy.yml` | GitHub Actions workflow that deploys the repo to GitHub Pages on every push to `main`. |
+
+## 📸 Drop-in photo folders (no JSON editing)
+
+| Folder | Shows up in |
+|---|---|
+| `photos/` | 🎥 Photography Showcase |
+| `gallery/` | 🖼️ Gallery Showcase |
+
+Just put images in the folder and push. On GitHub you can do it entirely in the browser: open the folder → **Add file → Upload files** → drag images in → **Commit**. The deploy workflow runs `scan.py`, which builds `photos.json`, and the site picks them up about a minute later.
+
+- File name = caption (`sunset-at-the-lake.jpg` → "sunset at the lake"). Camera names like `IMG_1234.jpg` get no caption.
+- Newest uploads show first, ahead of anything still listed in `data.json`.
+- Works with jpg, jpeg, png, gif, webp, avif, svg. **HEIC (iPhone) is not shown by most browsers**, so export it as JPG first.
+- Local preview: `python3 scan.py && python3 -m http.server 8000`.
 
 ## 🧠 How content updates actually work
 

@@ -1242,13 +1242,53 @@
       const galleryData = localStorage.getItem('aayeddie_custom_gallery');
       const gallery = galleryData ? JSON.parse(galleryData) : (data.gallery || []);
 
-      const items = builds.length > 0 ? builds : gallery;
+      const folder = await loadFolderImages();
+
+      const items = [...folder.gallery, ...(builds.length > 0 ? builds : gallery)];
       renderCardScroller(items, 'gallery-section', 'main-gallery-scroll');
 
       // Photography
       const photographyData = localStorage.getItem('aayeddie_custom_photography');
       const photography = photographyData ? JSON.parse(photographyData) : (data.photography || []);
-      renderCardScroller(photography, 'photography-section', 'photography-gallery-scroll');
+      renderCardScroller([...folder.photos, ...photography], 'photography-section', 'photography-gallery-scroll');
+    }
+
+    // Drop-a-file galleries: images in photos/ and gallery/ show up automatically.
+    // Deployed site: reads photos.json (built by scan.py on every push).
+    // Local preview without scan.py: falls back to reading the folder listing.
+    async function loadFolderImages() {
+      const empty = { photos: [], gallery: [] };
+      try {
+        const res = await fetch('photos.json', { cache: 'no-store' });
+        if (res.ok && (res.headers.get('content-type') || '').includes('json')) {
+          const j = await res.json();
+          return { photos: j.photos || [], gallery: j.gallery || [] };
+        }
+      } catch (e) {}
+      try {
+        return { photos: await listFolder('photos/'), gallery: await listFolder('gallery/') };
+      } catch (e) {
+        return empty;
+      }
+    }
+
+    async function listFolder(dir) {
+      const res = await fetch(dir);
+      if (!res.ok) return [];
+      const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+      return [...doc.querySelectorAll('a[href]')]
+        .map(a => a.getAttribute('href'))
+        .filter(h => /\.(jpe?g|png|gif|webp|avif|svg|bmp)$/i.test(h))
+        .map(h => {
+          const name = decodeURIComponent(h.split('/').pop());
+          const stem = name.replace(/\.[^.]+$/, '');
+          const camera = /^(img|_mg|dsc[nf]?|pxl|mvimg|photo|image|screenshot)?[-_ ]*[\d\-_ ]+(edited|copy|\(\d+\))?$/i.test(stem);
+          return {
+            title: camera ? '' : stem.replace(/[-_]+/g, ' ').replace(/[<>"'&]/g, '').trim(),
+            desc: '',
+            imageUrl: dir + encodeURIComponent(name)
+          };
+        });
     }
 
     function renderCardScroller(items, sectionId, scrollId) {
