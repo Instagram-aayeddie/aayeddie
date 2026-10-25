@@ -1266,9 +1266,42 @@
         }
       } catch (e) {}
       try {
-        return { photos: await listFolder('photos/'), gallery: await listFolder('gallery/') };
+        const local = ['localhost', '127.0.0.1', ''].includes(location.hostname);
+        const list = local ? listFolder : listFolderOnGitHub;
+        return { photos: await list('photos/'), gallery: await list('gallery/') };
       } catch (e) {
         return empty;
+      }
+    }
+
+    // No build step needed: asks GitHub what's in the folder (cached 5 min to stay under rate limits).
+    const GH_REPO = 'Instagram-aayeddie/aayeddie';
+    const GH_BRANCH = 'main';
+
+    function titleFromName(name) {
+      const stem = name.replace(/\.[^.]+$/, '');
+      const camera = /^(img|_mg|dsc[nf]?|pxl|mvimg|photo|image|screenshot)?[-_ ]*[\d\-_ ]+(edited|copy|\(\d+\))?$/i.test(stem);
+      const hexId = stem.length >= 12 && /^[0-9a-f\-_]+$/i.test(stem);
+      return (camera || hexId) ? '' : stem.replace(/[-_]+/g, ' ').replace(/[<>"'&]/g, '').trim();
+    }
+
+    async function listFolderOnGitHub(dir) {
+      const key = 'aayeddie_folder_' + dir;
+      let cached = null;
+      try { cached = JSON.parse(sessionStorage.getItem(key)); } catch (e) {}
+      if (cached && Date.now() - cached.t < 5 * 60 * 1000) return cached.items;
+      try {
+        const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${dir.replace(/\/$/, '')}?ref=${GH_BRANCH}`);
+        if (!res.ok) throw new Error('GitHub ' + res.status);
+        const files = await res.json();
+        const items = files
+          .filter(f => f.type === 'file' && /\.(jpe?g|png|gif|webp|avif|svg|bmp)$/i.test(f.name))
+          .sort((a, b) => b.name.localeCompare(a.name, undefined, { numeric: true }))
+          .map(f => ({ title: titleFromName(f.name), desc: '', imageUrl: f.download_url }));
+        try { sessionStorage.setItem(key, JSON.stringify({ t: Date.now(), items })); } catch (e) {}
+        return items;
+      } catch (e) {
+        return cached ? cached.items : [];
       }
     }
 
